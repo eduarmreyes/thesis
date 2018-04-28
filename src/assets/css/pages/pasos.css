@@ -1,0 +1,35 @@
+.pasos-empty {
+  min-height: 100vh;
+  width: 100%;
+  margin: auto;
+}
+
+.pasos-empty-content {
+  width: 100%;
+  max-width: 1200px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  display: flex;
+  display: -ms-flexbox;
+  align-items: stretch;
+  -ms-flex-pack: center;
+  -ms-flex-align: center;
+  justify-content: center;
+}
+
+.pasos-empty-margin {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.pasos-empty-sidebar {
+  width: 20%;
+  height: 100%;
+  display: inline-block;
+}
+
+.pasos-empty-form {
+  width: 80%;
+  height: 100%;
+  display: inline-block;
+}
