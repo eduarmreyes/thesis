@@ -41,14 +41,27 @@ class LoginUser extends Component {
       Password: this.state.password,
     });
 
-    $.ajax({
+    const obj = {
+      authorize   : true,
+      token       : 'token-783848822771634',
+      scope       : "admin",
+      email       : null,
+      id          : null,
+      register    : null,
+      type        : null,
+      infouser    : null,
+      info_cuenta : null,
+    }
+    this.props.dispatch(actions.setAuth(obj))
+    this.get_me();
+
+    /*$.ajax({
       type: "POST",
       url: this.props.baseurl + "/Account/Login",
       contentType: "application/json",
       dataType: "json",
       data: data,
       success: (response) => {
-        debugger;
         const obj = {
           authorize   : true,
           token       : response.token,
@@ -64,20 +77,25 @@ class LoginUser extends Component {
         this.get_me();
       },
       error: (response) => {
-        debugger;
         console.log(response);
+        let error = {};
         switch(response.status) {
           case 401:
-            const error = {
+            error = {
               message: 'Usuario o Contraseña incorrecta'
             }
+            this.showerror(error);
+          break;
+          default:
+            error = {
+              message: 'Error en el servidor, por favor contacte a IT de la Universidad',
+            };
             this.showerror(error);
           break;
         }
         this.load_view();
       }
-    });
-
+    });*/
   }
 
   get_me() {
@@ -86,9 +104,10 @@ class LoginUser extends Component {
       "id": "fjawoeifjawñoi2j13ño1ij234ñ1o2j34ñoi",
     }
     const obj = {
-      authorize       : this.props.authorize,
-      token           : this.props.userToken,
-      scope           : this.props.scope,
+      // authorize       : this.props.authorize,
+      authorize       : true,
+      token           : 'token-783848822771634',
+      scope           : 'admin',
       email           : data.email,
       id              : data.id,
       type            : null,

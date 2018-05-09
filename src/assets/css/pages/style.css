@@ -874,6 +874,16 @@ a {
   transition: all .2s ease;
 }
 
+.sidebar a.highlighted {
+  background-color: #0b387b;
+  color: #fff;
+}
+
+.sidebar a.highlighted:hover {
+  background-color: #0d4394;
+  color: #fff;
+}
+
 .sidebar a.active {
   background-color: rgba(0, 0, 0, 0.04);
   color: #0b387b;
@@ -887,6 +897,10 @@ a {
   color: #0b387b;
   margin: 0 10px 0 0;
   vertical-align: middle;
+}
+
+.sidebar a.highlighted i {
+  color: #fff;
 }
 
 .sidebar a span {

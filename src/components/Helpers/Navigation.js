@@ -7,11 +7,17 @@ import axios from "axios"
 import actions from "../../actions"
 import * as NumberFormat from 'react-number-format';
 import moment from 'moment';
+
 class NavigationUser extends Component {
   render() {
     return(
     /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <ul>
+        <li>
+          <NavLink to="/project-new" exact={true} activeClassName="active">
+            <i className="md-icon">home</i> <span>Crear Proyecto</span>
+          </NavLink>
+        </li>
         <li>
             <NavLink to="/dashboard" exact={true} activeClassName="active">
                  <i className="md-icon">home</i> <span>Inicio</span>
@@ -19,14 +25,9 @@ class NavigationUser extends Component {
         </li>     
          <li>
             <NavLink to="/transaccionesgeneralesuser" activeClassName="active">
-                <i className="md-icon">timeline</i> <span>Transacciones</span>
+                <i className="md-icon">timeline</i> <span>Indicadores</span>
             </NavLink>
         </li>
-        <li>
-            <NavLink to="/puntosforex" activeClassName="active">
-                <i className="md-icon">monetization_on</i> <span>Puntos FX</span>
-            </NavLink>           
-        </li> 
         <li>
             <NavLink to="/perfil" activeClassName="active">
                 <i className="md-icon">person</i> <span>Perfil</span>
@@ -53,6 +54,11 @@ class NavigationAdmin extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <ul>
         <li>
+          <NavLink to="/project-new" exact={true} className="highlighted" activeClassName="active">
+            <i className="md-icon">add</i> <span>Crear Proyecto</span>
+          </NavLink>
+        </li>
+        <li>
             <NavLink to="/dashboard" exact={true} activeClassName="active">
                  <i className="md-icon">home</i> <span>Inicio</span>
             </NavLink>
@@ -60,27 +66,22 @@ class NavigationAdmin extends Component {
 
         <li>
             <NavLink to="/clientes" activeClassName="active">
-                <i className="md-icon">person</i> <span>Usuarios</span>
+                <i className="md-icon">person</i> <span>Perfil de administrador</span>
             </NavLink>
         </li>
         <li>
           <NavLink to="/transaccionesgenerales" activeClassName="active">
-            <i className="md-icon">trending_up</i> <span>Transacciones</span>
+            <i className="md-icon">trending_up</i> <span>Indicadores</span>
           </NavLink>
         </li>
         <li>
             <NavLink to="/tareasgenerales" activeClassName="active">
-                <i className="md-icon">format_list_bulleted</i> <span>Cosito</span>
+                <i className="md-icon">format_list_bulleted</i> <span>Proyectos</span>
             </NavLink>
         </li>
         <li>
             <NavLink to="/usuariosgenerales" activeClassName="active">
               <i className="md-icon">people</i> <span>Usuarios</span>
-            </NavLink>
-        </li>
-        <li>
-            <NavLink to="/historial" activeClassName="active">
-                <i className="md-icon">library_books</i> <span>Bitacora</span>
             </NavLink>
         </li>
       </ul>

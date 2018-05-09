@@ -202,6 +202,7 @@ render() {
               <Route exact path="/confirm/:token" component={Confirm} /> 
               <PrivateRoute exact path="/companytype" component={CompanyType} /> 
               <PrivateRoute exact path="/paso" component={Paso} /> 
+              <PrivateRoute exact path="/project-new" component={Pnpasouno} /> 
               <PrivateRoute exact path="/pnpasouno" component={Pnpasouno} /> 
               <PrivateRoute exact path="/pnpasodos" component={Pnpasodos} /> 
               <PrivateRoute exact path="/pnpasotres" component={Pnpasotres} /> 

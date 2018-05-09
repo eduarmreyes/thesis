@@ -739,6 +739,12 @@ a {
     line-height: 20px;
     padding: 10px 14px;
     transition: all .2s ease; }
+    .sidebar a.highlighted {
+      background-color: $template-color;
+      color: #fff; }
+    .sidebar a.highlighted:hover {
+      background-color: $template-color * 1.2;
+      color: #fff; }
     .sidebar a.active {
       background-color: rgba(0, 0, 0, 0.04);
       color: $template-color; }
@@ -748,6 +754,9 @@ a {
       color: $template-color;
       margin: 0 10px 0 0;
       vertical-align: middle; }
+    .sidebar a.highlighted i {
+      color: #fff;
+    }
     .sidebar a span {
       vertical-align: middle; }
     .sidebar a strong {

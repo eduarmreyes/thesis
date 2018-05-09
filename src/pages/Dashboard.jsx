@@ -279,9 +279,9 @@ class DashboardAdmin extends Component {
       enddate: moment(),
       chart: null,
       useDummyData:true,
-      total_user:0,
-      pending_user:0,
-      task_incomplet:0,
+      total_user:6,
+      active_projects:7,
+      closed_projects:124,
       new_invertion:0,
       increase_capital:0
 
@@ -351,7 +351,7 @@ class DashboardAdmin extends Component {
     })
     .then(jsonresponse => { 
       this.setState({
-        pending_user:jsonresponse.data
+        active_projects:jsonresponse.data
       })
     })
     .catch(error => {
@@ -365,7 +365,7 @@ class DashboardAdmin extends Component {
     })
     .then(jsonresponse => { 
       this.setState({
-        task_incomplet:jsonresponse.data
+        closed_projects:jsonresponse.data
       })
     })
     .catch(error => {
@@ -984,15 +984,15 @@ class DashboardAdmin extends Component {
   		  <div className="page-dashboard-info height-card ">
             <div className="card-user">
               <NavLink to="/pendiente">
-                <h2 className="purple title-number">{this.state.pending_user}</h2>
-                <label>Clientes por aprobar</label>
+                <h2 className="purple title-number">{this.state.active_projects}</h2>
+                <label>Proyectos en ejecución</label>
               </NavLink>
             </div>
             <div className="card-detail-col">
               <NavLink to="/tareasgenerales">
-                <strong className="purple title-number">{this.state.task_incomplet}</strong>
+                <strong className="purple title-number">{this.state.closed_projects}</strong>
                 <br/>
-                <span>Tareas pendientes</span>
+                <span>Proyectos cerrados</span>
               </NavLink>
             </div>
             <div className="card-detail-col">
@@ -1017,43 +1017,20 @@ class DashboardAdmin extends Component {
               <NavLink to="/usuariosgenerales">
                 <ul>
                     <li>
-                        <label>Nuevo <br/>  Usuarios</label>
+                        <label>Usuarios <br/>  Nuevos</label>
                     </li>
                     <li>
-                        <h2>{this.state.new_user_month}</h2>
+                        <h2>{this.state.new_user_month || 0}</h2>
                     </li>
                 </ul>
               </NavLink>
               </div>
             </div>
-            <div className="card-detail-col">
-               <div className="card-subdetail-row">
-                  <ul>
-                      <li>
-                          <label>Nuevas <br/>  Inversiones</label>
-                      </li>
-                      <li>
-                          <h2>{this.state.new_invertion}</h2>
-                      </li>
-                  </ul>
-                </div>
-                <hr/>
-                <div className="card-subdetail-row">
-                  <ul>
-                      <li>
-                          <label>Aumentos <br/>  a capital</label>
-                      </li>
-                      <li>
-                          <h2>{this.state.increase_capital}</h2>
-                      </li>
-                  </ul>
-                </div>
-            </div>
           </div>	  
         <div className="border-bottom side-margins box">
         <div className="section-filter-dash">
            <h1>Reportes </h1>
-           <h3>Gráfica de Despositos diarios </h3>
+           <h3>Indicadores de proyectos</h3>
           <div className="align-filter">
           <div className="col-dash">
           </div>
@@ -1098,32 +1075,6 @@ class DashboardAdmin extends Component {
            		 {this.state.chart} 
             </div>             
         </div> 
-        <div className="border-bottom side-margins box">
-           <div className="grup-chart">
-              <div className="block-chart">
-                  <h3>Movimientos de transacciones</h3>
-
-                  <div className="chart-container">
-                    <canvas id="Radar"></canvas>
-                  </div>
-              </div>
-              <div className="block-chart">
-                  <h3>Proveniente de transacciones</h3>
-                  <canvas id="Doughnut"></canvas>
-              </div>
-              <div className="block-chart">
-              <br/>
-                  <h3>Proveniente de transacciones por peso</h3>
-                  <canvas id="Doughnutpeso"></canvas>
-              </div>
-          </div>
-
-          
-        </div>
-        <div className="chart-container">
-
-            <canvas id="StackedBar"></canvas>
-          </div>
 	</div>
     )
   }
