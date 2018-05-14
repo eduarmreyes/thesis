@@ -68,7 +68,7 @@ import { NavLink } from 'react-router-dom';
         return (
             <div className="footer">
                 <div className="footer-left">
-                    Copyright &copy; 2017 Consultor Forex. Todos los derechos reservados.
+                    Copyright &copy; 2017 UEES. Todos los derechos reservados.
                 </div>
                 <div className="footer-right">
                     <ul>

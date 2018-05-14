@@ -1,22 +1,17 @@
-import React, {Component} from 'react'
-import { Redirect } from 'react-router'
-import { withRouter } from "react-router-dom"
-import { connect } from "react-redux"
-import Backend from '../components/Layouts/Backend';
-import ChartLine from "../components/Graphics/ChartLine"
-import axios from 'axios'
-import { NavLink } from 'react-router-dom';
-import ChartDonut from "../components/Graphics/ChartDonut"
-import ChartminLine from "../components/Graphics/ChartminLine"
-import moment from 'moment';
-import Moment from 'moment';
-import {DatetimePickerTrigger} from 'rc-datetime-picker';
-import JSONData from "../JSONData"
+import React, {Component}        from 'react';
+import { Redirect }              from 'react-router';
+import { withRouter }            from 'react-router-dom';
+import { connect }               from 'react-redux';
+import moment                    from 'moment';
+import Moment                    from 'moment';
+import axios                     from 'axios';
+import { NavLink }               from 'react-router-dom';
+import JSONData                  from 'JSONData';
+import Chart                     from 'chart.js';
 
-import fileDownload  from'js-file-download';
-
-import Chart from 'chart.js';
-
+import Backend                   from 'components/Layouts/Backend';
+import ChartLine                 from 'components/Graphics/ChartLine';
+import { DatetimePickerTrigger } from 'rc-datetime-picker';
 
 class DashboarUser extends Component {
   constructor(props){
@@ -164,9 +159,7 @@ class DashboarUser extends Component {
       })
       .then(jsonresponse => { 
 
-        const url = jsonresponse.data;
-
-         // server sent the url to the file!
+        // server sent the url to the file!
         // now, let's download:
         window.open(jsonresponse.data);
         // you could also do:
@@ -235,7 +228,7 @@ class DashboarUser extends Component {
       <div className="generate-data margin50">
        <h2 className="display-block">Transacciones de clientes</h2>    
        
-            <a href="#" onClick={this.generate_estado} className="btn-generate">Generar estado de cuenta</a>        
+            <a href="" onClick={this.generate_estado} className="btn-generate">Generar estado de cuenta</a>        
       </div>
 
       <div className="page-cliente-empty-content margin50">
@@ -978,14 +971,14 @@ class DashboardAdmin extends Component {
       'Today': moment(),
       'Yesterday': moment().subtract(1, 'days')
     };
-    return(
-    /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
-      <div className="content-inner no-padding-top no-padding-left no-padding-right">       		
+    return (
+      /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
+      <div className="content-inner no-padding-top no-padding-left no-padding-right">
   		  <div className="page-dashboard-info height-card ">
             <div className="card-user">
               <NavLink to="/pendiente">
                 <h2 className="purple title-number">{this.state.active_projects}</h2>
-                <label>Proyectos en ejecución</label>
+                <span>Proyectos en ejecución</span>
               </NavLink>
             </div>
             <div className="card-detail-col">
@@ -1004,7 +997,7 @@ class DashboardAdmin extends Component {
              <NavLink to="/usuariosgenerales">
                 <ul>
                     <li>
-                        <label>Total de <br/>  Usuarios</label>
+                        <span>Total de <br/>  Usuarios</span>
                     </li>
                     <li>
                         <h2>{this.state.total_user}</h2>
@@ -1017,7 +1010,7 @@ class DashboardAdmin extends Component {
               <NavLink to="/usuariosgenerales">
                 <ul>
                     <li>
-                        <label>Usuarios <br/>  Nuevos</label>
+                        <span>Usuarios <br/>  Nuevos</span>
                     </li>
                     <li>
                         <h2>{this.state.new_user_month || 0}</h2>
@@ -1037,7 +1030,7 @@ class DashboardAdmin extends Component {
             <div className="col-dash">
               <ul>
                   <li>
-                      <label>Desde:</label>
+                      <span>Desde:</span>
                   </li>
                   <li>
                     <div className="form-group">
@@ -1051,7 +1044,7 @@ class DashboardAdmin extends Component {
                     </div>
                   </li>
                   <li>
-                      <label>Hasta:</label>
+                      <span>Hasta:</span>
                   </li>
                   <li>
                     <div className="form-group">
@@ -1065,7 +1058,7 @@ class DashboardAdmin extends Component {
                     </div>
                   </li>
                   <li>
-                    <a className="btn-blue blue" href="#" onClick={this.updateGraphics}> Aplicar</a>
+                    <a className="btn-blue blue" href="" onClick={this.updateGraphics}> Aplicar</a>
                   </li>
               </ul>
            </div>
@@ -1075,8 +1068,8 @@ class DashboardAdmin extends Component {
            		 {this.state.chart} 
             </div>             
         </div> 
-	</div>
-    )
+      </div>
+    );
   }
 }
 class Dashboard extends Component {

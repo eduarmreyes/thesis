@@ -878,6 +878,12 @@ a {
   background-color: #0b387b;
   color: #fff;
 }
+.sidebar a.highlighted.active {
+  background-color: #0b387b;
+  color: #fff;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 5px #6a8dff;
+}
 
 .sidebar a.highlighted:hover {
   background-color: #0d4394;
@@ -943,6 +949,10 @@ form:after {
   content: " ";
   display: block;
   clear: both;
+}
+
+.align-items-center {
+  align-items: center;
 }
 
 .form-control {

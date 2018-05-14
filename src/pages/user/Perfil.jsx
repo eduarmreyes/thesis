@@ -687,7 +687,7 @@ class General extends Component{
                                     </p>
                                     <p>
                                         Le pedimos que se ponga en contacto al teléfono <strong>(+503) 8888 8888 </strong> o enviar un correo a <br/>
-                                        <strong>info@consultorforex.com</strong> y explicar la razon por la cual se quiere hacer esa edición. Se le ruega que se adjunte un comprobantet (si es requerido) al momento de enviar el correo.
+                                        <strong>info@uees.edu.sv</strong> y explicar la razon por la cual se quiere hacer esa edición. Se le ruega que se adjunte un comprobantet (si es requerido) al momento de enviar el correo.
                                      </p>
                                     <div className="popup-retiro">
                                         <div className="form-group section-btn">

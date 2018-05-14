@@ -82,7 +82,7 @@ class Select_acount extends Component{
 		return(
 			<section id="select-acccount" className="select-acccountj">
 				<div className="select-account--logo-wrapper">
-					<img src="/img/logotext.png" alt="Logo Consultor Forex"  width="100%" />
+					<img src="/img/logotext.png" alt="Logo"  width="100%" />
 				</div>
 				{this.state.tabla}
 			</section>

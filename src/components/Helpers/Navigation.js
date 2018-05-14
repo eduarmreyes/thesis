@@ -492,7 +492,7 @@ class Navigation extends Component {
                                         <li>
                                             <div>
                                                 <span>
-                                                    Acepto los <a target='_blank' rel='noopener noreferrer' href="/terms"> Terminos y Condiciones </a> que conlleva el sistema de referido de CONSULTOR FOREX.
+                                                    Acepto los <a target='_blank' rel='noopener noreferrer' href="/terms"> Terminos y Condiciones </a> que conlleva el sistema de referido de UEES.
                                                 </span>
                                             </div>
                                         </li>

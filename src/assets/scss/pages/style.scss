@@ -741,7 +741,15 @@ a {
     transition: all .2s ease; }
     .sidebar a.highlighted {
       background-color: $template-color;
-      color: #fff; }
+      color: #fff;
+
+      &.active {
+        background-color: $template-color;
+        color: #fff;
+        box-sizing: border-box;
+        box-shadow: 0 0 0 5px #6a8dff;
+      }
+    }
     .sidebar a.highlighted:hover {
       background-color: $template-color * 1.2;
       color: #fff; }
@@ -790,6 +798,10 @@ form {
     content: " ";
     display: block;
     clear: both; }
+
+.align-items-center {
+  align-items: center;
+}
 
 .form-control {
   background-color: #fff;
