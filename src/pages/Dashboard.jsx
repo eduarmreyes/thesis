@@ -8,6 +8,7 @@ import axios                     from 'axios';
 import { NavLink }               from 'react-router-dom';
 import JSONData                  from 'JSONData';
 import Chart                     from 'chart.js';
+import data                      from 'pages/data.json';
 
 import Backend                   from 'components/Layouts/Backend';
 import ChartLine                 from 'components/Graphics/ChartLine';
@@ -73,47 +74,38 @@ class DashboarUser extends Component {
   componentDidMount(){    
     debugger;
   }
+
   updateGraphics() {
-      this.setState({
-        chart: null,
-        initChart: null
-      })
-        let json = null
-        let chart = null
-        let chartProps = null
-        let toUpdate = {
-          dummyData: {}
-        }
+    this.setState({
+      chart: null,
+      initChart: null
+    });
+    
+    let json = null
+    let chart = null
+    let chartProps = null
+    let toUpdate = {
+      dummyData: {}
+    }
     
 
-        setTimeout(() => {  
-        const bearer = 'bearer '+ this.props.userToken;
-        axios.request('GUET', {
-          url:this.props.baseurl + '/v1/user_accounts/'+this.state.id_cuenta+'/graphics',
-          headers: { 'Authorization': bearer,'Content-Type': 'application/json' }
-        })
-        .then(jsonresponse => { 
+    setTimeout(() => {
+      json = data;
+      chartProps = {
+        data: json.value,
+        id: "customID",
+        dates: json.label,
+        callback: this.getDataInit
+      };
 
-          json = jsonresponse.data.response
-           chartProps = {
-            data: json.value,
-            id: "customID",
-            dates: json.label,
-            callback: this.getDataInit
-          }               
-                    
-          toUpdate.dummyData = {
-            graphics: json
-          }
-          chart = <ChartLine {...chartProps} />
-          toUpdate.chart = chart
-          this.setState(toUpdate)
-           })  
-        .catch(error => {
-
-        });
-  
-      }, 500)  
+      toUpdate.dummyData = {
+        graphics: json
+      };
+      
+      chart = <ChartLine { ...chartProps } />
+      toUpdate.chart = chart;
+      this.setState(toUpdate);
+    }, 500);
   }
   get_transacciones(page,per_page){
     const bearer = 'bearer '+ this.props.userToken;
@@ -260,12 +252,9 @@ class DashboarUser extends Component {
   }
 }
 
-
-
 class DashboardAdmin extends Component {
-
   constructor(props){
-    super(props)
+    super(props);
 
     this.state = {
       startdate: moment(),
@@ -923,47 +912,28 @@ class DashboardAdmin extends Component {
       var enddate = this.state.enddate;
       var date1 = startdate.format('YYYY-MM-DD');
       var date2 = enddate.format('YYYY-MM-DD');
-      setTimeout(() => {  
-      if (this.props.scope == "admin") { 
-       const bearer = 'bearer '+ this.props.userToken;
-       axios.request('GET', {
-          url:this.props.baseurl + '/v1/graphics/graphic_growth?start_date='+ date1 +'&end_date='+ date2 +'',
-          headers: { 'Authorization': bearer,'Content-Type': 'application/json' }
-        })
-      .then(jsonresponse => { 
-       
-       json = jsonresponse.data.response;
-       console.log(jsonresponse.data.response)
-         chartProps = {
+      setTimeout(() => {
+        json = data;
+        chartProps = {
           data: json.value,
-          id: "line",
+          id: "customID",
           dates: json.label,
           callback: this.getDataInit
-        }               
-                  
+        };
+
         toUpdate.dummyData = {
           graphics: json
-        }
-
-        chart = <ChartLine {...chartProps} />
-        toUpdate.chart = chart
-        this.setState(toUpdate)
+        };
         
+        chart = <ChartLine { ...chartProps } />
+        toUpdate.chart = chart;
+        this.setState(toUpdate);
+      }, 10)  
 
-      })  
-      .catch(error => {
-    
-      });
-      } else {
-
-     
-      }
-     }, 10)  
-
-    this.get_movimiento_transacciones()
-    this.get_proveniente_transacciones()
-    this.get_proveniente_transacciones_x_peso()
-    this.get_bancos_por_cuentas()
+    // this.get_movimiento_transacciones()
+    // this.get_proveniente_transacciones()
+    // this.get_proveniente_transacciones_x_peso()
+    // this.get_bancos_por_cuentas()
 
     }
   render() {
@@ -989,85 +959,42 @@ class DashboardAdmin extends Component {
               </NavLink>
             </div>
             <div className="card-detail-col">
-            
-
-
               <div className="card-subdetail-row">
-              
-             <NavLink to="/usuariosgenerales">
-                <ul>
+                <NavLink to="/usuariosgenerales">
+                  <ul>
                     <li>
-                        <span>Total de <br/>  Usuarios</span>
+                      <span>Total de <br/>  Usuarios</span>
                     </li>
                     <li>
-                        <h2>{this.state.total_user}</h2>
+                      <h2>{this.state.total_user}</h2>
                     </li>
-                </ul>
-             </NavLink>
+                  </ul>
+                </NavLink>
               </div>
               <hr/>
               <div className="card-subdetail-row">
-              <NavLink to="/usuariosgenerales">
-                <ul>
+                <NavLink to="/usuariosgenerales">
+                  <ul>
                     <li>
-                        <span>Usuarios <br/>  Nuevos</span>
+                      <span>Usuarios <br/>  Nuevos</span>
                     </li>
                     <li>
-                        <h2>{this.state.new_user_month || 0}</h2>
+                      <h2>{this.state.new_user_month || 0}</h2>
                     </li>
-                </ul>
-              </NavLink>
+                  </ul>
+                </NavLink>
               </div>
             </div>
           </div>	  
         <div className="border-bottom side-margins box">
-        <div className="section-filter-dash">
-           <h1>Reportes </h1>
-           <h3>Indicadores de proyectos</h3>
-          <div className="align-filter">
-          <div className="col-dash">
-          </div>
-            <div className="col-dash">
-              <ul>
-                  <li>
-                      <span>Desde:</span>
-                  </li>
-                  <li>
-                    <div className="form-group">
-                        <DatetimePickerTrigger
-                          shortcuts={shortcuts} 
-                          closeOnSelectDay ={true}
-                          moment={this.state.startdate}
-                          onChange={this.selectstardate}>
-                          <input type="text" value={this.state.startdate.format('YYYY-MM-DD')} readOnly />
-                        </DatetimePickerTrigger>
-                    </div>
-                  </li>
-                  <li>
-                      <span>Hasta:</span>
-                  </li>
-                  <li>
-                    <div className="form-group">
-                        <DatetimePickerTrigger
-                          shortcuts={shortcuts} 
-                          moment={this.state.enddate}
-                          closeOnSelectDay ={true}
-                          onChange={this.selectenddate}>
-                          <input type="text" value={this.state.enddate.format('YYYY-MM-DD')} readOnly />
-                        </DatetimePickerTrigger>
-                    </div>
-                  </li>
-                  <li>
-                    <a className="btn-blue blue" href="" onClick={this.updateGraphics}> Aplicar</a>
-                  </li>
-              </ul>
-           </div>
-          </div>           
-        </div>
+          <div className="section-filter-dash">
+            <h1>Reportes </h1>
+            <h3>Indicadores de proyectos</h3>
             <div className="chart-container">
-           		 {this.state.chart} 
-            </div>             
-        </div> 
+              { this.state.chart }
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
