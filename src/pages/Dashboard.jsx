@@ -988,7 +988,7 @@ class DashboardAdmin extends Component {
           </div>	  
         <div className="border-bottom side-margins box">
           <div className="section-filter-dash">
-            <h1>Reportes </h1>
+            <h1>Seguimiento</h1>
             <h3>Indicadores de proyectos</h3>
             <div className="chart-container">
               { this.state.chart }

@@ -40,5 +40,11 @@
     "eject": "react-scripts eject",
     "sass": " sass --sourcemap=none --watch src/assets/scss:src/assets/css --style expanded",
     "sass-build": " sass --sourcemap=none --watch src/assets/scss:src/assets/css --style compressed"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "prettier": "^1.12.1"
   }
 }

@@ -14,7 +14,7 @@ import Backend from 'components/Layouts/Backend';
 import ChartLine from 'components/Graphics/ChartLine';
 import JSONData from 'JSONData';
 
-class NewProjectUser extends Component {
+class NewProjectDataUser extends Component {
   constructor(props) {
     super(props);
 
@@ -256,7 +256,7 @@ class NewProjectUser extends Component {
   }
 }
 
-class NewProjectAdmin extends Component {
+class NewProjectDataAdmin extends Component {
   constructor(props) {
     super(props);
 
@@ -982,65 +982,91 @@ class NewProjectAdmin extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
-          <h1>Nuevo Proyecto</h1>
+          <h1>Datos del Proyecto</h1>
           <Form>
             <FormGroup row className="align-items-center">
-              <Label for="project-name" sm={2}>
-                Nombre
+              <Label for="project-total-people" sm={2}>
+                Población Total
               </Label>
               <Col sm={9}>
                 <Input
                   type="text"
-                  name="project-name"
-                  id="project-name"
-                  placeholder="Nombre del Proyecto"
+                  name="project-total-people"
+                  id="project-total-people"
+                  placeholder="Población Total"
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project-faculty" sm={2}>
-                Facultad
-              </Label>
-              <Col sm={9}>
-                <Input type="select" name="project-faculty" id="project-faculty">
-                  <option>
-                    Seleccione una Facultad
-                  </option>
-                  <option value="Ingenieria">
-                    Ingeniería
-                  </option>
-                  <option value="Salud">
-                    Salud
-                  </option>
-                  <option value="Cosito">
-                    Cosito
-                  </option>
-                </Input>
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project-coordinador" sm={2}>
-                Coordinador
+              <Label for="project-men-percentage" sm={2}>
+                Porcentaje de Hombres
               </Label>
               <Col sm={9}>
                 <Input
                   type="text"
-                  name="project-coordinador"
-                  id="project-coordinador"
-                  placeholder="Coordinador del Proyecto"
+                  name="project-men-percentage"
+                  id="project-men-percentage"
+                  placeholder="Porcentaje de Hombres en plan"
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project-responsible-team" sm={2}>
-                Equipo Responsable
+              <Label for="project-women-percentage" sm={2}>
+                Porcentaje de Mujeres
+              </Label>
+              <Col sm={9}>
+                <Input
+                  type="text"
+                  name="project-women-percentage"
+                  id="project-women-percentage"
+                  placeholder="Porcentaje de Mujeres en plan"
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project-geographic-area" sm={2}>
+                Área Geográfica
               </Label>
               <Col sm={9}>
                 <Input
                   type="textarea"
                   rows="4"
-                  name="project-responsible-team"
-                  id="project-responsible-team"
+                  name="project-geographic-area"
+                  id="project-geographic-area"
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project-presentation" sm={2}>
+                Presentación
+              </Label>
+              <Col sm={9}>
+                <Input
+                  type="textarea"
+                  rows="4"
+                  name="project-presentation"
+                  id="project-presentation"
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project-background" sm={2}>
+                Antecedentes
+              </Label>
+              <Col sm={9}>
+                <Input type="textarea" rows="4" name="project-background" id="project-background" />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project-justification" sm={2}>
+                Justificación
+              </Label>
+              <Col sm={9}>
+                <Input
+                  type="textarea"
+                  rows="4"
+                  name="project-justification"
+                  id="project-justification"
                 />
               </Col>
             </FormGroup>
@@ -1055,14 +1081,14 @@ class NewProjectAdmin extends Component {
     );
   }
 }
-class NewProject extends Component {
+class NewProjectData extends Component {
   constructor(props) {
     super(props);
     this.state = {
       stado: 0,
       store_uuid: null,
       title: 'Inicio',
-      page: 'general',
+      page: 'data',
       menu: 'project-new',
     };
     this.set_project_view = this.set_project_view.bind(this);
@@ -1077,11 +1103,11 @@ class NewProject extends Component {
 
     switch (scope) {
       case 'user':
-        return <NewProjectUser {...this.props} />;
+        return <NewProjectDataUser {...this.props} />;
       case 'admin':
-        return <NewProjectAdmin {...this.props} />;
+        return <NewProjectDataAdmin {...this.props} />;
       case 'moderador':
-        return <NewProjectAdmin {...this.props} />;
+        return <NewProjectDataAdmin {...this.props} />;
       default:
         break;
     }
@@ -1110,4 +1136,4 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(NewProject));
+export default withRouter(connect(mapStateToProps)(NewProjectData));

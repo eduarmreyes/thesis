@@ -1922,3 +1922,7 @@ details p {
 .border-gray {
   border: solid 1px #eaeff8;
 }
+
+a:hover {
+  text-decoration: none;
+}
