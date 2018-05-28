@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import NewProject from './pages/projects/NewProject';
 import NewProjectActivities from './pages/projects/Activities';
 import NewProjectData from './pages/projects/Data';
+import NewProjectKPIs from './pages/projects/KPI';
 import PrivateRoute from './components/routes/PrivateRoute';
 import store from './store';
 //import actions from "./actions";
@@ -526,6 +527,7 @@ class Routes extends Component {
             <PrivateRoute exact path="/project-new" component={NewProject} />
             <PrivateRoute exact path="/project-new-activities" component={NewProjectActivities} />
             <PrivateRoute exact path="/project-new-data" component={NewProjectData} />
+            <PrivateRoute exact path="/project-new-kpis" component={NewProjectKPIs} />
             <PrivateRoute exact path="/clientes" component={General} />
             <PrivateRoute exact path="/pendiente" component={Pendiente} />
             <PrivateRoute exact path="/detalle-pendiente/:id_user" component={Detallependiente} />

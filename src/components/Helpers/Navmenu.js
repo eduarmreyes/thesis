@@ -235,6 +235,14 @@ class Navmenu extends Component {
               Actividades
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              className={`${this.props.page === 'kpis' ? 'active' : ''}`}
+              to="/project-new-kpis"
+            >
+              Indicadores
+            </NavLink>
+          </li>
         </ul>
       );
       this.setState({
