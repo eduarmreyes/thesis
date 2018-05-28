@@ -193,7 +193,7 @@ class NewProjectKPIsAdmin extends Component {
 			<tr>
 				<td colSpan={2}>
 					<div>
-						<h3 className="text-center">Agregue un recurso en el formulario de arriba ⬆️</h3>
+						<h3 className="text-center">Agregue un indicador en el formulario de arriba ⬆️</h3>
 					</div>
 				</td>
 			</tr>
