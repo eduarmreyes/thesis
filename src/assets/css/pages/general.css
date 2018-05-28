@@ -1926,3 +1926,7 @@ details p {
 a:hover {
   text-decoration: none;
 }
+
+.height100px {
+  height: 100px;
+}
