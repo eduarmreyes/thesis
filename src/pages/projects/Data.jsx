@@ -986,7 +986,7 @@ class NewProjectDataAdmin extends Component {
           <Form>
             <FormGroup row className="align-items-center">
               <Label for="project-total-people" sm={2}>
-                Población Total
+                Población beneficiaria
               </Label>
               <Col sm={9}>
                 <Input
@@ -1030,6 +1030,7 @@ class NewProjectDataAdmin extends Component {
               <Col sm={9}>
                 <Input
                   type="textarea"
+                  className="height-100px"
                   rows="4"
                   name="project-geographic-area"
                   id="project-geographic-area"
@@ -1043,6 +1044,7 @@ class NewProjectDataAdmin extends Component {
               <Col sm={9}>
                 <Input
                   type="textarea"
+                  className="height-100px"
                   rows="4"
                   name="project-presentation"
                   id="project-presentation"
@@ -1054,7 +1056,8 @@ class NewProjectDataAdmin extends Component {
                 Antecedentes
               </Label>
               <Col sm={9}>
-                <Input type="textarea" rows="4" name="project-background" id="project-background" />
+                <Input type="textarea"
+                className="height-100px" rows="4" name="project-background" id="project-background" />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -1064,6 +1067,7 @@ class NewProjectDataAdmin extends Component {
               <Col sm={9}>
                 <Input
                   type="textarea"
+                  className="height-100px"
                   rows="4"
                   name="project-justification"
                   id="project-justification"
