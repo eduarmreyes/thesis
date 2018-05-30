@@ -10,6 +10,9 @@ import NewProjectActivities from './pages/projects/Activities';
 import NewProjectData from './pages/projects/Data';
 import NewProjectKPIs from './pages/projects/KPI';
 import NewProjectSpecs from './pages/projects/Specs';
+
+import UpdateKPI from './pages/projects/UpdateKPI';
+
 import PrivateRoute from './components/routes/PrivateRoute';
 import store from './store';
 //import actions from "./actions";
@@ -42,9 +45,7 @@ import TransaccionesRetirosuser from './pages/user/transacciones/Retiros';
 import Ganadas from './pages/user/transacciones/Ganadas';
 import Select_acount from './pages/user/Select_acount';
 
-import Tareasgenerales from './pages/admin/tareas/General';
-import Tareasporasignar from './pages/admin/tareas/Porasignar';
-import Tareascompletadas from './pages/admin/tareas/Completadas';
+import ProjectGeneral from './pages/admin/projects/General';
 
 import Usuariosgenerales from './pages/admin/usuarios/General';
 import Usuariospermisos from './pages/admin/usuarios/Permisos';
@@ -556,9 +557,8 @@ class Routes extends Component {
             />
             <PrivateRoute exact path="/transaccionesganadasuser" component={Ganadas} />
             <PrivateRoute exact path="/Selectacount" component={Select_acount} />
-            <PrivateRoute exact path="/tareasgenerales" component={Tareasgenerales} />
-            <PrivateRoute exact path="/tareasporasignar" component={Tareasporasignar} />
-            <PrivateRoute exact path="/tareascompletadas" component={Tareascompletadas} />
+            <PrivateRoute exact path="/project-list" component={ProjectGeneral} />
+            <PrivateRoute exact path="/UpdateKPIToProject" component={UpdateKPI} />
             <PrivateRoute exact path="/usuariosgenerales" component={Usuariosgenerales} />
             <PrivateRoute exact path="/usuariospermisos" component={Usuariospermisos} />
             <PrivateRoute

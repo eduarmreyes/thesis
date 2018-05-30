@@ -110,13 +110,13 @@ class Navmenu extends Component {
         contentmenu: list_menu,
       });
     }
-    if (this.props.menu === 'tareas') {
+    if (this.props.menu === 'projects') {
       const list_menu = (
         <ul className="navmenu">
           <li>
             <NavLink
               className={`${this.props.page === 'general' ? 'active' : ''}`}
-              to="/tareasgenerales"
+              to="/project-list"
             >
               General
             </NavLink>

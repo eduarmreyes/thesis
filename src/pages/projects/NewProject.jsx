@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import Moment from 'moment';
 import $ from 'jquery';
-import { NavLink } from 'react-router-dom';
 import Chart from 'chart.js';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,10 +41,6 @@ class NewProjectUser extends Component {
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect push to={'/' + this.state.redirect_page} />;
-    }
-
     return (
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
@@ -232,6 +227,8 @@ class NewProjectAdmin extends Component {
   onSubmit(e) {
     e.preventDefault();
 
+    const url = (sessionStorage.getItem('currentProjectID')) ? "/ProjectProfile/Edit" : "/ProjectProfile/Add" ;
+
     const data =  JSON.stringify({
       projectName: this.state.project_name,
       knowledgeAreaId: parseInt(this.state.project_knowledge_area),
@@ -240,14 +237,15 @@ class NewProjectAdmin extends Component {
       developmentObjectiveId: parseInt(this.state.project_ods),
       projectCoordinator: this.state.project_coordinador,
       responsibleTeam: this.state.project_responsible_team,
-      project_start_date: this.state.project_start_date,
-      project_end_date: this.state.project_end_date,
-      project_institution: this.state.project_institution,
+      startDate: this.state.project_start_date,
+      endDate: this.state.project_end_date,
+      counterpartInstitution: this.state.project_institution,
+      id: (sessionStorage.getItem('currentProjectID')) ? sessionStorage.getItem('currentProjectID') : null,
     });
 
     $.ajax({
       type: "POST",
-      url: this.props.baseurl + "/ProjectProfile/Add",
+      url: url,
       contentType: "application/json",
       dataType: "json",
       data: data,

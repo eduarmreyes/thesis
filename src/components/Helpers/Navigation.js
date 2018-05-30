@@ -74,7 +74,7 @@ class NavigationAdmin extends Component {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/tareasgenerales" activeClassName="active">
+          <NavLink to="/project-list" activeClassName="active">
             <i className="md-icon">format_list_bulleted</i> <span>Proyectos</span>
           </NavLink>
         </li>
