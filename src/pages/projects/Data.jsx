@@ -990,7 +990,8 @@ class NewProjectDataAdmin extends Component {
               </Label>
               <Col sm={9}>
                 <Input
-                  type="text"
+                  required
+                  type="number"
                   name="project-total-people"
                   id="project-total-people"
                   placeholder="Población Total"

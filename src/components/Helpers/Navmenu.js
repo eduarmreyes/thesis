@@ -229,6 +229,14 @@ class Navmenu extends Component {
           </li>
           <li>
             <NavLink
+              className={`${this.props.page === 'specs' ? 'active' : ''}`}
+              to="/project-new-specs"
+            >
+              Especificaciones Técnicas
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               className={`${this.props.page === 'activities' ? 'active' : ''}`}
               to="/project-new-activities"
             >

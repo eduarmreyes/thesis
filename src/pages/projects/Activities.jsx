@@ -15,10 +15,10 @@ import ChartLine from 'components/Graphics/ChartLine';
 import JSONData from 'JSONData';
 
 const RESOURCES_OPTIONS = [
-  { id: 1, label: 'Impresora', value: 'printer' },
-  { id: 2, label: 'Equipo de Informática', value: 'computer' },
-  { id: 3, label: 'Alumnos de Facultad', value: 'alumni' },
-  { id: 4, label: 'Comida', value: 'food' },
+  { id: 1, label: 'Impresora', value: 'printer', price: 25 },
+  { id: 2, label: 'Equipo de Informática', value: 'computer', price: 125 },
+  { id: 3, label: 'Alumnos de Facultad', value: 'alumni', price: 50 },
+  { id: 4, label: 'Comida', value: 'food', price: 250 },
 ];
 
 class NewProjectActivitiesUser extends Component {
@@ -163,6 +163,7 @@ class NewProjectActivitiesAdmin extends Component {
           resource_label: this.state.project_resources_labels.join(', '),
         },
       ],
+      // total: this.total + this
     });
     this.onCleanForm();
   }
@@ -267,6 +268,8 @@ class NewProjectActivitiesAdmin extends Component {
               </Col>
             </FormGroup>
           </Form>
+          <hr />
+          Costo Total: {this.state.total}
           <hr />
           <div className="table-responsive">
             <table>
