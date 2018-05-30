@@ -293,7 +293,7 @@ class NewProjectActivities extends Component {
     this.state = {
       stado: 0,
       store_uuid: null,
-      title: 'Inicio',
+      title: 'Nuevo Proyecto',
       page: 'activities',
       menu: 'project-new',
     };

@@ -59,8 +59,6 @@ class NewProjectUser extends Component {
     super(props);
 
     this.state = {
-      title: 'Transacciones',
-      page: 'general',
       tabla: null,
       id_cuenta: this.props.info_cuenta !== null ? this.props.info_cuenta['uuid'] : '',
       redirect: false,
@@ -423,7 +421,7 @@ class NewProject extends Component {
     this.state = {
       stado: 0,
       store_uuid: null,
-      title: 'Inicio',
+      title: 'Nuevo Proyecto',
       page: 'general',
       menu: 'project-new',
     };

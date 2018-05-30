@@ -21,6 +21,18 @@ const RESOURCES_OPTIONS = [
 	{ id: 4, label: 'Comida', value: 'food' },
 ];
 
+const ODS = [
+  { id: 1, label: 'Fin de la pobreza', value: 'stop_poverty' },
+  { id: 2, label: 'Hambre cero', value: 'zero_hunger' },
+  { id: 3, label: 'Salud y bienestar', value: 'good_health' },
+  { id: 4, label: 'Educación de calidad', value: 'quality_education' },
+  { id: 5, label: 'Igualdad de género', value: 'gender_equality' },
+  { id: 6, label: 'Agua limpia y saneamiento', value: 'clean_water' },
+  { id: 7, label: 'Energía asequible y no contaminante', value: 'affordable_clean_energy' },
+  { id: 8, label: 'Trabajo decente y crecimiento económico', value: 'decent_work_economy_growth' },
+  { id: 9, label: 'Industria, innovación e infraestructura', value: 'infrastructure' },
+];
+
 class NewProjectKPIsUser extends Component {
 	constructor(props) {
 		super(props);
@@ -202,8 +214,34 @@ class NewProjectKPIsAdmin extends Component {
 			/*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
 			<div className="content-inner no-padding-top no-padding-left no-padding-right">
 				<div className="border-bottom side-margins box">
-					<h1>KPIs</h1>
+					<h1>Indicadores</h1>
 					<Form onSubmit={this.onAdd}>
+					<FormGroup row className="align-items-center">
+					  <Label for="project_name" sm={2}>
+					    Unidad de Medida
+					  </Label>
+					  <Col sm={9}>
+					    <Input
+					      type="select"
+					      name="project_knowledge_area"
+					      id="project_knowledge_area"
+					      className="height100px"
+					      onChange={this.onChangeMultipleSelect}
+					      value={this.state.project_resources}
+					    >
+					      <option>
+					        Seleccionar Opción
+					      </option>
+					      {ODS.map(ods => {
+					        return (
+					          <option key={ods.id} value={ods.value}>
+					            {ods.label}
+					          </option>
+					        );
+					      })}
+					    </Input>
+					  </Col>
+					</FormGroup>
 						<FormGroup row className="align-items-center">
 							<Label for="project_kpi_target" sm={2}>
 								Valor del Indicador
@@ -268,7 +306,7 @@ class NewProjectKPIs extends Component {
 		this.state = {
 			stado: 0,
 			store_uuid: null,
-			title: 'Inicio',
+			title: 'Nuevo Proyecto',
 			page: 'kpis',
 			menu: 'project-new',
 		};
