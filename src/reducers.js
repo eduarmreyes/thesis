@@ -1,45 +1,43 @@
-
-import { combineReducers } from "redux"
+import { combineReducers } from 'redux';
 
 const initialState = {
   auth: {
     authorize: false,
     token: null,
-    scope:null,
-    email:null,
-    id:null,
-    register:null,
-    type:null,
-    infouser:null,
-    info_cuenta:null,
-    info_cuenta_pfx:null
+    scope: null,
+    email: null,
+    id: null,
+    register: null,
+    type: null,
+    infouser: null,
+    info_cuenta: null,
+    info_cuenta_pfx: null,
   },
   setBaseUrl: {
-    baseurl: 'http://vripsapiv2.azurewebsites.net'
-  }
-}
+    baseurl: 'https://vripsapiv2.azurewebsites.net',
+  },
+};
 const mainReducer = (state = initialState, action = {}) => {
-
-  switch (action.type) { 
-    case "SET_AUTH":
+  switch (action.type) {
+    case 'SET_AUTH':
       return {
-      ...state,
-      ...action.payload
-    }
-    case "SET_BASEURL":
+        ...state,
+        ...action.payload,
+      };
+    case 'SET_BASEURL':
       return {
-      ...state,
-        setBaseUrl:{
-          ...action.payload
-      } 
-    }
+        ...state,
+        setBaseUrl: {
+          ...action.payload,
+        },
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
 const reducer = combineReducers({
-  mainReducer
-})
+  mainReducer,
+});
 
-export default reducer
+export default reducer;
