@@ -23,11 +23,11 @@ const RESOURCES_OPTIONS = [
 ];
 
 const UNITS = [
-  { id: 1, label: 'Personas', value: 'Personas' },
-  { id: 2, label: 'Adultos', value: 'Adultos' },
-  { id: 3, label: 'Niños y niñas', value: 'Niños y niñas' },
-  { id: 4, label: 'Adultos mayores', value: 'Adultos mayores' },
-  { id: 5, label: 'Jóvenes', value: 'Jóvenes' },
+	{ id: 1, label: 'Personas', value: 'Personas' },
+	{ id: 2, label: 'Adultos', value: 'Adultos' },
+	{ id: 3, label: 'Niños y niñas', value: 'Niños y niñas' },
+	{ id: 4, label: 'Adultos mayores', value: 'Adultos mayores' },
+	{ id: 5, label: 'Jóvenes', value: 'Jóvenes' },
 ];
 
 class UpdateKPIUser extends Component {
@@ -199,7 +199,9 @@ class UpdateKPIAdmin extends Component {
 				const kpi_target_date = kpi.target_date;
 				return (
 					<tr key={kpi.id}>
-						<td>{kpi.target} {kpi.unit}</td>
+						<td>
+							{kpi.target} {kpi.unit}
+						</td>
 						<td>{moment(kpi_target_date).format('LL')}</td>
 					</tr>
 				);
@@ -218,33 +220,34 @@ class UpdateKPIAdmin extends Component {
 			<div className="content-inner no-padding-top no-padding-left no-padding-right">
 				<div className="border-bottom side-margins box">
 					<h1>Indicadores</h1>
+					<p className="muted">
+						Indique cómo va el proyecto actualmente y seleccione la fecha del indicador
+					</p>
 					<Form onSubmit={this.onAdd}>
-					<FormGroup row className="align-items-center">
-					  <Label for="project_name" sm={2}>
-					    Unidad de Medida
-					  </Label>
-					  <Col sm={9}>
-					    <Input
-					      type="select"
-					      name="project_units"
-					      id="project_units"
-					      className="height100px"
-					      onChange={this.onChange}
-					      value={this.state.project_units}
-					    >
-					      <option>
-					        Seleccionar Opción
-					      </option>
-					      {UNITS.map(unit => {
-					        return (
-					          <option key={unit.id} value={unit.value}>
-					            {unit.label}
-					          </option>
-					        );
-					      })}
-					    </Input>
-					  </Col>
-					</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_name" sm={2}>
+								Unidad de Medida
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="select"
+									name="project_units"
+									id="project_units"
+									className="height100px"
+									onChange={this.onChange}
+									value={this.state.project_units}
+								>
+									<option>Seleccionar Opción</option>
+									{UNITS.map(unit => {
+										return (
+											<option key={unit.id} value={unit.value}>
+												{unit.label}
+											</option>
+										);
+									})}
+								</Input>
+							</Col>
+						</FormGroup>
 						<FormGroup row className="align-items-center">
 							<Label for="project_kpi_target" sm={2}>
 								Valor del Indicador
@@ -255,7 +258,7 @@ class UpdateKPIAdmin extends Component {
 									type="number"
 									name="project_kpi_target"
 									id="project_kpi_target"
-									placeholder="Valor meta"
+									placeholder="Valor Real"
 									value={this.state.project_kpi_target}
 									onChange={this.onChange}
 								/>
@@ -263,7 +266,7 @@ class UpdateKPIAdmin extends Component {
 						</FormGroup>
 						<FormGroup row className="align-items-center">
 							<Label for="project_kpi_date" sm={2}>
-								Fecha del Indicador Meta
+								Fecha del Indicador Real
 							</Label>
 							<Col sm={9}>
 								<Input
@@ -291,7 +294,7 @@ class UpdateKPIAdmin extends Component {
 						<table>
 							<thead>
 								<tr className="no-cursorpointer">
-									<th> Valor Meta </th>
+									<th> Valor Real </th>
 									<th> Fecha </th>
 								</tr>
 							</thead>
@@ -309,9 +312,8 @@ class UpdateKPI extends Component {
 		this.state = {
 			stado: 0,
 			store_uuid: null,
-			title: 'Nuevo Proyecto',
+			title: 'Proyecto',
 			page: 'kpis',
-			menu: 'project-new',
 		};
 		this.set_project_view = this.set_project_view.bind(this);
 	}

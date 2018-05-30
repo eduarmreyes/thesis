@@ -366,8 +366,13 @@ class NewProjectDataAdmin extends Component {
                 Antecedentes
               </Label>
               <Col sm={9}>
-                <Input type="textarea"
-                className="height-100px" rows="4" name="project-background" id="project-background" />
+                <Input
+                  type="textarea"
+                  className="height-100px"
+                  rows="4"
+                  name="project-background"
+                  id="project-background"
+                />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -401,7 +406,7 @@ class NewProjectData extends Component {
     this.state = {
       stado: 0,
       store_uuid: null,
-      title: 'Nuevo Proyecto',
+      title: 'Proyecto',
       page: 'data',
       menu: 'project-new',
     };

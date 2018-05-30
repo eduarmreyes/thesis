@@ -45,7 +45,7 @@ class NewProjectUser extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
-          <h1>Nuevo Proyecto</h1>
+          <h1>Proyecto</h1>
           <Form>
             <FormGroup row className="align-items-center">
               <Label for="project_name" sm={2}>
@@ -126,68 +126,71 @@ class NewProjectAdmin extends Component {
   }
   componentDidMount() {
     $.ajax({
-      type: "GET",
-      url: this.props.baseurl + "/KnowledgeArea/GetAll",
-      contentType: "application/json",
-      dataType: "json",
-      success: (response) => {
+      type: 'GET',
+      url: this.props.baseurl + '/KnowledgeArea/GetAll',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: response => {
         this.setState({
-          KNOWLEDGE_AREA: response
+          KNOWLEDGE_AREA: response,
         });
       },
-      error: (response) => {
+      error: response => {
         console.log(response.data);
-      }
+      },
     });
     $.ajax({
-      type: "GET",
-      url: this.props.baseurl + "/DevelopmentObjective/GetAll",
-      contentType: "application/json",
-      dataType: "json",
-      success: (response) => {
+      type: 'GET',
+      url: this.props.baseurl + '/DevelopmentObjective/GetAll',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: response => {
         this.setState({
-          ODS: response
+          ODS: response,
         });
       },
-      error: (response) => {
+      error: response => {
         console.log(response.data);
-      }
+      },
     });
     $.ajax({
-      type: "GET",
-      url: this.props.baseurl + "/InvestigationLine/GetAll",
-      contentType: "application/json",
-      dataType: "json",
-      success: (response) => {
+      type: 'GET',
+      url: this.props.baseurl + '/InvestigationLine/GetAll',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: response => {
         this.setState({
-          LINE: response
+          LINE: response,
         });
       },
-      error: (response) => {
+      error: response => {
         console.log(response.data);
-      }
+      },
     });
     $.ajax({
-      type: "GET",
-      url: this.props.baseurl + "/Faculty/GetAll",
-      contentType: "application/json",
-      dataType: "json",
-      success: (response) => {
+      type: 'GET',
+      url: this.props.baseurl + '/Faculty/GetAll',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: response => {
         this.setState({
-          FACULTY_OPTIONS: response
+          FACULTY_OPTIONS: response,
         });
       },
-      error: (response) => {
+      error: response => {
         console.log(response.data);
-      }
+      },
     });
     if (sessionStorage.getItem('currentProjectID')) {
       $.ajax({
-        type: "GET",
-        url: this.props.baseurl + "/ProjectProfile/GetById/" + sessionStorage.getItem('currentProjectID'),
-        contentType: "application/json",
-        dataType: "json",
-        success: (response) => {
+        type: 'GET',
+        url:
+          this.props.baseurl +
+          '/ProjectProfile/GetById/' +
+          sessionStorage.getItem('currentProjectID'),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: response => {
           this.setState({
             project_name: response.projectName,
             project_knowledge_area: response.knowledgeAreaId,
@@ -201,9 +204,9 @@ class NewProjectAdmin extends Component {
             // project_institution: response.,
           });
         },
-        error: (response) => {
+        error: response => {
           console.log(response.data);
-        }
+        },
       });
     }
   }
@@ -227,9 +230,11 @@ class NewProjectAdmin extends Component {
   onSubmit(e) {
     e.preventDefault();
 
-    const url = (sessionStorage.getItem('currentProjectID')) ? "/ProjectProfile/Edit" : "/ProjectProfile/Add" ;
+    const url = sessionStorage.getItem('currentProjectID')
+      ? '/ProjectProfile/Edit'
+      : '/ProjectProfile/Add';
 
-    const data =  JSON.stringify({
+    const data = JSON.stringify({
       projectName: this.state.project_name,
       knowledgeAreaId: parseInt(this.state.project_knowledge_area),
       facultyId: parseInt(this.state.project_faculty),
@@ -240,22 +245,26 @@ class NewProjectAdmin extends Component {
       startDate: this.state.project_start_date,
       endDate: this.state.project_end_date,
       counterpartInstitution: this.state.project_institution,
-      id: (sessionStorage.getItem('currentProjectID')) ? sessionStorage.getItem('currentProjectID') : null,
+      id: sessionStorage.getItem('currentProjectID')
+        ? sessionStorage.getItem('currentProjectID')
+        : null,
     });
 
     $.ajax({
-      type: "POST",
+      type: 'POST',
       url: url,
-      contentType: "application/json",
-      dataType: "json",
+      contentType: 'application/json',
+      dataType: 'json',
       data: data,
-      success: (response) => {
-        if (response.status === "success") {
+      success: response => {
+        if (response.status === 'success') {
           sessionStorage.setItem('currentProjectID', response.id);
-          this.props.history.push("/project-new-data");
+          this.props.history.push('/project-new-data');
         }
       },
-      error: (response) => { console.log(response); }
+      error: response => {
+        console.log(response);
+      },
     });
   }
 
@@ -264,7 +273,7 @@ class NewProjectAdmin extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
-          <h1>Nuevo Proyecto</h1>
+          <h1>Proyecto</h1>
           <Form onSubmit={this.onSubmit}>
             <FormGroup row className="align-items-center">
               <Label for="project_name" sm={2}>
@@ -470,7 +479,7 @@ class NewProject extends Component {
     this.state = {
       stado: 0,
       store_uuid: null,
-      title: 'Nuevo Proyecto',
+      title: 'Proyecto',
       page: 'general',
       menu: 'project-new',
     };

@@ -24,11 +24,6 @@ class NavigationUser extends Component {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/transaccionesgeneralesuser" activeClassName="active">
-            <i className="md-icon">timeline</i> <span>Indicadores</span>
-          </NavLink>
-        </li>
-        <li>
           <NavLink to="/perfil" activeClassName="active">
             <i className="md-icon">person</i> <span>Perfil</span>
           </NavLink>
@@ -60,17 +55,6 @@ class NavigationAdmin extends Component {
         <li>
           <NavLink to="/dashboard" exact={true} activeClassName="active">
             <i className="md-icon">home</i> <span>Inicio</span>
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink to="/clientes" activeClassName="active">
-            <i className="md-icon">person</i> <span>Perfil de administrador</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/transaccionesgenerales" activeClassName="active">
-            <i className="md-icon">trending_up</i> <span>Indicadores</span>
           </NavLink>
         </li>
         <li>

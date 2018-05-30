@@ -146,18 +146,18 @@ class NewProjectActivitiesAdmin extends Component {
 
   componentDidMount() {
     $.ajax({
-      type: "GET",
-      url: this.props.baseurl + "/ResourceType/GetAll",
-      contentType: "application/json",
-      dataType: "json",
-      success: (response) => {
+      type: 'GET',
+      url: this.props.baseurl + '/ResourceType/GetAll',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: response => {
         this.setState({
-          RESOURCES_OPTIONS: response
+          RESOURCES_OPTIONS: response,
         });
       },
-      error: (response) => {
+      error: response => {
         console.log(response.data);
-      }
+      },
     });
   }
 
@@ -174,7 +174,7 @@ class NewProjectActivitiesAdmin extends Component {
           cost: parseInt(this.state.project_activity_budget),
         },
       ],
-      total: parseInt(this.state.total) + parseInt(this.state.project_activity_budget)
+      total: parseInt(this.state.total) + parseInt(this.state.project_activity_budget),
     });
     this.onCleanForm();
   }
@@ -212,12 +212,10 @@ class NewProjectActivitiesAdmin extends Component {
             <td>{activity.name}</td>
             <td>{activity.resource_label}</td>
             <td>
-              {
-                activity.cost.toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                })
-              }
+              {activity.cost.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
             </td>
           </tr>
         );
@@ -305,12 +303,11 @@ class NewProjectActivitiesAdmin extends Component {
             </FormGroup>
           </Form>
           <hr />
-          Costo Total: {
-            parseInt(this.state.total).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })
-          }
+          Costo Total:{' '}
+          {parseInt(this.state.total).toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          })}
           <hr />
           <div className="table-responsive">
             <table>
@@ -335,7 +332,7 @@ class NewProjectActivities extends Component {
     this.state = {
       stado: 0,
       store_uuid: null,
-      title: 'Nuevo Proyecto',
+      title: 'Proyecto',
       page: 'activities',
       menu: 'project-new',
     };

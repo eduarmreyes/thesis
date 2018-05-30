@@ -294,7 +294,7 @@ class NewProjectSpecs extends Component {
 		this.state = {
 			stado: 0,
 			store_uuid: null,
-			title: 'Nuevo Proyecto',
+			title: 'Proyecto',
 			page: 'specs',
 			menu: 'project-new',
 		};

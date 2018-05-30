@@ -1,10 +1,9 @@
-
-import JSONGraphics from "./components/dummyJSON/JSONGraphics"
+import JSONGraphics from './components/dummyJSON/JSONGraphics';
 
 const JSONData = {
-  graphics: {
-    ...JSONGraphics
-  }
-}
+	graphics: {
+		...JSONGraphics,
+	},
+};
 
-export default JSONData
+export default JSONData;
