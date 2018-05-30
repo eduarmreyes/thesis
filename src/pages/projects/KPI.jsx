@@ -21,8 +21,8 @@ const RESOURCES_OPTIONS = [
 	{ id: 4, label: 'Comida', value: 'food' },
 ];
 
-const ODS = [
-  { id: 1, label: 'Fin de la pobreza', value: 'stop_poverty' },
+const UNITS = [
+  { id: 1, label: '', value: 'stop_poverty' },
   { id: 2, label: 'Hambre cero', value: 'zero_hunger' },
   { id: 3, label: 'Salud y bienestar', value: 'good_health' },
   { id: 4, label: 'Educación de calidad', value: 'quality_education' },
@@ -232,10 +232,10 @@ class NewProjectKPIsAdmin extends Component {
 					      <option>
 					        Seleccionar Opción
 					      </option>
-					      {ODS.map(ods => {
+					      {UNITS.map(unit => {
 					        return (
-					          <option key={ods.id} value={ods.value}>
-					            {ods.label}
+					          <option key={unit.id} value={unit.value}>
+					            {unit.label}
 					          </option>
 					        );
 					      })}
