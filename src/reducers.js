@@ -15,7 +15,7 @@ const initialState = {
     info_cuenta_pfx:null
   },
   setBaseUrl: {
-    baseurl: 'http://ueesapiv1.azurewebsites.net'
+    baseurl: 'http://vripsapiv2.azurewebsites.net'
   }
 }
 const mainReducer = (state = initialState, action = {}) => {

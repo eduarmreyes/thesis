@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Moment from 'moment';
-import axios from 'axios';
+import $ from 'jquery';
 import { NavLink } from 'react-router-dom';
 import Chart from 'chart.js';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
@@ -13,46 +13,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Backend from 'components/Layouts/Backend';
 import ChartLine from 'components/Graphics/ChartLine';
 import JSONData from 'JSONData';
-
-const FACULTY_OPTIONS = [
-  { id: 1, label: 'Facultad de Medicina', value: 'facultad_medicina' },
-  { id: 2, label: 'Facultad de Odontología', value: 'facultad_odontologia' },
-  { id: 3, label: 'Facultad de Ingenierías', value: 'facultad_ingenierias' },
-  { id: 4, label: 'Facultad de Ciencias Jurídicas', value: 'facultad_ciencias_juridicas' },
-  { id: 5, label: 'Facultad de Ciencias Sociales', value: 'facultad_ciencias_sociales' },
-  { id: 6, label: 'Facultad de Ciencias Empresariales', value: 'facultad_ciencias_empresariales' },
-];
-
-const KNOWLEDGE_AREA = [
-  { id: 1, label: 'Facultad de Medicina', value: 'facultad_medicina' },
-  { id: 2, label: 'Facultad de Odontología', value: 'facultad_odontologia' },
-  { id: 3, label: 'Facultad de Ingenierías', value: 'facultad_ingenierias' },
-  { id: 4, label: 'Facultad de Ciencias Jurídicas', value: 'facultad_ciencias_juridicas' },
-  { id: 5, label: 'Facultad de Ciencias Sociales', value: 'facultad_ciencias_sociales' },
-  { id: 6, label: 'Facultad de Ciencias Empresariales', value: 'facultad_ciencias_empresariales' },
-];
-
-const LINE = [
-  { id: 1, label: 'Mujer, niñez y adolescencia', value: 'mujer_and_adolescence' },
-  { id: 2, label: 'Medioambiente', value: 'environment' },
-  { id: 3, label: 'Calidad', value: 'quality' },
-  { id: 4, label: 'Derechos humanos', value: 'human_rights' },
-  { id: 5, label: 'Poblaciones en estado de vulnerabilidad', value: 'vulenrable_people' },
-  { id: 6, label: 'Promoción de salud y abordaje integral de enfermedades', value: 'health' },
-  { id: 7, label: 'Teología, estudios sociales y culturales', value: 'theology_social_sciences_cultures' },
-];
-
-const ODS = [
-  { id: 1, label: 'Fin de la pobreza', value: 'stop_poverty' },
-  { id: 2, label: 'Hambre cero', value: 'zero_hunger' },
-  { id: 3, label: 'Salud y bienestar', value: 'good_health' },
-  { id: 4, label: 'Educación de calidad', value: 'quality_education' },
-  { id: 5, label: 'Igualdad de género', value: 'gender_equality' },
-  { id: 6, label: 'Agua limpia y saneamiento', value: 'clean_water' },
-  { id: 7, label: 'Energía asequible y no contaminante', value: 'affordable_clean_energy' },
-  { id: 8, label: 'Trabajo decente y crecimiento económico', value: 'decent_work_economy_growth' },
-  { id: 9, label: 'Industria, innovación e infraestructura', value: 'infrastructure' },
-];
 
 class NewProjectUser extends Component {
   constructor(props) {
@@ -162,12 +122,74 @@ class NewProjectAdmin extends Component {
       project_faculty: [],
       project_faculty_labels: [],
       project_name: '',
+      KNOWLEDGE_AREA: [],
+      ODS: [],
+      FACULTY_OPTIONS: [],
+      LINE: [],
     };
 
     this.onChange = this.onChange.bind(this);
     this.onChangeMultipleSelect = this.onChangeMultipleSelect.bind(this);
   }
-  componentDidMount() {}
+  componentDidMount() {
+    $.ajax({
+      type: "GET",
+      url: this.props.baseurl + "/KnowledgeArea/GetAll",
+      contentType: "application/json",
+      dataType: "json",
+      success: (response) => {
+        this.setState({
+          KNOWLEDGE_AREA: response
+        });
+      },
+      error: (response) => {
+        console.log(response.data);
+      }
+    });
+    $.ajax({
+      type: "GET",
+      url: this.props.baseurl + "/DevelopmentObjective/GetAll",
+      contentType: "application/json",
+      dataType: "json",
+      success: (response) => {
+        this.setState({
+          ODS: response
+        });
+      },
+      error: (response) => {
+        console.log(response.data);
+      }
+    });
+    $.ajax({
+      type: "GET",
+      url: this.props.baseurl + "/InvestigationLine/GetAll",
+      contentType: "application/json",
+      dataType: "json",
+      success: (response) => {
+        this.setState({
+          LINE: response
+        });
+      },
+      error: (response) => {
+        console.log(response.data);
+      }
+    });
+    $.ajax({
+      type: "GET",
+      url: this.props.baseurl + "/Faculty/GetAll",
+      contentType: "application/json",
+      dataType: "json",
+      success: (response) => {
+        this.setState({
+          FACULTY_OPTIONS: response
+        });
+      },
+      error: (response) => {
+        console.log(response.data);
+      }
+    });
+  }
+
   selectstardate(startdate) {
     this.setState({
       startdate,
@@ -194,13 +216,18 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  onSubmit(e) {
+    e.preventDefault();
+    console.log(e);
+  }
+
   render() {
     return (
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
           <h1>Nuevo Proyecto</h1>
-          <Form>
+          <Form onSubmit={this.onSubmit}>
             <FormGroup row className="align-items-center">
               <Label for="project_name" sm={2}>
                 Nombre
@@ -229,39 +256,13 @@ class NewProjectAdmin extends Component {
                   onChange={this.onChangeMultipleSelect}
                   value={this.state.project_resources}
                 >
-                  <option>
-                    Seleccionar Opción
-                  </option>
-                  <option value="art_and_culture">
-                    Arte y Cultura
-                  </option>
-                  <option value="economy">
-                    Economía, Administración y Comercio
-                  </option>
-                  <option value="health">
-                    Salud
-                  </option>
-                  <option value="science">
-                    Ciencias
-                  </option>
-                  <option value="environment">
-                    Agropecuaria y Medio Ambiente
-                  </option>
-                  <option value="law">
-                    Derecho
-                  </option>
-                  <option value="humanities">
-                    Humanidades
-                  </option>
-                  <option value="technology">
-                    Tecnología
-                  </option>
-                  <option value="education">
-                    Educación
-                  </option>
-                  <option value="social_sciences">
-                    Ciencias Sociales
-                  </option>
+                  {this.state.KNOWLEDGE_AREA.map(knowledge_area => {
+                    return (
+                      <option key={knowledge_area.id} value={knowledge_area.id}>
+                        {knowledge_area.knowledgeAreaName}
+                      </option>
+                    );
+                  })}
                 </Input>
               </Col>
             </FormGroup>
@@ -305,10 +306,10 @@ class NewProjectAdmin extends Component {
                   onChange={this.onChangeMultipleSelect}
                   value={this.state.project_faculty}
                 >
-                  {FACULTY_OPTIONS.map(faculty => {
+                  {this.state.FACULTY_OPTIONS.map(faculty => {
                     return (
                       <option key={faculty.id} value={faculty.value}>
-                        {faculty.label}
+                        {faculty.facultyName}
                       </option>
                     );
                   })}
@@ -329,10 +330,10 @@ class NewProjectAdmin extends Component {
                   onChange={this.onChangeMultipleSelect}
                   value={this.state.project_faculty}
                 >
-                  {LINE.map(line => {
+                  {this.state.LINE.map(line => {
                     return (
                       <option key={line.id} value={line.value}>
-                        {line.label}
+                        {line.lineName}
                       </option>
                     );
                   })}
@@ -353,10 +354,10 @@ class NewProjectAdmin extends Component {
                   onChange={this.onChangeMultipleSelect}
                   value={this.state.project_faculty}
                 >
-                  {ODS.map(ods => {
+                  {this.state.ODS.map(ods => {
                     return (
                       <option key={ods.id} value={ods.value}>
-                        {ods.label}
+                        {ods.objectiveName}
                       </option>
                     );
                   })}

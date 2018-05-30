@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Moment from 'moment';
+import 'moment/locale/es';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import Chart from 'chart.js';
@@ -157,7 +158,9 @@ class NewProjectKPIsAdmin extends Component {
 		this.onChange = this.onChange.bind(this);
 	}
 
-	componentDidMount() {}
+	componentDidMount() {
+		moment.locale('es');
+	}
 
 	onAdd(e) {
 		e.preventDefault();
@@ -193,10 +196,11 @@ class NewProjectKPIsAdmin extends Component {
 	render() {
 		const kpis_table = this.state.kpis.length ? (
 			this.state.kpis.map(kpi => {
+				const kpi_target_date = kpi.target_date;
 				return (
 					<tr key={kpi.id}>
 						<td>{kpi.target} {kpi.unit}</td>
-						<td>{kpi.target_date}</td>
+						<td>{moment(kpi_target_date).format('LL')}</td>
 					</tr>
 				);
 			})

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Moment from 'moment';
-import axios from 'axios';
+import $ from 'jquery';
 import { NavLink } from 'react-router-dom';
 import Chart from 'chart.js';
 import { Col, Button, Form, FormGroup, Label, Input, FormText, Table } from 'reactstrap';
@@ -13,13 +13,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Backend from 'components/Layouts/Backend';
 import ChartLine from 'components/Graphics/ChartLine';
 import JSONData from 'JSONData';
-
-const RESOURCES_OPTIONS = [
-  { id: 1, label: 'Impresora', value: 'printer' },
-  { id: 2, label: 'Equipo de Informática', value: 'computer' },
-  { id: 3, label: 'Alumnos de Facultad', value: 'alumni' },
-  { id: 4, label: 'Alimento', value: 'food' },
-];
 
 class NewProjectActivitiesUser extends Component {
   constructor(props) {
@@ -143,6 +136,7 @@ class NewProjectActivitiesAdmin extends Component {
       project_resources_labels: [],
       project_activity_name: '',
       total: 0,
+      RESOURCES_OPTIONS: [],
     };
 
     this.onAdd = this.onAdd.bind(this);
@@ -150,7 +144,22 @@ class NewProjectActivitiesAdmin extends Component {
     this.onChangeMultipleSelect = this.onChangeMultipleSelect.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    $.ajax({
+      type: "GET",
+      url: this.props.baseurl + "/ResourceType/GetAll",
+      contentType: "application/json",
+      dataType: "json",
+      success: (response) => {
+        this.setState({
+          RESOURCES_OPTIONS: response
+        });
+      },
+      error: (response) => {
+        console.log(response.data);
+      }
+    });
+  }
 
   onAdd(e) {
     e.preventDefault();
@@ -276,10 +285,10 @@ class NewProjectActivitiesAdmin extends Component {
                   value={this.state.project_resources}
                   multiple
                 >
-                  {RESOURCES_OPTIONS.map(resource => {
+                  {this.state.RESOURCES_OPTIONS.map(resource => {
                     return (
-                      <option key={resource.id} value={resource.value}>
-                        {resource.label}
+                      <option key={resource.id} value={resource.id}>
+                        {resource.resourceName}
                       </option>
                     );
                   })}
