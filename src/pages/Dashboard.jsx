@@ -237,7 +237,7 @@ class DashboardAdmin extends Component {
           {
             label: 'Impacto entre géneros',
             backgroundColor: ['#3e95cd', '#8e5ea2'],
-            data: [2478, 5267],
+            data: [345, 299],
           },
         ],
       },
