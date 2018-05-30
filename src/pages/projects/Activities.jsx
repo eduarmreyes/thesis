@@ -15,10 +15,10 @@ import ChartLine from 'components/Graphics/ChartLine';
 import JSONData from 'JSONData';
 
 const RESOURCES_OPTIONS = [
-  { id: 1, label: 'Impresora', value: 'printer', price: 25 },
-  { id: 2, label: 'Equipo de Informática', value: 'computer', price: 125 },
-  { id: 3, label: 'Alumnos de Facultad', value: 'alumni', price: 50 },
-  { id: 4, label: 'Comida', value: 'food', price: 250 },
+  { id: 1, label: 'Impresora', value: 'printer' },
+  { id: 2, label: 'Equipo de Informática', value: 'computer' },
+  { id: 3, label: 'Alumnos de Facultad', value: 'alumni' },
+  { id: 4, label: 'Alimento', value: 'food' },
 ];
 
 class NewProjectActivitiesUser extends Component {
@@ -142,6 +142,7 @@ class NewProjectActivitiesAdmin extends Component {
       project_resources: [],
       project_resources_labels: [],
       project_activity_name: '',
+      total: 0,
     };
 
     this.onAdd = this.onAdd.bind(this);
@@ -161,9 +162,10 @@ class NewProjectActivitiesAdmin extends Component {
           name: this.state.project_activity_name,
           resource: this.state.project_resources.join(', '),
           resource_label: this.state.project_resources_labels.join(', '),
+          cost: parseInt(this.state.project_activity_budget),
         },
       ],
-      // total: this.total + this
+      total: parseInt(this.state.total) + parseInt(this.state.project_activity_budget)
     });
     this.onCleanForm();
   }
@@ -173,6 +175,7 @@ class NewProjectActivitiesAdmin extends Component {
       project_resources: [],
       project_resources_labels: [],
       project_activity_name: '',
+      project_activity_budget: '',
     });
   }
 
@@ -199,6 +202,14 @@ class NewProjectActivitiesAdmin extends Component {
           <tr key={activity.id}>
             <td>{activity.name}</td>
             <td>{activity.resource_label}</td>
+            <td>
+              {
+                activity.cost.toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                })
+              }
+            </td>
           </tr>
         );
       })
@@ -233,10 +244,26 @@ class NewProjectActivitiesAdmin extends Component {
                 />
               </Col>
             </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_activity_budget" sm={2}>
+                Presupuesto para la actividad
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  type="text"
+                  name="project_activity_budget"
+                  id="project_activity_budget"
+                  placeholder="Costo por esta actividad"
+                  value={this.state.project_activity_budget}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
             <h3>Recursos a usar en la actividad</h3>
             <FormGroup row className="align-items-center">
               <Label for="project-faculty" sm={2}>
-                Seleccione recurso
+                Seleccione los recursos a usar
               </Label>
               <Col sm={9}>
                 <Input
@@ -269,7 +296,12 @@ class NewProjectActivitiesAdmin extends Component {
             </FormGroup>
           </Form>
           <hr />
-          Costo Total: {this.state.total}
+          Costo Total: {
+            parseInt(this.state.total).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })
+          }
           <hr />
           <div className="table-responsive">
             <table>
@@ -277,6 +309,7 @@ class NewProjectActivitiesAdmin extends Component {
                 <tr className="no-cursorpointer">
                   <th> Actividad </th>
                   <th> Recursos </th>
+                  <th> Costo </th>
                 </tr>
               </thead>
               <tbody>{activities_table}</tbody>
