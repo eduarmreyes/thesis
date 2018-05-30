@@ -23,7 +23,6 @@ class NewProjectUser extends Component {
       id_cuenta: this.props.info_cuenta !== null ? this.props.info_cuenta['uuid'] : '',
       redirect: false,
     };
-    this.onChangeMultipleSelect = this.onChangeMultipleSelect.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -39,16 +38,6 @@ class NewProjectUser extends Component {
   onChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
-    });
-  }
-
-  onChangeMultipleSelect(e) {
-    const values = Array.from(e.target.selectedOptions, o => o.value);
-    this.setState({
-      [e.target.name]: values,
-    });
-    this.setState({
-      project_faculty_labels: Array.from(e.target.selectedOptions, o => o.label),
     });
   }
 
@@ -122,6 +111,15 @@ class NewProjectAdmin extends Component {
       project_faculty: [],
       project_faculty_labels: [],
       project_name: '',
+      project_knowledge_area: '',
+      project_start_date: '',
+      project_end_date: '',
+      project_faculty: '',
+      project_line: '',
+      project_ods: '',
+      project_coordinador: '',
+      project_responsible_team: '',
+      project_institution: '',
       KNOWLEDGE_AREA: [],
       ODS: [],
       FACULTY_OPTIONS: [],
@@ -129,7 +127,7 @@ class NewProjectAdmin extends Component {
     };
 
     this.onChange = this.onChange.bind(this);
-    this.onChangeMultipleSelect = this.onChangeMultipleSelect.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
     $.ajax({
@@ -188,6 +186,31 @@ class NewProjectAdmin extends Component {
         console.log(response.data);
       }
     });
+    if (sessionStorage.getItem('currentProjectID')) {
+      $.ajax({
+        type: "GET",
+        url: this.props.baseurl + "/ProjectProfile/GetById/" + sessionStorage.getItem('currentProjectID'),
+        contentType: "application/json",
+        dataType: "json",
+        success: (response) => {
+          this.setState({
+            project_name: response.projectName,
+            project_knowledge_area: response.knowledgeAreaId,
+            // project_start_date: response.,
+            // project_end_date: response.,
+            project_faculty: response.facultyId,
+            project_line: response.investigationLineId,
+            project_ods: response.developmentObjectiveId,
+            project_coordinador: response.projectCoordinator,
+            project_responsible_team: response.responsibleTeam,
+            // project_institution: response.,
+          });
+        },
+        error: (response) => {
+          console.log(response.data);
+        }
+      });
+    }
   }
 
   selectstardate(startdate) {
@@ -206,19 +229,36 @@ class NewProjectAdmin extends Component {
     });
   }
 
-  onChangeMultipleSelect(e) {
-    const values = Array.from(e.target.selectedOptions, o => o.value);
-    this.setState({
-      [e.target.name]: values,
-    });
-    this.setState({
-      project_faculty_labels: Array.from(e.target.selectedOptions, o => o.label),
-    });
-  }
-
   onSubmit(e) {
     e.preventDefault();
-    console.log(e);
+
+    const data =  JSON.stringify({
+      projectName: this.state.project_name,
+      knowledgeAreaId: parseInt(this.state.project_knowledge_area),
+      facultyId: parseInt(this.state.project_faculty),
+      investigationLineId: parseInt(this.state.project_line),
+      developmentObjectiveId: parseInt(this.state.project_ods),
+      projectCoordinator: this.state.project_coordinador,
+      responsibleTeam: this.state.project_responsible_team,
+      project_start_date: this.state.project_start_date,
+      project_end_date: this.state.project_end_date,
+      project_institution: this.state.project_institution,
+    });
+
+    $.ajax({
+      type: "POST",
+      url: this.props.baseurl + "/ProjectProfile/Add",
+      contentType: "application/json",
+      dataType: "json",
+      data: data,
+      success: (response) => {
+        if (response.status === "success") {
+          sessionStorage.setItem('currentProjectID', response.id);
+          this.props.history.push("/project-new-data");
+        }
+      },
+      error: (response) => { console.log(response); }
+    });
   }
 
   render() {
@@ -253,7 +293,7 @@ class NewProjectAdmin extends Component {
                   name="project_knowledge_area"
                   id="project_knowledge_area"
                   className="height100px"
-                  onChange={this.onChangeMultipleSelect}
+                  onChange={this.onChange}
                   value={this.state.project_resources}
                 >
                   {this.state.KNOWLEDGE_AREA.map(knowledge_area => {
@@ -276,6 +316,8 @@ class NewProjectAdmin extends Component {
                   name="project_start_date"
                   id="project_start_date"
                   placeholder="Fecha Inicio del Proyecto"
+                  onChange={this.onChange}
+                  value={this.state.project_start_date}
                 />
               </Col>
             </FormGroup>
@@ -289,11 +331,13 @@ class NewProjectAdmin extends Component {
                   name="project_end_date"
                   id="project_end_date"
                   placeholder="Fecha Fin del Proyecto"
+                  onChange={this.onChange}
+                  value={this.state.project_end_date}
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project-faculty" sm={2}>
+              <Label for="project_faculty" sm={2}>
                 Facultad
               </Label>
               <Col sm={9}>
@@ -303,12 +347,12 @@ class NewProjectAdmin extends Component {
                   name="project_faculty"
                   id="project_faculty"
                   className="height100px"
-                  onChange={this.onChangeMultipleSelect}
+                  onChange={this.onChange}
                   value={this.state.project_faculty}
                 >
                   {this.state.FACULTY_OPTIONS.map(faculty => {
                     return (
-                      <option key={faculty.id} value={faculty.value}>
+                      <option key={faculty.id} value={faculty.id}>
                         {faculty.facultyName}
                       </option>
                     );
@@ -317,22 +361,22 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project-faculty" sm={2}>
+              <Label for="project_line" sm={2}>
                 Línea
               </Label>
               <Col sm={9}>
                 <Input
                   required
                   type="select"
-                  name="project_faculty"
-                  id="project_faculty"
+                  name="project_line"
+                  id="project_line"
                   className="height100px"
-                  onChange={this.onChangeMultipleSelect}
-                  value={this.state.project_faculty}
+                  onChange={this.onChange}
+                  value={this.state.project_line}
                 >
                   {this.state.LINE.map(line => {
                     return (
-                      <option key={line.id} value={line.value}>
+                      <option key={line.id} value={line.id}>
                         {line.lineName}
                       </option>
                     );
@@ -341,22 +385,22 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project-faculty" sm={2}>
+              <Label for="project_ods" sm={2}>
                 ODS
               </Label>
               <Col sm={9}>
                 <Input
                   required
                   type="select"
-                  name="project_faculty"
-                  id="project_faculty"
+                  name="project_ods"
+                  id="project_ods"
                   className="height100px"
-                  onChange={this.onChangeMultipleSelect}
-                  value={this.state.project_faculty}
+                  onChange={this.onChange}
+                  value={this.state.project_ods}
                 >
                   {this.state.ODS.map(ods => {
                     return (
-                      <option key={ods.id} value={ods.value}>
+                      <option key={ods.id} value={ods.id}>
                         {ods.objectiveName}
                       </option>
                     );
@@ -365,20 +409,22 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project-coordinador" sm={2}>
+              <Label for="project_coordinador" sm={2}>
                 Coordinador
               </Label>
               <Col sm={9}>
                 <Input
                   type="text"
-                  name="project-coordinador"
-                  id="project-coordinador"
+                  name="project_coordinador"
+                  id="project_coordinador"
                   placeholder="Coordinador del Proyecto"
+                  onChange={this.onChange}
+                  value={this.state.project_coordinador}
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project-responsible-team" sm={2}>
+              <Label for="project_responsible_team" sm={2}>
                 Equipo Responsable
               </Label>
               <Col sm={9}>
@@ -386,13 +432,15 @@ class NewProjectAdmin extends Component {
                   type="textarea"
                   className="height-100px"
                   rows="4"
-                  name="project-responsible-team"
-                  id="project-responsible-team"
+                  name="project_responsible_team"
+                  id="project_responsible_team"
+                  onChange={this.onChange}
+                  value={this.state.project_responsible_team}
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_institucion" sm={2}>
+              <Label for="project_institution" sm={2}>
                 Institución contraparte
               </Label>
               <Col sm={9}>
@@ -400,8 +448,10 @@ class NewProjectAdmin extends Component {
                   type="textarea"
                   className="height-100px"
                   rows="4"
-                  name="project_institucion"
-                  id="project_institucion"
+                  name="project_institution"
+                  id="project_institution"
+                  onChange={this.onChange}
+                  value={this.state.project_institution}
                 />
               </Col>
             </FormGroup>
