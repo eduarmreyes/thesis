@@ -22,15 +22,11 @@ const RESOURCES_OPTIONS = [
 ];
 
 const UNITS = [
-  { id: 1, label: '', value: 'stop_poverty' },
-  { id: 2, label: 'Hambre cero', value: 'zero_hunger' },
-  { id: 3, label: 'Salud y bienestar', value: 'good_health' },
-  { id: 4, label: 'Educación de calidad', value: 'quality_education' },
-  { id: 5, label: 'Igualdad de género', value: 'gender_equality' },
-  { id: 6, label: 'Agua limpia y saneamiento', value: 'clean_water' },
-  { id: 7, label: 'Energía asequible y no contaminante', value: 'affordable_clean_energy' },
-  { id: 8, label: 'Trabajo decente y crecimiento económico', value: 'decent_work_economy_growth' },
-  { id: 9, label: 'Industria, innovación e infraestructura', value: 'infrastructure' },
+  { id: 1, label: 'Personas', value: 'Personas' },
+  { id: 2, label: 'Adultos', value: 'Adultos' },
+  { id: 3, label: 'Niños y niñas', value: 'Niños y niñas' },
+  { id: 4, label: 'Adultos mayores', value: 'Adultos mayores' },
+  { id: 5, label: 'Jóvenes', value: 'Jóvenes' },
 ];
 
 class NewProjectKPIsUser extends Component {
@@ -154,6 +150,7 @@ class NewProjectKPIsAdmin extends Component {
 			project_kpis: [],
 			project_kpis_labels: [],
 			project_kpi_target: '',
+			project_units: '',
 		};
 
 		this.onAdd = this.onAdd.bind(this);
@@ -169,6 +166,7 @@ class NewProjectKPIsAdmin extends Component {
 				...this.state.kpis,
 				{
 					id: this.state.kpis.length,
+					unit: this.state.project_units,
 					target: this.state.project_kpi_target,
 					target_date: this.state.project_kpi_date,
 				},
@@ -182,6 +180,7 @@ class NewProjectKPIsAdmin extends Component {
 			project_kpis: [],
 			project_kpis_labels: [],
 			project_kpi_target: '',
+			project_units: '',
 		});
 	}
 
@@ -196,7 +195,7 @@ class NewProjectKPIsAdmin extends Component {
 			this.state.kpis.map(kpi => {
 				return (
 					<tr key={kpi.id}>
-						<td>{kpi.target}</td>
+						<td>{kpi.target} {kpi.unit}</td>
 						<td>{kpi.target_date}</td>
 					</tr>
 				);
@@ -223,11 +222,11 @@ class NewProjectKPIsAdmin extends Component {
 					  <Col sm={9}>
 					    <Input
 					      type="select"
-					      name="project_knowledge_area"
-					      id="project_knowledge_area"
+					      name="project_units"
+					      id="project_units"
 					      className="height100px"
-					      onChange={this.onChangeMultipleSelect}
-					      value={this.state.project_resources}
+					      onChange={this.onChange}
+					      value={this.state.project_units}
 					    >
 					      <option>
 					        Seleccionar Opción
