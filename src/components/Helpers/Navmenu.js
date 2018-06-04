@@ -178,13 +178,6 @@ class Navmenu extends Component {
               &#60; Regresar
             </NavLink>
           </li>
-
-          {/*<li className="width80 text-right">
-            <ul>
-                <li><NavLink to="#" className="blue">NOMBRAR ADMINISTRADOR</NavLink></li>
-                <li ><NavLink to="#" >SUSPENDER</NavLink></li>
-            </ul>
-        </li>*/}
         </ul>
       );
       this.setState({
@@ -200,7 +193,6 @@ class Navmenu extends Component {
               Cuenta
             </NavLink>
           </li>
-          {/*<li><NavLink className={`${ this.props.page === 'porcentaje' ? "active" : ""}`} to="/porcentaje">% de riesgo</NavLink></li>*/}
         </ul>
       );
       this.setState({
@@ -213,10 +205,10 @@ class Navmenu extends Component {
         <ul className="navmenu">
           <li>
             <NavLink
-              className={`${this.props.page === 'general' ? 'active' : ''}`}
+              className={`${this.props.page === 'logframe' ? 'active' : ''}`}
               to="/project-new"
             >
-              Información General
+              Matriz del Marco Lógico
             </NavLink>
           </li>
           <li>

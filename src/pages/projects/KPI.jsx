@@ -7,20 +7,10 @@ import Moment from 'moment';
 import 'moment/locale/es';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
-import Chart from 'chart.js';
 import { Col, Button, Form, FormGroup, Label, Input, FormText, Table } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Backend from 'components/Layouts/Backend';
-import ChartLine from 'components/Graphics/ChartLine';
-import JSONData from 'JSONData';
-
-const RESOURCES_OPTIONS = [
-	{ id: 1, label: 'Impresora', value: 'printer' },
-	{ id: 2, label: 'Equipo de Informática', value: 'computer' },
-	{ id: 3, label: 'Alumnos de Facultad', value: 'alumni' },
-	{ id: 4, label: 'Comida', value: 'food' },
-];
 
 const UNITS = [
 	{ id: 1, label: 'Personas', value: 'Personas' },

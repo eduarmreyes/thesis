@@ -13,6 +13,37 @@ import Backend from 'components/Layouts/Backend';
 import ChartLine from 'components/Graphics/ChartLine';
 import JSONData from 'JSONData';
 
+const UNIT_MEASUREMENT = [
+  {
+    id: 1,
+    label: 'Personas',
+  },
+  {
+    id: 2,
+    label: 'Niños',
+  },
+  {
+    id: 3,
+    label: 'Niñas',
+  },
+  {
+    id: 4,
+    label: 'Niños y Niñas',
+  },
+  {
+    id: 5,
+    label: 'Familias',
+  },
+  {
+    id: 6,
+    label: 'Centros Educativos',
+  },
+  {
+    id: 7,
+    label: 'Mujeres',
+  },
+];
+
 class NewProjectUser extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +76,6 @@ class NewProjectUser extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
-          <h1>Proyecto</h1>
           <Form>
             <FormGroup row className="align-items-center">
               <Label for="project_name" sm={2}>
@@ -103,371 +133,239 @@ class NewProjectAdmin extends Component {
     super(props);
 
     this.state = {
-      project_faculty: [],
-      project_faculty_labels: [],
-      project_name: '',
-      project_knowledge_area: '',
-      project_start_date: '',
-      project_end_date: '',
-      project_faculty: '',
-      project_line: '',
-      project_ods: '',
-      project_coordinador: '',
-      project_responsible_team: '',
-      project_institution: '',
-      KNOWLEDGE_AREA: [],
-      ODS: [],
-      FACULTY_OPTIONS: [],
-      LINE: [],
+      logframes: [],
+      project_logframes: [],
+      project_logframes_labels: [],
+      project_general_objective: '',
+      project_means_verification: '',
+      project_risk_assumptions: '',
     };
 
+    this.onAdd = this.onAdd.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-  componentDidMount() {
-    $.ajax({
-      type: 'GET',
-      url: this.props.baseurl + '/KnowledgeArea/GetAll',
-      contentType: 'application/json',
-      dataType: 'json',
-      success: response => {
-        this.setState({
-          KNOWLEDGE_AREA: response,
-        });
-      },
-      error: response => {
-        console.log(response.data);
-      },
-    });
-    $.ajax({
-      type: 'GET',
-      url: this.props.baseurl + '/DevelopmentObjective/GetAll',
-      contentType: 'application/json',
-      dataType: 'json',
-      success: response => {
-        this.setState({
-          ODS: response,
-        });
-      },
-      error: response => {
-        console.log(response.data);
-      },
-    });
-    $.ajax({
-      type: 'GET',
-      url: this.props.baseurl + '/InvestigationLine/GetAll',
-      contentType: 'application/json',
-      dataType: 'json',
-      success: response => {
-        this.setState({
-          LINE: response,
-        });
-      },
-      error: response => {
-        console.log(response.data);
-      },
-    });
-    $.ajax({
-      type: 'GET',
-      url: this.props.baseurl + '/Faculty/GetAll',
-      contentType: 'application/json',
-      dataType: 'json',
-      success: response => {
-        this.setState({
-          FACULTY_OPTIONS: response,
-        });
-      },
-      error: response => {
-        console.log(response.data);
-      },
-    });
-    if (sessionStorage.getItem('currentProjectID')) {
-      $.ajax({
-        type: 'GET',
-        url:
-          this.props.baseurl +
-          '/ProjectProfile/GetById/' +
-          sessionStorage.getItem('currentProjectID'),
-        contentType: 'application/json',
-        dataType: 'json',
-        success: response => {
-          this.setState({
-            project_name: response.projectName,
-            project_knowledge_area: response.knowledgeAreaId,
-            // project_start_date: response.,
-            // project_end_date: response.,
-            project_faculty: response.facultyId,
-            project_line: response.investigationLineId,
-            project_ods: response.developmentObjectiveId,
-            project_coordinador: response.projectCoordinator,
-            project_responsible_team: response.responsibleTeam,
-            // project_institution: response.,
-          });
-        },
-        error: response => {
-          console.log(response.data);
-        },
-      });
-    }
   }
 
-  selectstardate(startdate) {
+  componentDidMount() {}
+
+  onAdd(e) {
+    e.preventDefault();
     this.setState({
-      startdate,
+      logframes: [
+        ...this.state.logframes,
+        {
+          id: this.state.logframes.length,
+          objective: this.state.project_general_objective,
+          means_verification: this.state.project_means_verification,
+          risk_assumptions: this.state.project_risk_assumptions,
+        },
+      ],
+    });
+    this.onCleanForm();
+  }
+
+  onCleanForm() {
+    this.setState({
+      project_logframes: [],
+      project_logframes_labels: [],
+      project_general_objective: '',
+      project_means_verification: '',
+      project_risk_assumptions: '',
     });
   }
-  selectenddate(enddate) {
-    this.setState({
-      enddate,
-    });
-  }
+
   onChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
     });
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-
-    const url = sessionStorage.getItem('currentProjectID')
-      ? '/ProjectProfile/Edit'
-      : '/ProjectProfile/Add';
-
-    const data = JSON.stringify({
-      projectName: this.state.project_name,
-      knowledgeAreaId: parseInt(this.state.project_knowledge_area),
-      facultyId: parseInt(this.state.project_faculty),
-      investigationLineId: parseInt(this.state.project_line),
-      developmentObjectiveId: parseInt(this.state.project_ods),
-      projectCoordinator: this.state.project_coordinador,
-      responsibleTeam: this.state.project_responsible_team,
-      startDate: this.state.project_start_date,
-      endDate: this.state.project_end_date,
-      counterpartInstitution: this.state.project_institution,
-      id: sessionStorage.getItem('currentProjectID')
-        ? sessionStorage.getItem('currentProjectID')
-        : null,
-    });
-
-    $.ajax({
-      type: 'POST',
-      url: url,
-      contentType: 'application/json',
-      dataType: 'json',
-      data: data,
-      success: response => {
-        if (response.status === 'success') {
-          sessionStorage.setItem('currentProjectID', response.id);
-          this.props.history.push('/project-new-data');
-        }
-      },
-      error: response => {
-        console.log(response);
-      },
-    });
-  }
-
   render() {
+    const logframes_table = this.state.logframes.length ? (
+      this.state.logframes.map(logframe => {
+        return (
+          <tr key={logframe.id}>
+            <td>{logframe.objective}</td>
+            <td>{logframe.means_verification}</td>
+            <td>{logframe.risk_assumptions}</td>
+          </tr>
+        );
+      })
+    ) : (
+      <tr>
+        <td colSpan={2}>
+          <div>
+            <h3 className="text-center">Agregue la información en el formulario de arriba ⬆️</h3>
+          </div>
+        </td>
+      </tr>
+    );
     return (
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
-          <h1>Proyecto</h1>
-          <Form onSubmit={this.onSubmit}>
+          <h3>Objetivo General e Indicador del Objetivo General</h3>
+          <Form onSubmit={this.onAdd}>
             <FormGroup row className="align-items-center">
-              <Label for="project_name" sm={2}>
-                Nombre
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="text"
-                  name="project_name"
-                  id="project_name"
-                  placeholder="Nombre del Proyecto"
-                  value={this.state.project_name}
-                  onChange={this.onChange}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_name" sm={2}>
-                Área del Conocimiento
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="select"
-                  name="project_knowledge_area"
-                  id="project_knowledge_area"
-                  className="height100px"
-                  onChange={this.onChange}
-                  value={this.state.project_resources}
-                >
-                  {this.state.KNOWLEDGE_AREA.map(knowledge_area => {
-                    return (
-                      <option key={knowledge_area.id} value={knowledge_area.id}>
-                        {knowledge_area.knowledgeAreaName}
-                      </option>
-                    );
-                  })}
-                </Input>
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_name" sm={2}>
-                Fecha Inicio
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="date"
-                  name="project_start_date"
-                  id="project_start_date"
-                  placeholder="Fecha Inicio del Proyecto"
-                  onChange={this.onChange}
-                  value={this.state.project_start_date}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_name" sm={2}>
-                Fecha Fin
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="date"
-                  name="project_end_date"
-                  id="project_end_date"
-                  placeholder="Fecha Fin del Proyecto"
-                  onChange={this.onChange}
-                  value={this.state.project_end_date}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_faculty" sm={2}>
-                Facultad
+              <Label for="project_general_objective" sm={2}>
+                Objetivo General
               </Label>
               <Col sm={9}>
                 <Input
                   required
-                  type="select"
-                  name="project_faculty"
-                  id="project_faculty"
-                  className="height100px"
-                  onChange={this.onChange}
-                  value={this.state.project_faculty}
-                >
-                  {this.state.FACULTY_OPTIONS.map(faculty => {
-                    return (
-                      <option key={faculty.id} value={faculty.id}>
-                        {faculty.facultyName}
-                      </option>
-                    );
-                  })}
-                </Input>
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_line" sm={2}>
-                Línea
-              </Label>
-              <Col sm={9}>
-                <Input
-                  required
-                  type="select"
-                  name="project_line"
-                  id="project_line"
-                  className="height100px"
-                  onChange={this.onChange}
-                  value={this.state.project_line}
-                >
-                  {this.state.LINE.map(line => {
-                    return (
-                      <option key={line.id} value={line.id}>
-                        {line.lineName}
-                      </option>
-                    );
-                  })}
-                </Input>
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_ods" sm={2}>
-                ODS
-              </Label>
-              <Col sm={9}>
-                <Input
-                  required
-                  type="select"
-                  name="project_ods"
-                  id="project_ods"
-                  className="height100px"
-                  onChange={this.onChange}
-                  value={this.state.project_ods}
-                >
-                  {this.state.ODS.map(ods => {
-                    return (
-                      <option key={ods.id} value={ods.id}>
-                        {ods.objectiveName}
-                      </option>
-                    );
-                  })}
-                </Input>
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_coordinador" sm={2}>
-                Coordinador
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="text"
-                  name="project_coordinador"
-                  id="project_coordinador"
-                  placeholder="Coordinador del Proyecto"
-                  onChange={this.onChange}
-                  value={this.state.project_coordinador}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_responsible_team" sm={2}>
-                Equipo Responsable
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="textarea"
                   className="height-100px"
-                  rows="4"
-                  name="project_responsible_team"
-                  id="project_responsible_team"
+                  type="textarea"
+                  name="project_general_objective"
+                  id="project_general_objective"
+                  placeholder="Objetivo General"
+                  value={this.state.project_general_objective}
                   onChange={this.onChange}
-                  value={this.state.project_responsible_team}
+                />
+              </Col>
+              <Label for="project_general_objective" sm={2}>
+                Indicador Objetivo General
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_general_objective"
+                  id="project_general_objective"
+                  placeholder="Indicador del Objetivo General"
+                  value={this.state.project_general_objective}
+                  onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_institution" sm={2}>
-                Institución contraparte
+              <Label className="muted" sm={2}>
+                Información Granular del Indicador del Objetivo General
               </Label>
               <Col sm={9}>
                 <Input
-                  type="textarea"
-                  className="height-100px"
-                  rows="4"
-                  name="project_institution"
-                  id="project_institution"
+                  required
+                  className="give-me-space-between"
+                  type="number"
+                  name="project_general_objective_kpi_quantity"
+                  id="project_general_objective_kpi_quantity"
+                  placeholder="Valor del Indicador"
+                  value={this.state.project_general_objective_kpi_quantity}
                   onChange={this.onChange}
-                  value={this.state.project_institution}
+                />
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="select"
+                  name="project_general_objective_kpi_unit_measurement"
+                  id="project_general_objective_kpi_unit_measurement"
+                  placeholder="Unidad de Medida"
+                  value={this.state.project_general_objective_kpi_unit_measurement}
+                  onChange={this.onChange}
+                >
+                  <option value="">Seleccione Opción</option>
+                  {UNIT_MEASUREMENT.map(unit => {
+                    return (
+                      <option key={unit.id} value={unit.id}>
+                        {unit.label}
+                      </option>
+                    );
+                  })}
+                </Input>
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="text"
+                  name="project_general_objective_kpi_variable"
+                  id="project_general_objective_kpi_variable"
+                  placeholder="Variable"
+                  value={this.state.project_general_objective_kpi_variable}
+                  onChange={this.onChange}
+                />
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="date"
+                  name="project_general_objective_kpi_date"
+                  id="project_general_objective_kpi_date"
+                  placeholder="Variable"
+                  value={this.state.project_general_objective_kpi_date}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_general_objective" sm={2}>
+                Objetivo Específico
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_especifico_objective"
+                  id="project_especifico_objective"
+                  placeholder="Objetivo Específico"
+                  value={this.state.project_especifico_objective}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_means_verification" sm={2}>
+                Medio de Verificación
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_means_verification"
+                  id="project_means_verification"
+                  placeholder="Medio de Verificación"
+                  value={this.state.project_means_verification}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_risk_assumptions" sm={2}>
+                Supuesto
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_risk_assumptions"
+                  id="project_risk_assumptions"
+                  placeholder="Medio de Verificación"
+                  value={this.state.project_risk_assumptions}
+                  onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
             <FormGroup check row>
               <Col sm={{ size: 10, offset: 2 }}>
-                <Button color="primary">Guardar</Button>
+                <Button color="primary" className="d-flex align-items-center">
+                  <i className="md-icon">add</i>
+                  Agregar
+                </Button>
               </Col>
             </FormGroup>
           </Form>
+          <hr />
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr className="no-cursorpointer">
+                  <th> Objetivo </th>
+                  <th> Medios de Verificación </th>
+                  <th> Supuesto </th>
+                </tr>
+              </thead>
+              <tbody>{logframes_table}</tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
@@ -479,8 +377,8 @@ class NewProject extends Component {
     this.state = {
       stado: 0,
       store_uuid: null,
-      title: 'Proyecto',
-      page: 'general',
+      title: 'Nuevo Proyecto - Matriz Marco Lógico',
+      page: 'logframe',
       menu: 'project-new',
     };
     this.set_project_view = this.set_project_view.bind(this);
