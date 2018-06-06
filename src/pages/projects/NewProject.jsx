@@ -7,6 +7,9 @@ import Moment from 'moment';
 import $ from 'jquery';
 import Chart from 'chart.js';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import Select from 'react-select/lib/Select';
+import CreatableSelect from 'react-select/lib/Creatable';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Backend from 'components/Layouts/Backend';
@@ -17,30 +20,37 @@ const UNIT_MEASUREMENT = [
   {
     id: 1,
     label: 'Personas',
+    value: 'Personas',
   },
   {
     id: 2,
     label: 'Niños',
+    value: 'Niños',
   },
   {
     id: 3,
     label: 'Niñas',
+    value: 'Niñas',
   },
   {
     id: 4,
     label: 'Niños y Niñas',
+    value: 'Niños y Niñas',
   },
   {
     id: 5,
     label: 'Familias',
+    value: 'Familias',
   },
   {
     id: 6,
     label: 'Centros Educativos',
+    value: 'Centros Educativos',
   },
   {
     id: 7,
     label: 'Mujeres',
+    value: 'Mujeres',
   },
 ];
 
@@ -138,14 +148,39 @@ class NewProjectAdmin extends Component {
       project_logframes_labels: [],
       project_general_objective: '',
       project_means_verification: '',
-      project_risk_assumptions: '',
+      project_general_objective_kpi_unit_measurement: '',
+
+      // Activities State
+      activities: [],
+      project_resources: [],
+      project_resources_labels: [],
+      project_activity_name: '',
+      total: 0,
+      RESOURCES_OPTIONS: [],
     };
 
     this.onAdd = this.onAdd.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.onChangeSelection = this.onChangeSelection.bind(this);
+    this.onAddActivities = this.onAddActivities.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    $.ajax({
+      type: 'GET',
+      url: this.props.baseurl + '/ResourceType/GetAll',
+      contentType: 'application/json',
+      dataType: 'json',
+      success: response => {
+        this.setState({
+          RESOURCES_OPTIONS: response,
+        });
+      },
+      error: response => {
+        console.log(response.data);
+      },
+    });
+  }
 
   onAdd(e) {
     e.preventDefault();
@@ -159,6 +194,24 @@ class NewProjectAdmin extends Component {
           risk_assumptions: this.state.project_risk_assumptions,
         },
       ],
+    });
+    this.onCleanForm();
+  }
+
+  onAddActivities(e) {
+    e.preventDefault();
+    this.setState({
+      activities: [
+        ...this.state.activities,
+        {
+          id: this.state.activities.length,
+          name: this.state.project_activity_name,
+          resource: this.state.project_resources.join(', '),
+          resource_label: this.state.project_resources_labels.join(', '),
+          cost: parseInt(this.state.project_activity_budget),
+        },
+      ],
+      total: parseInt(this.state.total) + parseInt(this.state.project_activity_budget),
     });
     this.onCleanForm();
   }
@@ -179,14 +232,27 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  onSelectInputChange(inputValue, actionMeta) {}
+
+  onChangeSelection(e) {
+    this.setState({
+      project_general_objective_kpi_unit_measurement: e,
+    });
+  }
+
   render() {
-    const logframes_table = this.state.logframes.length ? (
-      this.state.logframes.map(logframe => {
+    const activities_table = this.state.activities.length ? (
+      this.state.activities.map(activity => {
         return (
-          <tr key={logframe.id}>
-            <td>{logframe.objective}</td>
-            <td>{logframe.means_verification}</td>
-            <td>{logframe.risk_assumptions}</td>
+          <tr key={activity.id}>
+            <td>{activity.name}</td>
+            <td>{activity.resource_label}</td>
+            <td>
+              {activity.cost.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </td>
           </tr>
         );
       })
@@ -194,7 +260,7 @@ class NewProjectAdmin extends Component {
       <tr>
         <td colSpan={2}>
           <div>
-            <h3 className="text-center">Agregue la información en el formulario de arriba ⬆️</h3>
+            <h3 className="text-center">Agregue un recurso en el formulario de arriba ⬆️</h3>
           </div>
         </td>
       </tr>
@@ -203,8 +269,8 @@ class NewProjectAdmin extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
-          <h3>Objetivo General e Indicador del Objetivo General</h3>
-          <Form onSubmit={this.onAdd}>
+          <h1>Objetivo General</h1>
+          <Form onSubmit={e => e.preventDefault()}>
             <FormGroup row className="align-items-center">
               <Label for="project_general_objective" sm={2}>
                 Objetivo General
@@ -221,7 +287,9 @@ class NewProjectAdmin extends Component {
                   onChange={this.onChange}
                 />
               </Col>
-              <Label for="project_general_objective" sm={2}>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_general_objective_kpi" sm={2}>
                 Indicador Objetivo General
               </Label>
               <Col sm={9}>
@@ -229,10 +297,10 @@ class NewProjectAdmin extends Component {
                   required
                   className="height-100px"
                   type="textarea"
-                  name="project_general_objective"
-                  id="project_general_objective"
+                  name="project_general_objective_kpi"
+                  id="project_general_objective_kpi"
                   placeholder="Indicador del Objetivo General"
-                  value={this.state.project_general_objective}
+                  value={this.state.project_general_objective_kpi}
                   onChange={this.onChange}
                 />
               </Col>
@@ -252,25 +320,16 @@ class NewProjectAdmin extends Component {
                   value={this.state.project_general_objective_kpi_quantity}
                   onChange={this.onChange}
                 />
-                <Input
+                <CreatableSelect
                   required
+                  isClearable
                   className="give-me-space-between"
-                  type="select"
                   name="project_general_objective_kpi_unit_measurement"
-                  id="project_general_objective_kpi_unit_measurement"
-                  placeholder="Unidad de Medida"
                   value={this.state.project_general_objective_kpi_unit_measurement}
-                  onChange={this.onChange}
-                >
-                  <option value="">Seleccione Opción</option>
-                  {UNIT_MEASUREMENT.map(unit => {
-                    return (
-                      <option key={unit.id} value={unit.id}>
-                        {unit.label}
-                      </option>
-                    );
-                  })}
-                </Input>
+                  onChange={this.onChangeSelection}
+                  onInputChange={this.onSelectInputChange}
+                  options={UNIT_MEASUREMENT}
+                />
                 <Input
                   required
                   className="give-me-space-between"
@@ -294,7 +353,52 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_general_objective" sm={2}>
+              <Label for="project_general_objective_means_of_verification" sm={2}>
+                Medio de Verificación del Objetivo General
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_general_objective_means_of_verification"
+                  id="project_general_objective_means_of_verification"
+                  placeholder="Medios de Verificación del Objetivo General"
+                  value={this.state.project_general_objective_means_of_verification}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_general_objective_risks" sm={2}>
+                Supuesto del Objetivo General
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_general_objective_risks"
+                  id="project_general_objective_risks"
+                  placeholder="Supuesto del Objetivo General"
+                  value={this.state.project_general_objective_risks}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup check row>
+              <Col sm={{ size: 11 }}>
+                <Button color="primary" className="d-flex align-items-center ml-auto">
+                  <i className="md-icon">add</i>
+                  Agregar Objetivo General
+                </Button>
+              </Col>
+            </FormGroup>
+          </Form>
+          <h1>Objetivos Específicos</h1>
+          <Form onSubmit={e => e.preventDefault()} className="opacity-5 p-events-none">
+            <FormGroup row className="align-items-center">
+              <Label for="project_specific_objective" sm={2}>
                 Objetivo Específico
               </Label>
               <Col sm={9}>
@@ -302,70 +406,386 @@ class NewProjectAdmin extends Component {
                   required
                   className="height-100px"
                   type="textarea"
-                  name="project_especifico_objective"
-                  id="project_especifico_objective"
+                  name="project_specific_objective"
+                  id="project_specific_objective"
                   placeholder="Objetivo Específico"
-                  value={this.state.project_especifico_objective}
+                  value={this.state.project_specific_objective}
                   onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_means_verification" sm={2}>
-                Medio de Verificación
+              <Label for="project_specific_objective_kpi" sm={2}>
+                Indicador Objetivo Específico
               </Label>
               <Col sm={9}>
                 <Input
                   required
                   className="height-100px"
                   type="textarea"
-                  name="project_means_verification"
-                  id="project_means_verification"
-                  placeholder="Medio de Verificación"
-                  value={this.state.project_means_verification}
+                  name="project_specific_objective_kpi"
+                  id="project_specific_objective_kpi"
+                  placeholder="Indicador del Objetivo Específico"
+                  value={this.state.project_specific_objective_kpi}
                   onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_risk_assumptions" sm={2}>
-                Supuesto
+              <Label className="muted" sm={2}>
+                Información Granular del Indicador del Objetivo Específico
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="number"
+                  name="project_specific_objective_kpi_quantity"
+                  id="project_specific_objective_kpi_quantity"
+                  placeholder="Valor del Indicador"
+                  value={this.state.project_specific_objective_kpi_quantity}
+                  onChange={this.onChange}
+                />
+                <CreatableSelect
+                  required
+                  isClearable
+                  className="give-me-space-between"
+                  name="form-field-name"
+                  value={this.state.project_specific_objective_kpi_unit_measurement}
+                  onChange={this.onChangeSelection}
+                  onInputChange={this.onSelectInputChange}
+                  options={UNIT_MEASUREMENT}
+                />
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="text"
+                  name="project_specific_objective_kpi_variable"
+                  id="project_specific_objective_kpi_variable"
+                  placeholder="Variable"
+                  value={this.state.project_specific_objective_kpi_variable}
+                  onChange={this.onChange}
+                />
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="date"
+                  name="project_specific_objective_kpi_date"
+                  id="project_specific_objective_kpi_date"
+                  placeholder="Variable"
+                  value={this.state.project_specific_objective_kpi_date}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_specific_objective_means_of_verification" sm={2}>
+                Medio de Verificación del Objetivo Específico
               </Label>
               <Col sm={9}>
                 <Input
                   required
                   className="height-100px"
                   type="textarea"
-                  name="project_risk_assumptions"
-                  id="project_risk_assumptions"
-                  placeholder="Medio de Verificación"
-                  value={this.state.project_risk_assumptions}
+                  name="project_specific_objective_means_of_verification"
+                  id="project_specific_objective_means_of_verification"
+                  placeholder="Medios de Verificación del Objetivo Específico"
+                  value={this.state.project_specific_objective_means_of_verification}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_specific_objective_risks" sm={2}>
+                Supuesto del Objetivo Específico
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_specific_objective_risks"
+                  id="project_specific_objective_risks"
+                  placeholder="Supuesto del Objetivo Específico"
+                  value={this.state.project_especifico_objective_risks}
                   onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
             <FormGroup check row>
-              <Col sm={{ size: 10, offset: 2 }}>
-                <Button color="primary" className="d-flex align-items-center">
+              <Col sm={{ size: 11 }}>
+                <Button color="primary" className="d-flex align-items-center ml-auto">
                   <i className="md-icon">add</i>
-                  Agregar
+                  Agregar Objetivo Específico
                 </Button>
               </Col>
             </FormGroup>
           </Form>
-          <hr />
-          <div className="table-responsive">
-            <table>
-              <thead>
-                <tr className="no-cursorpointer">
-                  <th> Objetivo </th>
-                  <th> Medios de Verificación </th>
-                  <th> Supuesto </th>
-                </tr>
-              </thead>
-              <tbody>{logframes_table}</tbody>
-            </table>
-          </div>
+          <h1>Resultados</h1>
+          <Form onSubmit={e => e.preventDefault()} className="opacity-5 p-events-none">
+            <FormGroup row className="align-items-center">
+              <Label for="project_result" sm={2}>
+                Resultado
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_result"
+                  id="project_result"
+                  placeholder="Resultado"
+                  value={this.state.project_result}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_result_kpi" sm={2}>
+                Indicador Resultado
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_result_kpi"
+                  id="project_result_kpi"
+                  placeholder="Indicador del Resultado"
+                  value={this.state.project_result_kpi}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label className="muted" sm={2}>
+                Información Granular del Indicador del Resultado
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="number"
+                  name="project_result_kpi_quantity"
+                  id="project_result_kpi_quantity"
+                  placeholder="Valor del Indicador"
+                  value={this.state.project_result_kpi_quantity}
+                  onChange={this.onChange}
+                />
+                <CreatableSelect
+                  required
+                  isClearable
+                  className="give-me-space-between"
+                  name="form-field-name"
+                  value={this.state.project_result_kpi_unit_measurement}
+                  onChange={this.onChangeSelection}
+                  onInputChange={this.onSelectInputChange}
+                  options={UNIT_MEASUREMENT}
+                />
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="text"
+                  name="project_result_kpi_variable"
+                  id="project_result_kpi_variable"
+                  placeholder="Variable"
+                  value={this.state.project_result_kpi_variable}
+                  onChange={this.onChange}
+                />
+                <Input
+                  required
+                  className="give-me-space-between"
+                  type="date"
+                  name="project_result_kpi_date"
+                  id="project_result_kpi_date"
+                  placeholder="Variable"
+                  value={this.state.project_result_kpi_date}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_result_means_of_verification" sm={2}>
+                Medio de Verificación del Resultado
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_result_means_of_verification"
+                  id="project_result_means_of_verification"
+                  placeholder="Medios de Verificación del Resultado"
+                  value={this.state.project_result_means_of_verification}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_result_risks" sm={2}>
+                Supuesto del Resultado
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  className="height-100px"
+                  type="textarea"
+                  name="project_result_risks"
+                  id="project_result_risks"
+                  placeholder="Supuesto del Resultado"
+                  value={this.state.project_especifico_objective_risks}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup check row>
+              <Col sm={{ size: 11 }}>
+                <Button color="primary" className="d-flex align-items-center ml-auto">
+                  <i className="md-icon">add</i>
+                  Agregar Resultado
+                </Button>
+              </Col>
+            </FormGroup>
+          </Form>
+          <h1>Actividades</h1>
+          <Form onSubmit={this.onAddActivities} className="opacity-5 p-events-none">
+            <FormGroup row className="align-items-center">
+              <Label for="project_activity_name" sm={2}>
+                Resultado de la Actividad
+              </Label>
+              <Col sm={9}>
+                <Select
+                  defaultValue=""
+                  isClearable
+                  isSearchable
+                  name="project_activity_resource"
+                  options={UNIT_MEASUREMENT}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_activity_name" sm={2}>
+                Nombre de la Actividad
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  type="text"
+                  name="project_activity_name"
+                  id="project_activity_name"
+                  placeholder="Nombre de la actividad"
+                  value={this.state.project_activity_name}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_activity_start_date" sm={2}>
+                Fecha de Inicio de la Actividad
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  type="date"
+                  name="project_activity_start_date"
+                  id="project_activity_start_date"
+                  placeholder="Nombre de la actividad"
+                  value={this.state.project_activity_start_date}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_activity_end_date" sm={2}>
+                Fecha Fin de la Actividad
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  type="text"
+                  name="project_activity_end_date"
+                  id="project_activity_end_date"
+                  placeholder="Nombre de la actividad"
+                  value={this.state.project_activity_end_date}
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <h3>Recursos a usar en la actividad</h3>
+            <FormGroup row className="align-items-center">
+              <Label for="project-faculty" sm={2}>
+                Seleccione los recursos a usar
+              </Label>
+              <Col sm={9}>
+                <Select
+                  name="project_resources"
+                  id="project_resources"
+                  onChange={this.onChangeMultipleSelect}
+                  value={this.state.project_resources}
+                  options={this.state.RESOURCES_OPTIONS}
+                  isClearable
+                  isSearchable
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_resources_quantity" sm={2}>
+                Cantidad
+              </Label>
+              <Col sm={9}>
+                <Input
+                  type="text"
+                  name="project_resources_quantity"
+                  id="project_resources_quantity"
+                  placeholder="Cantidad de Recurso"
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_resources_quantity" sm={2}>
+                Unidad de Medida
+              </Label>
+              <Col sm={9}>
+                <Select
+                  name="project_resources"
+                  id="project_resources"
+                  onChange={this.onChangeMultipleSelect}
+                  value={this.state.project_resources}
+                  options={this.state.RESOURCES_OPTIONS}
+                  isClearable
+                  isSearchable
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_resources_unit_price" sm={2}>
+                Precio Unitario
+              </Label>
+              <Col sm={9}>
+                <Input
+                  type="number"
+                  name="project_resources_unit_price"
+                  id="project_resources_unit_price"
+                  placeholder="Precio Unitario"
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup check row>
+              <Col sm={{ size: 11 }}>
+                <Button color="primary" className="d-flex align-items-center ml-auto">
+                  <i className="md-icon">add</i>
+                  Agregar Actividad
+                </Button>
+              </Col>
+            </FormGroup>
+            <hr />
+            Costo Total:{' '}
+            {parseInt(this.state.total).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+            <hr />
+          </Form>
         </div>
       </div>
     );

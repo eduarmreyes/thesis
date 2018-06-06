@@ -308,7 +308,7 @@ class NewProjectSpecsAdmin extends Component {
 			/*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
 			<div className="content-inner no-padding-top no-padding-left no-padding-right">
 				<div className="border-bottom side-margins box">
-					<h1>Proyecto</h1>
+					<h1>Perfil del Proyecto</h1>
 					<Form onSubmit={this.onSubmit}>
 						<FormGroup row className="align-items-center">
 							<Label for="project_name" sm={2}>

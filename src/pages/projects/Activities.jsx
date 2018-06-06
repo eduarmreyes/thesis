@@ -274,7 +274,6 @@ class NewProjectActivitiesAdmin extends Component {
               </Label>
               <Col sm={9}>
                 <Input
-                  required
                   type="select"
                   name="project_resources"
                   id="project_resources"

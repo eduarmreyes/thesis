@@ -213,34 +213,18 @@ class Navmenu extends Component {
           </li>
           <li>
             <NavLink
+              className={`${this.props.page === 'specs' ? 'active' : ''}`}
+              to="/project-new-specs"
+            >
+              Perfil del Proyecto
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
               className={`${this.props.page === 'data' ? 'active' : ''}`}
               to="/project-new-data"
             >
               Datos del Proyecto
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={`${this.props.page === 'specs' ? 'active' : ''}`}
-              to="/project-new-specs"
-            >
-              Especificaciones Técnicas
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={`${this.props.page === 'activities' ? 'active' : ''}`}
-              to="/project-new-activities"
-            >
-              Actividades
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={`${this.props.page === 'kpis' ? 'active' : ''}`}
-              to="/project-new-kpis"
-            >
-              Indicadores
             </NavLink>
           </li>
         </ul>

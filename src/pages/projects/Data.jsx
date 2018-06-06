@@ -291,7 +291,7 @@ class NewProjectDataAdmin extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="border-bottom side-margins box">
-          <h1>Datos del Proyecto</h1>
+          <h1>Perfil del Proyecto</h1>
           <Form>
             <FormGroup row className="align-items-center">
               <Label for="project-total-people" sm={2}>
@@ -406,7 +406,7 @@ class NewProjectData extends Component {
     this.state = {
       stado: 0,
       store_uuid: null,
-      title: 'Proyecto',
+      title: 'Nuevo Proyecto - Datos del Proyecto',
       page: 'data',
       menu: 'project-new',
     };
