@@ -380,7 +380,7 @@ class NewProjectSpecsAdmin extends Component {
 						</FormGroup>
 						<FormGroup row className="align-items-center">
 							<Label for="project_faculty" sm={2}>
-								Facultad
+								Facultad o Unidad
 							</Label>
 							<Col sm={9}>
 								<Input
@@ -404,7 +404,7 @@ class NewProjectSpecsAdmin extends Component {
 						</FormGroup>
 						<FormGroup row className="align-items-center">
 							<Label for="project_line" sm={2}>
-								Línea
+								Línea Institucional
 							</Label>
 							<Col sm={9}>
 								<Input

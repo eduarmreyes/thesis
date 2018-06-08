@@ -648,7 +648,7 @@ class NewProjectAdmin extends Component {
             </FormGroup>
           </Form>
           <h1>Actividades</h1>
-          <Form onSubmit={this.onAddActivities} className="opacity-5 p-events-none">
+          <Form onSubmit={this.onAddActivities}>
             <FormGroup row className="align-items-center">
               <Label for="project_activity_name" sm={2}>
                 Resultado de la Actividad
@@ -711,10 +711,10 @@ class NewProjectAdmin extends Component {
                 />
               </Col>
             </FormGroup>
-            <h3>Recursos a usar en la actividad</h3>
+            <h3>Recursos a utilizarse en la actividad</h3>
             <FormGroup row className="align-items-center">
               <Label for="project-faculty" sm={2}>
-                Seleccione los recursos a usar
+                Seleccione los recursos a utilizarse
               </Label>
               <Col sm={9}>
                 <Select
@@ -767,6 +767,32 @@ class NewProjectAdmin extends Component {
                   name="project_resources_unit_price"
                   id="project_resources_unit_price"
                   placeholder="Precio Unitario"
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label sm={2}>Entidad que proporciona el recurso</Label>
+              <Col sm={4}>
+                <Label for="project_resources_entity_uees" className="d-flex justify-content-end">
+                  Universidad Evangélica (UEES)
+                </Label>
+                <Input
+                  type="radio"
+                  name="project_resources_entity_uees"
+                  id="project_resources_entity_uees"
+                />
+              </Col>
+              <Col sm={4}>
+                <Label
+                  for="project_resources_entity_other_one"
+                  className="d-flex justify-content-end"
+                >
+                  Institución contraparte
+                </Label>
+                <Input
+                  type="radio"
+                  name="project_resources_entity_other_one"
+                  id="project_resources_entity_other_one"
                 />
               </Col>
             </FormGroup>
