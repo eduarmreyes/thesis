@@ -648,7 +648,7 @@ class NewProjectAdmin extends Component {
             </FormGroup>
           </Form>
           <h1>Actividades</h1>
-          <Form onSubmit={this.onAddActivities}>
+          <Form onSubmit={this.onAddActivities} className="opacity-5 p-events-none">
             <FormGroup row className="align-items-center">
               <Label for="project_activity_name" sm={2}>
                 Resultado de la Actividad
@@ -773,27 +773,44 @@ class NewProjectAdmin extends Component {
             <FormGroup row className="align-items-center">
               <Label sm={2}>Entidad que proporciona el recurso</Label>
               <Col sm={4}>
-                <Label for="project_resources_entity_uees" className="d-flex justify-content-end">
-                  Universidad Evangélica (UEES)
-                </Label>
-                <Input
-                  type="radio"
-                  name="project_resources_entity_uees"
-                  id="project_resources_entity_uees"
-                />
+                <div className="pretty p-default p-round">
+                  <input
+                    type="radio"
+                    required
+                    id="project_resources_entity_uees"
+                    name="project_resources_entity"
+                    checked={
+                      typeof this.state.project_resources_entity !== 'undefined'
+                        ? this.state.project_resources_entity === 'uees'
+                        : false
+                    }
+                    value="uees"
+                    onChange={this.onChange}
+                  />
+                  <div className="state">
+                    <label>Universidad Evangélica (UEES)</label>
+                  </div>
+                </div>
               </Col>
               <Col sm={4}>
-                <Label
-                  for="project_resources_entity_other_one"
-                  className="d-flex justify-content-end"
-                >
-                  Institución contraparte
-                </Label>
-                <Input
-                  type="radio"
-                  name="project_resources_entity_other_one"
-                  id="project_resources_entity_other_one"
-                />
+                <div className="pretty p-default p-round">
+                  <input
+                    type="radio"
+                    required
+                    id="project_resources_entity_other_one"
+                    name="project_resources_entity"
+                    checked={
+                      typeof this.state.project_resources_entity !== 'undefined'
+                        ? this.state.project_resources_entity === 'other'
+                        : false
+                    }
+                    value="other"
+                    onChange={this.onChange}
+                  />
+                  <div className="state">
+                    <label>Institución Contraparte</label>
+                  </div>
+                </div>
               </Col>
             </FormGroup>
             <FormGroup check row>
