@@ -1069,6 +1069,7 @@ select {
 	cursor: pointer;
 }
 .datetime-picker .calendar .calendar-nav button .fa {
+	color: red;
 	font-size: 18px;
 }
 .datetime-picker .calendar .calendar-nav button:hover {
@@ -1278,8 +1279,8 @@ select {
 .datetime-trigger {
 	position: relative;
 	input {
-		padding: 5px 0px;
-		text-align: center;
+		cursor: pointer;
+		padding: 5px 15px;
 		border-radius: 3px;
 		border: 1px solid #f0f0f0;
 		color: #b5b5b5;

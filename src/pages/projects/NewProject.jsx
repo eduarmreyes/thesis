@@ -4,13 +4,16 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import Moment from 'moment';
+import 'moment/locale/es';
 import $ from 'jquery';
 import Chart from 'chart.js';
 import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import Select from 'react-select/lib/Select';
 import CreatableSelect from 'react-select/lib/Creatable';
+import { DatetimePickerTrigger } from 'rc-datetime-picker';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'rc-datetime-picker/dist/picker.css';
 
 import Backend from 'components/Layouts/Backend';
 import ChartLine from 'components/Graphics/ChartLine';
@@ -105,12 +108,14 @@ class NewProjectUser extends Component {
                 Fecha Inicio
               </Label>
               <Col sm={9}>
-                <Input
-                  type="date"
-                  name="project_start_date"
-                  id="project_start_date"
-                  placeholder="Fecha Inicio del Proyecto"
-                />
+                <DatetimePickerTrigger
+                  closeOnSelectDay={true}
+                  moment={this.state.project_start_date}
+                  onChange={this.onSelectProjectStartDate}
+                  className="give-me-space-between"
+                >
+                  <input type="text" value={this.state.project_start_date.format('LL')} readOnly />
+                </DatetimePickerTrigger>
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -118,12 +123,14 @@ class NewProjectUser extends Component {
                 Fecha Fin
               </Label>
               <Col sm={9}>
-                <Input
-                  type="date"
-                  name="project_end_date"
-                  id="project_end_date"
-                  placeholder="Fecha Fin del Proyecto"
-                />
+                <DatetimePickerTrigger
+                  closeOnSelectDay={true}
+                  moment={this.state.project_end_date}
+                  onChange={this.onSelectProjectEndDate}
+                  className="give-me-space-between"
+                >
+                  <input type="text" value={this.state.project_end_date.format('LL')} readOnly />
+                </DatetimePickerTrigger>
               </Col>
             </FormGroup>
             <FormGroup check row>
@@ -157,15 +164,34 @@ class NewProjectAdmin extends Component {
       project_activity_name: '',
       total: 0,
       RESOURCES_OPTIONS: [],
+      project_general_kpi_date: moment(),
+      project_specific_objective_kpi_date: moment(),
+      project_result_kpi_date: moment(),
+      project_activity_start_date: moment(),
+      project_activity_end_date: moment(),
+      project_start_date: moment(),
+      project_end_date: moment(),
     };
 
     this.onAdd = this.onAdd.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onChangeSelection = this.onChangeSelection.bind(this);
     this.onAddActivities = this.onAddActivities.bind(this);
+    this.onSelectProjectGeneralObjectiveKPIDate = this.onSelectProjectGeneralObjectiveKPIDate.bind(
+      this
+    );
+    this.onSelectProjectSpecificObjectiveKPIDate = this.onSelectProjectSpecificObjectiveKPIDate.bind(
+      this
+    );
+    this.onSelectProjectResultKPIDate = this.onSelectProjectResultKPIDate.bind(this);
+    this.onSelectProjectActivityStartDate = this.onSelectProjectActivityStartDate.bind(this);
+    this.onSelectProjectActivityEndDate = this.onSelectProjectActivityEndDate.bind(this);
+    this.onSelectProjectStartDate = this.onSelectProjectStartDate.bind(this);
+    this.onSelectProjectEndDate = this.onSelectProjectEndDate.bind(this);
   }
 
   componentDidMount() {
+    moment.locale('es');
     $.ajax({
       type: 'GET',
       url: this.props.baseurl + '/ResourceType/GetAll',
@@ -233,6 +259,48 @@ class NewProjectAdmin extends Component {
   }
 
   onSelectInputChange(inputValue, actionMeta) {}
+
+  onSelectProjectGeneralObjectiveKPIDate(project_general_kpi_date) {
+    this.setState({
+      project_general_kpi_date,
+    });
+  }
+
+  onSelectProjectSpecificObjectiveKPIDate(project_specific_objective_kpi_date) {
+    this.setState({
+      project_specific_objective_kpi_date,
+    });
+  }
+
+  onSelectProjectResultKPIDate(project_result_kpi_date) {
+    this.setState({
+      project_result_kpi_date,
+    });
+  }
+
+  onSelectProjectActivityStartDate(project_activity_start_date) {
+    this.setState({
+      project_activity_start_date,
+    });
+  }
+
+  onSelectProjectActivityEndDate(project_activity_end_date) {
+    this.setState({
+      project_activity_end_date,
+    });
+  }
+
+  onSelectProjectStartDate(project_start_date) {
+    this.setState({
+      project_start_date,
+    });
+  }
+
+  onSelectProjectEndDate(project_end_date) {
+    this.setState({
+      project_end_date,
+    });
+  }
 
   onChangeSelection(e) {
     this.setState({
@@ -340,16 +408,18 @@ class NewProjectAdmin extends Component {
                   value={this.state.project_general_objective_kpi_variable}
                   onChange={this.onChange}
                 />
-                <Input
-                  required
+                <DatetimePickerTrigger
+                  closeOnSelectDay={true}
+                  moment={this.state.project_general_kpi_date}
+                  onChange={this.onSelectProjectGeneralObjectiveKPIDate}
                   className="give-me-space-between"
-                  type="date"
-                  name="project_general_objective_kpi_date"
-                  id="project_general_objective_kpi_date"
-                  placeholder="Variable"
-                  value={this.state.project_general_objective_kpi_date}
-                  onChange={this.onChange}
-                />
+                >
+                  <input
+                    type="text"
+                    value={this.state.project_general_kpi_date.format('LL')}
+                    readOnly
+                  />
+                </DatetimePickerTrigger>
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -466,16 +536,18 @@ class NewProjectAdmin extends Component {
                   value={this.state.project_specific_objective_kpi_variable}
                   onChange={this.onChange}
                 />
-                <Input
-                  required
+                <DatetimePickerTrigger
+                  closeOnSelectDay={true}
+                  moment={this.state.project_specific_objective_kpi_date}
+                  onChange={this.onSelectProjectSpecificObjectiveKPIDate}
                   className="give-me-space-between"
-                  type="date"
-                  name="project_specific_objective_kpi_date"
-                  id="project_specific_objective_kpi_date"
-                  placeholder="Variable"
-                  value={this.state.project_specific_objective_kpi_date}
-                  onChange={this.onChange}
-                />
+                >
+                  <input
+                    type="text"
+                    value={this.state.project_specific_objective_kpi_date.format('LL')}
+                    readOnly
+                  />
+                </DatetimePickerTrigger>
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -592,16 +664,18 @@ class NewProjectAdmin extends Component {
                   value={this.state.project_result_kpi_variable}
                   onChange={this.onChange}
                 />
-                <Input
-                  required
+                <DatetimePickerTrigger
+                  closeOnSelectDay={true}
+                  moment={this.state.project_result_kpi_date}
+                  onChange={this.onSelectProjectResultKPIDate}
                   className="give-me-space-between"
-                  type="date"
-                  name="project_result_kpi_date"
-                  id="project_result_kpi_date"
-                  placeholder="Variable"
-                  value={this.state.project_result_kpi_date}
-                  onChange={this.onChange}
-                />
+                >
+                  <input
+                    type="text"
+                    value={this.state.project_result_kpi_date.format('LL')}
+                    readOnly
+                  />
+                </DatetimePickerTrigger>
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -684,15 +758,18 @@ class NewProjectAdmin extends Component {
                 Fecha de Inicio de la Actividad
               </Label>
               <Col sm={9}>
-                <Input
-                  required
-                  type="date"
-                  name="project_activity_start_date"
-                  id="project_activity_start_date"
-                  placeholder="Nombre de la actividad"
-                  value={this.state.project_activity_start_date}
-                  onChange={this.onChange}
-                />
+                <DatetimePickerTrigger
+                  closeOnSelectDay={true}
+                  moment={this.state.project_activity_start_date}
+                  onChange={this.onSelectProjectKPIDate}
+                  className="give-me-space-between"
+                >
+                  <input
+                    type="text"
+                    value={this.state.project_activity_start_date.format('LL')}
+                    readOnly
+                  />
+                </DatetimePickerTrigger>
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -700,15 +777,18 @@ class NewProjectAdmin extends Component {
                 Fecha Fin de la Actividad
               </Label>
               <Col sm={9}>
-                <Input
-                  required
-                  type="text"
-                  name="project_activity_end_date"
-                  id="project_activity_end_date"
-                  placeholder="Nombre de la actividad"
-                  value={this.state.project_activity_end_date}
-                  onChange={this.onChange}
-                />
+                <DatetimePickerTrigger
+                  closeOnSelectDay={true}
+                  moment={this.state.project_activity_end_date}
+                  onChange={this.onSelectProjectActivityEndDate}
+                  className="give-me-space-between"
+                >
+                  <input
+                    type="text"
+                    value={this.state.project_activity_end_date.format('LL')}
+                    readOnly
+                  />
+                </DatetimePickerTrigger>
               </Col>
             </FormGroup>
             <h3>Recursos a utilizarse en la actividad</h3>
