@@ -171,6 +171,8 @@ class NewProjectAdmin extends Component {
       project_activity_end_date: moment(),
       project_start_date: moment(),
       project_end_date: moment(),
+      showLogframe: false,
+      showSpecificObjectiveArea: false,
     };
 
     this.onAdd = this.onAdd.bind(this);
@@ -188,6 +190,9 @@ class NewProjectAdmin extends Component {
     this.onSelectProjectActivityEndDate = this.onSelectProjectActivityEndDate.bind(this);
     this.onSelectProjectStartDate = this.onSelectProjectStartDate.bind(this);
     this.onSelectProjectEndDate = this.onSelectProjectEndDate.bind(this);
+    this.onToggleLogframe = this.onToggleLogframe.bind(this);
+    this.onToggleSpecificObjectiveArea = this.onToggleSpecificObjectiveArea.bind(this);
+    this.onSubmitGeneralObjective = this.onSubmitGeneralObjective.bind(this);
   }
 
   componentDidMount() {
@@ -302,6 +307,26 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  onSubmitGeneralObjective(e) {
+    debugger;
+    e.preventDefault();
+    // ajax save general objective
+    this.onToggleSpecificObjectiveArea();
+  }
+
+  onToggleLogframe(e) {
+    e.preventDefault();
+    this.setState({
+      showLogframe: !this.state.showLogframe,
+    });
+  }
+
+  onToggleSpecificObjectiveArea() {
+    this.setState({
+      showSpecificObjectiveArea: !this.state.showSpecificObjectiveArea,
+    });
+  }
+
   onChangeSelection(e) {
     this.setState({
       project_general_objective_kpi_unit_measurement: e,
@@ -336,9 +361,14 @@ class NewProjectAdmin extends Component {
     return (
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
+        <div className="toggle-logframe-wrapper">
+          <a href="#" onClick={this.onToggleLogframe}>
+            [ Mostrar Matriz ]
+          </a>
+        </div>
         <div className="border-bottom side-margins box">
           <h1>Objetivo General</h1>
-          <Form onSubmit={e => e.preventDefault()}>
+          <Form onSubmit={this.onSubmitGeneralObjective}>
             <FormGroup row className="align-items-center">
               <Label for="project_general_objective" sm={2}>
                 Objetivo General
@@ -466,7 +496,10 @@ class NewProjectAdmin extends Component {
             </FormGroup>
           </Form>
           <h1>Objetivos Específicos</h1>
-          <Form onSubmit={e => e.preventDefault()} className="opacity-5 p-events-none">
+          <Form
+            onSubmit={e => e.preventDefault()}
+            className={`${this.state.showSpecificObjectiveArea ? '' : 'opacity-5 p-events-none'}`}
+          >
             <FormGroup row className="align-items-center">
               <Label for="project_specific_objective" sm={2}>
                 Objetivo Específico
@@ -909,6 +942,61 @@ class NewProjectAdmin extends Component {
             })}
             <hr />
           </Form>
+        </div>
+        <div
+          className={`bg-logframe ${
+            this.state.showLogframe ? 'di-flex' : 'd-none'
+          } justify-content-center align-items-center`}
+        >
+          <div className="bg-bright p-25 br-5">
+            <div className="text-right">
+              <a href="#" onClick={this.onToggleLogframe}>
+                [ Ocultar Matriz del Marco Lógico ]
+              </a>
+            </div>
+            <h3 className="text-center">Matriz del Marco Lógico</h3>
+            <table>
+              <thead>
+                <tr>
+                  <td> </td>
+                  <th>Resumen del Proyecto</th>
+                  <th>Indicadores</th>
+                  <th>Medios de Verificación</th>
+                  <th>Supuesto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Objetivo General</th>
+                  <td>{this.state.project_general_objective}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                </tr>
+                <tr>
+                  <th>Objetivo Específico</th>
+                  <td>{this.state.project_specific_objective}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                </tr>
+                <tr>
+                  <th>Resultados</th>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                </tr>
+                <tr>
+                  <th>Actividades</th>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                  <td>{' testing '}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
