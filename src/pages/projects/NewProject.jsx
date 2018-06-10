@@ -164,7 +164,7 @@ class NewProjectAdmin extends Component {
       project_activity_name: '',
       total: 0,
       RESOURCES_OPTIONS: [],
-      project_general_kpi_date: moment(),
+      project_general_objective_kpi_date: moment(),
       project_specific_objective_kpi_date: moment(),
       project_result_kpi_date: moment(),
       project_activity_start_date: moment(),
@@ -173,6 +173,8 @@ class NewProjectAdmin extends Component {
       project_end_date: moment(),
       showLogframe: false,
       showSpecificObjectiveArea: false,
+      project_general_objective_error_message: '',
+      project_logframe_id: 0,
     };
 
     this.onAdd = this.onAdd.bind(this);
@@ -193,6 +195,8 @@ class NewProjectAdmin extends Component {
     this.onToggleLogframe = this.onToggleLogframe.bind(this);
     this.onToggleSpecificObjectiveArea = this.onToggleSpecificObjectiveArea.bind(this);
     this.onSubmitGeneralObjective = this.onSubmitGeneralObjective.bind(this);
+    this.updateGeneralObjectiveErrorMessage = this.updateGeneralObjectiveErrorMessage.bind(this);
+    this.saveLogframeId = this.saveLogframeId.bind(this);
   }
 
   componentDidMount() {
@@ -265,9 +269,9 @@ class NewProjectAdmin extends Component {
 
   onSelectInputChange(inputValue, actionMeta) {}
 
-  onSelectProjectGeneralObjectiveKPIDate(project_general_kpi_date) {
+  onSelectProjectGeneralObjectiveKPIDate(project_general_objective_kpi_date) {
     this.setState({
-      project_general_kpi_date,
+      project_general_objective_kpi_date,
     });
   }
 
@@ -308,10 +312,32 @@ class NewProjectAdmin extends Component {
   }
 
   onSubmitGeneralObjective(e) {
-    debugger;
     e.preventDefault();
-    // ajax save general objective
-    this.onToggleSpecificObjectiveArea();
+
+    const data = JSON.stringify({
+      ProjectName: '',
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ProjectMatrix/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          this.saveLogframeId(response.id);
+          this.saveGeneralObjective();
+        } else {
+          this.updateGeneralObjectiveErrorMessage('No se pudo guardar la matriz de marco lógico.');
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
   }
 
   onToggleLogframe(e) {
@@ -330,6 +356,83 @@ class NewProjectAdmin extends Component {
   onChangeSelection(e) {
     this.setState({
       project_general_objective_kpi_unit_measurement: e,
+    });
+  }
+
+  saveLogframeId(id) {
+    this.setState({
+      project_logframe_id: id,
+    });
+  }
+
+  saveGeneralObjective() {
+    const data = JSON.stringify({
+      ObjectiveDescription: this.state.project_general_objective,
+      ObjetiveIndicator: this.state.project_general_objective_kpi,
+      MeansOfVerification: this.state.project_general_objective_means_of_verification,
+      ObjectiveType: '0',
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ProjectObjective/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        console.log(response);
+        if (response.status === 'success') {
+          this.saveGeneralObjectiveIndicator(response.id);
+        } else {
+          this.updateGeneralObjectiveErrorMessage('No se pudo guardar la matriz de marco lógico.');
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  saveGeneralObjectiveIndicator(project_general_objective_id) {
+    this.setState({
+      project_general_objective_id: project_general_objective_id,
+    });
+
+    const data = JSON.stringify({
+      ProjectObjectiveId: this.state.project_general_objective_id,
+      Goal: this.state.project_general_objective_kpi_quantity,
+      Variable: this.state.project_general_objective_kpi_variable,
+      // UnitMeasurement: this.state.project_general_objective_kpi_unit_measurement,
+      GoalDate: this.state.project_general_objective_kpi_date,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ObjectiveIndicator/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        console.log(response);
+        if (response.status === 'success') {
+          this.onToggleSpecificObjectiveArea();
+        } else {
+          this.updateGeneralObjectiveErrorMessage('No se pudo guardar la matriz de marco lógico.');
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  updateGeneralObjectiveErrorMessage(msg) {
+    this.setState({
+      project_general_objective_error_message: msg,
     });
   }
 
@@ -440,13 +543,13 @@ class NewProjectAdmin extends Component {
                 />
                 <DatetimePickerTrigger
                   closeOnSelectDay={true}
-                  moment={this.state.project_general_kpi_date}
+                  moment={this.state.project_general_objective_kpi_date}
                   onChange={this.onSelectProjectGeneralObjectiveKPIDate}
                   className="give-me-space-between"
                 >
                   <input
                     type="text"
-                    value={this.state.project_general_kpi_date.format('LL')}
+                    value={this.state.project_general_objective_kpi_date.format('LL')}
                     readOnly
                   />
                 </DatetimePickerTrigger>
@@ -488,6 +591,9 @@ class NewProjectAdmin extends Component {
             </FormGroup>
             <FormGroup check row>
               <Col sm={{ size: 11 }}>
+                <span class="color-danger">
+                  {this.state.project_general_objective_error_message}
+                </span>
                 <Button color="primary" className="d-flex align-items-center ml-auto">
                   <i className="md-icon">add</i>
                   Agregar Objetivo General

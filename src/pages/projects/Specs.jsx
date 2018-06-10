@@ -311,6 +311,93 @@ class NewProjectSpecsAdmin extends Component {
 					<h1>Perfil del Proyecto</h1>
 					<Form onSubmit={this.onSubmit}>
 						<FormGroup row className="align-items-center">
+							<Label for="project_faculty" sm={2}>
+								Facultad o Unidad
+							</Label>
+							<Col sm={9}>
+								<Input
+									required
+									type="select"
+									name="project_faculty"
+									id="project_faculty"
+									className="height100px"
+									onChange={this.onChange}
+									value={this.state.project_faculty}
+								>
+									{this.state.FACULTY_OPTIONS.map(faculty => {
+										return (
+											<option key={faculty.id} value={faculty.id}>
+												{faculty.facultyName}
+											</option>
+										);
+									})}
+								</Input>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_dean" sm={2}>
+								Decano(s)
+							</Label>
+							<Col sm={9}>
+								<Input
+									required
+									type="text"
+									name="project_dean"
+									id="project_dean"
+									className="height100px"
+									onChange={this.onChange}
+									value={this.state.project_dean}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_coordinador" sm={2}>
+								Coordinador
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="text"
+									name="project_coordinador"
+									id="project_coordinador"
+									placeholder="Coordinador del Proyecto"
+									onChange={this.onChange}
+									value={this.state.project_coordinador}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_responsible_team" sm={2}>
+								Equipo Responsable
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="textarea"
+									className="height-100px"
+									rows="4"
+									name="project_responsible_team"
+									id="project_responsible_team"
+									onChange={this.onChange}
+									value={this.state.project_responsible_team}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_institution" sm={2}>
+								Institución contraparte
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="textarea"
+									className="height-100px"
+									rows="4"
+									name="project_institution"
+									id="project_institution"
+									onChange={this.onChange}
+									value={this.state.project_institution}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
 							<Label for="project_name" sm={2}>
 								Nombre
 							</Label>
@@ -342,60 +429,6 @@ class NewProjectSpecsAdmin extends Component {
 										return (
 											<option key={knowledge_area.id} value={knowledge_area.id}>
 												{knowledge_area.knowledgeAreaName}
-											</option>
-										);
-									})}
-								</Input>
-							</Col>
-						</FormGroup>
-						<FormGroup row className="align-items-center">
-							<Label for="project_name" sm={2}>
-								Fecha Inicio
-							</Label>
-							<Col sm={9}>
-								<Input
-									type="date"
-									name="project_start_date"
-									id="project_start_date"
-									placeholder="Fecha Inicio del Proyecto"
-									onChange={this.onChange}
-									value={this.state.project_start_date}
-								/>
-							</Col>
-						</FormGroup>
-						<FormGroup row className="align-items-center">
-							<Label for="project_name" sm={2}>
-								Fecha Fin
-							</Label>
-							<Col sm={9}>
-								<Input
-									type="date"
-									name="project_end_date"
-									id="project_end_date"
-									placeholder="Fecha Fin del Proyecto"
-									onChange={this.onChange}
-									value={this.state.project_end_date}
-								/>
-							</Col>
-						</FormGroup>
-						<FormGroup row className="align-items-center">
-							<Label for="project_faculty" sm={2}>
-								Facultad o Unidad
-							</Label>
-							<Col sm={9}>
-								<Input
-									required
-									type="select"
-									name="project_faculty"
-									id="project_faculty"
-									className="height100px"
-									onChange={this.onChange}
-									value={this.state.project_faculty}
-								>
-									{this.state.FACULTY_OPTIONS.map(faculty => {
-										return (
-											<option key={faculty.id} value={faculty.id}>
-												{faculty.facultyName}
 											</option>
 										);
 									})}
@@ -451,49 +484,104 @@ class NewProjectSpecsAdmin extends Component {
 							</Col>
 						</FormGroup>
 						<FormGroup row className="align-items-center">
-							<Label for="project_coordinador" sm={2}>
-								Coordinador
+							<Label for="project_beneficiary_population" sm={2}>
+								Población beneficiaria
 							</Label>
 							<Col sm={9}>
 								<Input
 									type="text"
-									name="project_coordinador"
-									id="project_coordinador"
-									placeholder="Coordinador del Proyecto"
+									name="project_beneficiary_population"
+									id="project_beneficiary_population"
+									placeholder="Población beneficiaria"
+									value={this.state.project_beneficiary_population}
 									onChange={this.onChange}
-									value={this.state.project_coordinador}
 								/>
 							</Col>
 						</FormGroup>
 						<FormGroup row className="align-items-center">
-							<Label for="project_responsible_team" sm={2}>
-								Equipo Responsable
+							<Label for="project_geographic_area_of_influence" sm={2}>
+								Área geográfica de influencia del proyecto
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="text"
+									name="project_geographic_area_of_influence"
+									id="project_geographic_area_of_influence"
+									placeholder="Área geográfica de influencia del proyecto"
+									value={this.state.project_geographic_area_of_influence}
+									onChange={this.onChange}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_name" sm={2}>
+								Fecha Inicio
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="date"
+									name="project_start_date"
+									id="project_start_date"
+									placeholder="Fecha Inicio del Proyecto"
+									onChange={this.onChange}
+									value={this.state.project_start_date}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_name" sm={2}>
+								Fecha Fin
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="date"
+									name="project_end_date"
+									id="project_end_date"
+									placeholder="Fecha Fin del Proyecto"
+									onChange={this.onChange}
+									value={this.state.project_end_date}
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project-presentation" sm={2}>
+								Presentación
 							</Label>
 							<Col sm={9}>
 								<Input
 									type="textarea"
 									className="height-100px"
 									rows="4"
-									name="project_responsible_team"
-									id="project_responsible_team"
-									onChange={this.onChange}
-									value={this.state.project_responsible_team}
+									name="project-presentation"
+									id="project-presentation"
 								/>
 							</Col>
 						</FormGroup>
 						<FormGroup row className="align-items-center">
-							<Label for="project_institution" sm={2}>
-								Institución contraparte
+							<Label for="project-background" sm={2}>
+								Antecedentes
 							</Label>
 							<Col sm={9}>
 								<Input
 									type="textarea"
 									className="height-100px"
 									rows="4"
-									name="project_institution"
-									id="project_institution"
-									onChange={this.onChange}
-									value={this.state.project_institution}
+									name="project-background"
+									id="project-background"
+								/>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project-justification" sm={2}>
+								Justificación
+							</Label>
+							<Col sm={9}>
+								<Input
+									type="textarea"
+									className="height-100px"
+									rows="4"
+									name="project-justification"
+									id="project-justification"
 								/>
 							</Col>
 						</FormGroup>

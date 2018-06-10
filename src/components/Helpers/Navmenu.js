@@ -219,14 +219,6 @@ class Navmenu extends Component {
               Perfil del Proyecto
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              className={`${this.props.page === 'data' ? 'active' : ''}`}
-              to="/project-new-data"
-            >
-              Datos del Proyecto
-            </NavLink>
-          </li>
         </ul>
       );
       this.setState({
