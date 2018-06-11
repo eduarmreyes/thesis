@@ -16,8 +16,9 @@ import NewProjectData from 'pages/projects/Data';
 import NewProjectKPIs from 'pages/projects/KPI';
 import NewProjectSpecs from 'pages/projects/Specs';
 
-/* Update routes */
+import ProjectGeneral from './pages/admin/projects/General';
 
+/* Update routes */
 import UpdateKPI from 'pages/projects/UpdateKPI';
 import UpdateActivities from 'pages/projects/UpdateActivities';
 
@@ -483,6 +484,7 @@ class Routes extends Component {
             <PrivateRoute exact path="/project-new-data" component={NewProjectData} />
             <PrivateRoute exact path="/project-new-kpis" component={NewProjectKPIs} />
             <PrivateRoute exact path="/project-new-specs" component={NewProjectSpecs} />
+            <PrivateRoute exact path="/project-list" component={ProjectGeneral} />
             <PrivateRoute
               exact
               path="/updateKPIToProject/:projectID-:projectMatrixID"
