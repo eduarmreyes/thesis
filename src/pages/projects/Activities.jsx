@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import Moment from 'moment';
 import $ from 'jquery';
-import { NavLink } from 'react-router-dom';
-import Chart from 'chart.js';
-import { Col, Button, Form, FormGroup, Label, Input, FormText, Table } from 'reactstrap';
+import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Backend from 'components/Layouts/Backend';
-import ChartLine from 'components/Graphics/ChartLine';
-import JSONData from 'JSONData';
 
 class NewProjectActivitiesUser extends Component {
   constructor(props) {
@@ -23,7 +16,6 @@ class NewProjectActivitiesUser extends Component {
       page: 'general',
       tabla: null,
       id_cuenta: this.props.info_cuenta !== null ? this.props.info_cuenta['uuid'] : '',
-      redirect: false,
     };
   }
   shouldComponentUpdate(nextProps, nextState) {
@@ -36,93 +28,7 @@ class NewProjectActivitiesUser extends Component {
   componentWillMount() {}
   componentDidMount() {}
   render() {
-    if (this.state.redirect) {
-      return <Redirect push to={'/' + this.state.redirect_page} />;
-    }
-    return (
-      /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
-      <div className="content-inner no-padding-top no-padding-left no-padding-right">
-        <div className="page-info height-card ">
-          <div className="card-user">
-            <strong className="purple title-number">
-              {this.props.info_cuenta['initial_amount']}
-            </strong>
-            <br />
-            <span>Saldo inicial</span>
-          </div>
-
-          <div className="card-detail-col">
-            <strong className="whiteblue title-number">
-              {this.props.info_cuenta['able_to_withdraw']}{' '}
-            </strong>
-            <br />
-            <span>Total permitido a retirar</span>
-          </div>
-
-          <div className="card-detail-col">
-            <strong className="whiteblue title-number">
-              {this.props.info_cuenta['total_earnings']}{' '}
-            </strong>
-            <br />
-            <span>Total de ganancia</span>
-          </div>
-
-          <div className="card-detail-col">
-            <strong className="purple title-number">{this.props.info_cuenta['balance']}</strong>
-            <br />
-            <span>Saldo actual</span>
-          </div>
-        </div>
-        <div className="row-card ">
-          <div className="card-detail-col">
-            <span>Total débitos</span>{' '}
-            <strong className="whiteblue">{this.props.info_cuenta['total_debits']}</strong>
-          </div>
-          <div className="card-detail-col">
-            <span>Rendimiento Historico</span>{' '}
-            <strong className="whiteblue">{this.props.info_cuenta['account_performance']}</strong>
-          </div>
-          <div className="card-detail-col">
-            <span>Rendimiento del mes</span>{' '}
-            <strong className="purple">{this.props.info_cuenta['current_performance']}</strong>
-          </div>
-        </div>
-
-        <div className="border-bottom side-margins border-chart margin50">
-          <h3>Grafica de crecimiento </h3>
-          <div className="chart-container">{this.state.chart}</div>
-        </div>
-
-        <div className="generate-data margin50">
-          <h2 className="display-block">Transacciones de clientes</h2>
-        </div>
-
-        <div className="page-cliente-empty-content margin50">
-          <div className="table-responsive">
-            <Table striped>
-              <thead>
-                <tr className="no-cursorpointer">
-                  <td> Cuenta </td>
-                  <td> Nombre </td>
-                  <td> Monto </td>
-                  <td> Tipo de transacción </td>
-                  <td> Finalización de Contrato </td>
-                  <td> Balance </td>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.tabla}
-                <tr className="no-cursorpointer">
-                  <td colSpan={6}>
-                    <NavLink to="/transaccionesgeneralesuser">Ver mas Transacciones</NavLink>
-                  </td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-        </div>
-      </div>
-    );
+    return <h1>User</h1>;
   }
 }
 
@@ -171,10 +77,10 @@ class NewProjectActivitiesAdmin extends Component {
           name: this.state.project_activity_name,
           resource: this.state.project_resources.join(', '),
           resource_label: this.state.project_resources_labels.join(', '),
-          cost: parseInt(this.state.project_activity_budget),
+          cost: parseInt(this.state.project_activity_budget, 10),
         },
       ],
-      total: parseInt(this.state.total) + parseInt(this.state.project_activity_budget),
+      total: parseInt(this.state.total, 10) + parseInt(this.state.project_activity_budget, 10),
     });
     this.onCleanForm();
   }
@@ -224,7 +130,12 @@ class NewProjectActivitiesAdmin extends Component {
       <tr>
         <td colSpan={2}>
           <div>
-            <h3 className="text-center">Agregue un recurso en el formulario de arriba ⬆️</h3>
+            <h3 className="text-center">
+              Agregue un recurso en el formulario de arriba{' '}
+              <span role="img" aria-label="Up emoji">
+                ⬆️
+              </span>
+            </h3>
           </div>
         </td>
       </tr>
@@ -303,7 +214,7 @@ class NewProjectActivitiesAdmin extends Component {
           </Form>
           <hr />
           Costo Total:{' '}
-          {parseInt(this.state.total).toLocaleString('en-US', {
+          {parseInt(this.state.total, 10).toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}

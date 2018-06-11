@@ -4,19 +4,12 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/es';
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { DatetimePickerTrigger } from 'rc-datetime-picker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Backend from 'components/Layouts/Backend';
 
-const UNITS = [
-	{ id: 1, label: 'Personas', value: 'Personas' },
-	{ id: 2, label: 'Adultos', value: 'Adultos' },
-	{ id: 3, label: 'Niños y niñas', value: 'Niños y niñas' },
-	{ id: 4, label: 'Adultos mayores', value: 'Adultos mayores' },
-	{ id: 5, label: 'Jóvenes', value: 'Jóvenes' },
-];
-
-class NewProjectKPIsUser extends Component {
+class UpdateKPIUser extends Component {
 	constructor(props) {
 		super(props);
 
@@ -28,7 +21,7 @@ class NewProjectKPIsUser extends Component {
 	}
 }
 
-class NewProjectKPIsAdmin extends Component {
+class UpdateKPIAdmin extends Component {
 	constructor(props) {
 		super(props);
 
@@ -38,6 +31,7 @@ class NewProjectKPIsAdmin extends Component {
 			project_kpis_labels: [],
 			project_kpi_target: '',
 			project_units: '',
+			project_general_objective_kpi_date: moment(),
 		};
 
 		this.onAdd = this.onAdd.bind(this);
@@ -70,6 +64,14 @@ class NewProjectKPIsAdmin extends Component {
 			project_kpis_labels: [],
 			project_kpi_target: '',
 			project_units: '',
+		});
+	}
+
+	onSelectInputChange(inputValue, actionMeta) {}
+
+	onSelectProjectGeneralObjectiveKPIDate(project_general_objective_kpi_date) {
+		this.setState({
+			project_general_objective_kpi_date,
 		});
 	}
 
@@ -110,32 +112,13 @@ class NewProjectKPIsAdmin extends Component {
 			/*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
 			<div className="content-inner no-padding-top no-padding-left no-padding-right">
 				<div className="border-bottom side-margins box">
-					<h1>Indicadores</h1>
+					<h1>Actividades</h1>
+					<p className="muted">Actualice el estado de las actividades del proyecto</p>
+					<p className="muted">
+						<strong>Objetivo General: </strong> Test objetivo
+						general...fajewoifjawoeifja...faoweijfaoiwejfawe...jfaoiwejfaowejfoaiwe...
+					</p>
 					<Form onSubmit={this.onAdd}>
-						<FormGroup row className="align-items-center">
-							<Label for="project_name" sm={2}>
-								Unidad de Medida
-							</Label>
-							<Col sm={9}>
-								<Input
-									type="select"
-									name="project_units"
-									id="project_units"
-									className="height100px"
-									onChange={this.onChange}
-									value={this.state.project_units}
-								>
-									<option>Seleccionar Opción</option>
-									{UNITS.map(unit => {
-										return (
-											<option key={unit.id} value={unit.value}>
-												{unit.label}
-											</option>
-										);
-									})}
-								</Input>
-							</Col>
-						</FormGroup>
 						<FormGroup row className="align-items-center">
 							<Label for="project_kpi_target" sm={2}>
 								Valor del Indicador
@@ -146,26 +129,45 @@ class NewProjectKPIsAdmin extends Component {
 									type="number"
 									name="project_kpi_target"
 									id="project_kpi_target"
-									placeholder="Valor meta"
+									placeholder="Valor Real"
 									value={this.state.project_kpi_target}
 									onChange={this.onChange}
 								/>
 							</Col>
 						</FormGroup>
 						<FormGroup row className="align-items-center">
-							<Label for="project_kpi_date" sm={2}>
-								Fecha del Indicador Meta
+							<Label for="project_name" sm={2}>
+								Unidad de Medida
 							</Label>
 							<Col sm={9}>
-								<Input
-									required
-									type="date"
-									name="project_kpi_date"
-									id="project_kpi_date"
-									placeholder="Fecha meta"
-									value={this.state.project_kpi_date}
-									onChange={this.onChange}
-								/>
+								<strong>Niños y Niñas</strong>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_name" sm={2}>
+								Variable
+							</Label>
+							<Col sm={9}>
+								<strong>Salud Bucal</strong>
+							</Col>
+						</FormGroup>
+						<FormGroup row className="align-items-center">
+							<Label for="project_kpi_date" sm={2}>
+								Fecha del Indicador Real
+							</Label>
+							<Col sm={9}>
+								<DatetimePickerTrigger
+									closeOnSelectDay={true}
+									moment={this.state.project_kpi_date}
+									onChange={this.onSelectProjectGeneralObjectiveKPIDate}
+									className="give-me-space-between"
+								>
+									<input
+										type="text"
+										value={this.state.project_general_objective_kpi_date.format('LL')}
+										readOnly
+									/>
+								</DatetimePickerTrigger>
 							</Col>
 						</FormGroup>
 						<FormGroup check row>
@@ -182,7 +184,7 @@ class NewProjectKPIsAdmin extends Component {
 						<table>
 							<thead>
 								<tr className="no-cursorpointer">
-									<th> Valor Meta </th>
+									<th> Valor Real </th>
 									<th> Fecha </th>
 								</tr>
 							</thead>
@@ -194,7 +196,7 @@ class NewProjectKPIsAdmin extends Component {
 		);
 	}
 }
-class NewProjectKPIs extends Component {
+class UpdateKPI extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -202,7 +204,6 @@ class NewProjectKPIs extends Component {
 			store_uuid: null,
 			title: 'Proyecto',
 			page: 'kpis',
-			menu: 'project-new',
 		};
 		this.set_project_view = this.set_project_view.bind(this);
 	}
@@ -216,11 +217,11 @@ class NewProjectKPIs extends Component {
 
 		switch (scope) {
 			case 'user':
-				return <NewProjectKPIsUser {...this.props} />;
+				return <UpdateKPIUser {...this.props} />;
 			case 'admin':
-				return <NewProjectKPIsAdmin {...this.props} />;
+				return <UpdateKPIAdmin {...this.props} />;
 			case 'moderador':
-				return <NewProjectKPIsAdmin {...this.props} />;
+				return <UpdateKPIAdmin {...this.props} />;
 			default:
 				break;
 		}
@@ -249,4 +250,4 @@ const mapStateToProps = (state, props) => {
 	};
 };
 
-export default withRouter(connect(mapStateToProps)(NewProjectKPIs));
+export default withRouter(connect(mapStateToProps)(UpdateKPI));

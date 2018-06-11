@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 class Footer extends Component {
   render() {
     return (

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import Moment from 'moment';
 import 'moment/locale/es';
 import $ from 'jquery';
-import Chart from 'chart.js';
-import { Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import Select from 'react-select/lib/Select';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { DatetimePickerTrigger } from 'rc-datetime-picker';
@@ -16,8 +13,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'rc-datetime-picker/dist/picker.css';
 
 import Backend from 'components/Layouts/Backend';
-import ChartLine from 'components/Graphics/ChartLine';
-import JSONData from 'JSONData';
 
 const UNIT_MEASUREMENT = [
   {
@@ -61,19 +56,7 @@ class NewProjectUser extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      tabla: null,
-      id_cuenta: this.props.info_cuenta !== null ? this.props.info_cuenta['uuid'] : '',
-      redirect: false,
-    };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.info_cuenta === null) {
-      return false;
-    } else {
-      return true;
-    }
+    this.state = {};
   }
 
   componentDidMount() {}
@@ -85,63 +68,7 @@ class NewProjectUser extends Component {
   }
 
   render() {
-    return (
-      /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
-      <div className="content-inner no-padding-top no-padding-left no-padding-right">
-        <div className="border-bottom side-margins box">
-          <Form>
-            <FormGroup row className="align-items-center">
-              <Label for="project_name" sm={2}>
-                Nombre
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="text"
-                  name="project_name"
-                  id="project_name"
-                  placeholder="Nombre del Proyecto"
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_name" sm={2}>
-                Fecha Inicio
-              </Label>
-              <Col sm={9}>
-                <DatetimePickerTrigger
-                  closeOnSelectDay={true}
-                  moment={this.state.project_start_date}
-                  onChange={this.onSelectProjectStartDate}
-                  className="give-me-space-between"
-                >
-                  <input type="text" value={this.state.project_start_date.format('LL')} readOnly />
-                </DatetimePickerTrigger>
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_name" sm={2}>
-                Fecha Fin
-              </Label>
-              <Col sm={9}>
-                <DatetimePickerTrigger
-                  closeOnSelectDay={true}
-                  moment={this.state.project_end_date}
-                  onChange={this.onSelectProjectEndDate}
-                  className="give-me-space-between"
-                >
-                  <input type="text" value={this.state.project_end_date.format('LL')} readOnly />
-                </DatetimePickerTrigger>
-              </Col>
-            </FormGroup>
-            <FormGroup check row>
-              <Col sm={{ size: 10, offset: 2 }}>
-                <Button color="primary">Guardar</Button>
-              </Col>
-            </FormGroup>
-          </Form>
-        </div>
-      </div>
-    );
+    return <h1>User</h1>;
   }
 }
 
@@ -243,10 +170,10 @@ class NewProjectAdmin extends Component {
           name: this.state.project_activity_name,
           resource: this.state.project_resources.join(', '),
           resource_label: this.state.project_resources_labels.join(', '),
-          cost: parseInt(this.state.project_activity_budget),
+          cost: parseInt(this.state.project_activity_budget, 10),
         },
       ],
-      total: parseInt(this.state.total) + parseInt(this.state.project_activity_budget),
+      total: parseInt(this.state.total, 10) + parseInt(this.state.project_activity_budget, 10),
     });
     this.onCleanForm();
   }
@@ -437,7 +364,7 @@ class NewProjectAdmin extends Component {
   }
 
   render() {
-    const activities_table = this.state.activities.length ? (
+    /*const activities_table = this.state.activities.length ? (
       this.state.activities.map(activity => {
         return (
           <tr key={activity.id}>
@@ -460,14 +387,14 @@ class NewProjectAdmin extends Component {
           </div>
         </td>
       </tr>
-    );
+    );*/
     return (
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="toggle-logframe-wrapper">
-          <a href="#" onClick={this.onToggleLogframe}>
+          <Button className="link" onClick={this.onToggleLogframe}>
             [ Mostrar Matriz ]
-          </a>
+          </Button>
         </div>
         <div className="border-bottom side-margins box">
           <h1>Objetivo General</h1>
@@ -1042,7 +969,7 @@ class NewProjectAdmin extends Component {
             </FormGroup>
             <hr />
             Costo Total:{' '}
-            {parseInt(this.state.total).toLocaleString('en-US', {
+            {parseInt(this.state.total, 10).toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
             })}
@@ -1056,9 +983,9 @@ class NewProjectAdmin extends Component {
         >
           <div className="bg-bright p-25 br-5">
             <div className="text-right">
-              <a href="#" onClick={this.onToggleLogframe}>
+              <Button className="link" onClick={this.onToggleLogframe}>
                 [ Ocultar Matriz del Marco Lógico ]
-              </a>
+              </Button>
             </div>
             <h3 className="text-center">Matriz del Marco Lógico</h3>
             <table>

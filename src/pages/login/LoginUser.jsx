@@ -8,8 +8,6 @@ import actions from '../../actions';
 import '../../assets/css/pages/style.css';
 import '../../assets/css/pages/login.css';
 import '../../assets/css/pages/movil.css';
-import Lottie from 'react-lottie';
-import * as animationData from '../../components/lottieAnimation/LoadingRupertx.json';
 
 class LoginUser extends Component {
   constructor(props) {
@@ -25,23 +23,6 @@ class LoginUser extends Component {
   }
   onSubmit(e) {
     e.preventDefault();
-    const defaultOptions = {
-      loop: true,
-      autoplay: true,
-      animationData: animationData,
-    };
-
-    const load_view = (
-      <div className="content-loading">
-        <Lottie
-          options={defaultOptions}
-          height={125}
-          width={125}
-          isStopped={this.state.isStopped}
-          isPaused={this.state.isPaused}
-        />
-      </div>
-    );
 
     const data = JSON.stringify({
       UserName: this.state.email,

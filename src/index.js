@@ -3,76 +3,37 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
+import PrivateRoute from 'components/routes/PrivateRoute';
+import store from 'store';
+
 /*Componentes tipo pagina cargados*/
-import Dashboard from './pages/Dashboard';
-import NewProject from './pages/projects/NewProject';
-import NewProjectActivities from './pages/projects/Activities';
-import NewProjectData from './pages/projects/Data';
-import NewProjectKPIs from './pages/projects/KPI';
-import NewProjectSpecs from './pages/projects/Specs';
+import Dashboard from 'pages/Dashboard';
 
-import UpdateKPI from './pages/projects/UpdateKPI';
+/* Project routes */
+import NewProject from 'pages/projects/NewProject';
+import NewProjectActivities from 'pages/projects/Activities';
+import NewProjectData from 'pages/projects/Data';
+import NewProjectKPIs from 'pages/projects/KPI';
+import NewProjectSpecs from 'pages/projects/Specs';
 
-import PrivateRoute from './components/routes/PrivateRoute';
-import store from './store';
-//import actions from "./actions";
-import Login from './pages/login/Login';
-import LoginAdmin from './pages/login/LoginAdmin';
-import LoginUser from './pages/login/LoginUser';
+/* Update routes */
 
-import Validar from './pages/login/Validar';
-import Confirm from './pages/login/Confirm';
-import Singup from './pages/login/Singup';
-import CompanyType from './pages/login/CompanyType';
-import Logout from './pages/login/Logout';
+import UpdateKPI from 'pages/projects/UpdateKPI';
+import UpdateActivities from 'pages/projects/UpdateActivities';
 
-import registerServiceWorker from './registerServiceWorker';
+//import actions from "actions";
+import Login from 'pages/login/Login';
+import LoginAdmin from 'pages/login/LoginAdmin';
+import LoginUser from 'pages/login/LoginUser';
 
-import General from './pages/admin/cliente/General';
-import Pendiente from './pages/admin/cliente/Pendiente';
-import Historial from './pages/admin/cliente/Historial';
-import Detallependiente from './pages/admin/cliente/Detallependiente';
-import Detallecliente from './pages/admin/cliente/Detallecliente';
+import Signup from 'pages/login/Signup';
+import Logout from 'pages/login/Logout';
 
-import TransaccionesGenerales from './pages/admin/transacciones/General';
-import TransaccionesDepositos from './pages/admin/transacciones/Depositos';
-import TransaccionesRetiros from './pages/admin/transacciones/Retiros';
-import TransaccionesPips from './pages/admin/transacciones/Pips';
+import Loading from 'components/Helpers/Loading';
 
-import TransaccionesGeneralesuser from './pages/user/transacciones/General';
-import TransaccionesDepositosuser from './pages/user/transacciones/Depositos';
-import TransaccionesRetirosuser from './pages/user/transacciones/Retiros';
-import Ganadas from './pages/user/transacciones/Ganadas';
-import Select_acount from './pages/user/Select_acount';
+import registerServiceWorker from 'registerServiceWorker';
 
-import ProjectGeneral from './pages/admin/projects/General';
-
-import Usuariosgenerales from './pages/admin/usuarios/General';
-import Usuariospermisos from './pages/admin/usuarios/Permisos';
-import Detalleusuarios from './pages/admin/usuarios/Detalleusuarios';
-
-import Perfil from './pages/user/Perfil';
-
-import Cuenta from './pages/configuracion/Cuenta';
-import Porcentaje from './pages/configuracion/Porcentaje';
-import Terms from './pages/configuracion/TermsConditions';
-import Faq from './pages/configuracion/Faq';
-
-import Infoeconomicauser from './pages/user/info/Infoeconomica';
-import Infoempresauser from './pages/user/info/Infoempresa';
-import Infobancariauser from './pages/user/info/Infobancaria';
-import Infoarchivosuser from './pages/user/info/Infoarchivos';
-
-import Perfiladmin from './pages/admin/cliente/info/Perfil';
-import Infoeconomicaadmin from './pages/admin/cliente/info/Infoeconomica';
-import Infoempresaadmin from './pages/admin/cliente/info/Infoempresa';
-import Infobancariaadmin from './pages/admin/cliente/info/Infobancaria';
-import Infoarchivosadmin from './pages/admin/cliente/info/Infoarchivos';
-
-import Puntosforex from './pages/user/forex/RetiroCanje';
-import Referidos from './pages/user/forex/Referidos';
-
-import Loading from './components/Helpers/Loading';
+import 'assets/css/pages/general.css';
 
 class Error404 extends Component {
   render() {
@@ -86,10 +47,9 @@ class Error404 extends Component {
         >
           <defs>
             <style>
-              {' '}
               {
                 '.cls-1 { fill: #f3f8ff; } .cls-2 { fill: #4873ff;  } .cls-3, .cls-5 { fill: none; } .cls-3 { stroke: #afcdff; stroke-width: 4px; } .cls-4 {  stroke: none; }'
-              }{' '}
+              }
             </style>
           </defs>
           <g id="Group_258" data-name="Group 258" transform="translate(0 4776)">
@@ -506,11 +466,6 @@ class Routes extends Component {
   }
   componentWillMount() {}
   render() {
-    /*const handleFunctions = {
-      user: {
-        logout: this.handleUserLogout
-      }
-    }*/
     return (
       /*Se crean las rutas que serviran como las paginas a cargar*/
       <Provider store={store}>
@@ -521,83 +476,23 @@ class Routes extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/admin" component={LoginAdmin} />
             <Route exact path="/log-user" component={LoginUser} />
-            <Route exact path="/singup" component={Singup} />
-            <Route exact path="/validar" component={Validar} />
-            <Route exact path="/confirm/:token" component={Confirm} />
-            <PrivateRoute exact path="/companytype" component={CompanyType} />
+            <Route exact path="/Signup" component={Signup} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/project-new" component={NewProject} />
             <PrivateRoute exact path="/project-new-activities" component={NewProjectActivities} />
             <PrivateRoute exact path="/project-new-data" component={NewProjectData} />
             <PrivateRoute exact path="/project-new-kpis" component={NewProjectKPIs} />
             <PrivateRoute exact path="/project-new-specs" component={NewProjectSpecs} />
-            <PrivateRoute exact path="/clientes" component={General} />
-            <PrivateRoute exact path="/pendiente" component={Pendiente} />
-            <PrivateRoute exact path="/detalle-pendiente/:id_user" component={Detallependiente} />
-            <PrivateRoute exact path="/detalle-cliente/:id_user/:uuid" component={Detallecliente} />
-            <PrivateRoute exact path="/historial" component={Historial} />
-            <PrivateRoute exact path="/transaccionesgenerales" component={TransaccionesGenerales} />
-            <PrivateRoute exact path="/transaccionesdepositos" component={TransaccionesDepositos} />
-            <PrivateRoute exact path="/transaccionesretiros" component={TransaccionesRetiros} />
-            <PrivateRoute exact path="/transaccionespips" component={TransaccionesPips} />
             <PrivateRoute
               exact
-              path="/transaccionesgeneralesuser"
-              component={TransaccionesGeneralesuser}
+              path="/updateKPIToProject/:projectID-:projectMatrixID"
+              component={UpdateKPI}
             />
             <PrivateRoute
               exact
-              path="/transaccionesdepositosuser"
-              component={TransaccionesDepositosuser}
+              path="/updateActivitiesToProject/:projectID-:projectMatrixID"
+              component={UpdateActivities}
             />
-            <PrivateRoute
-              exact
-              path="/transaccionesretirosuser"
-              component={TransaccionesRetirosuser}
-            />
-            <PrivateRoute exact path="/transaccionesganadasuser" component={Ganadas} />
-            <PrivateRoute exact path="/Selectacount" component={Select_acount} />
-            <PrivateRoute exact path="/project-list" component={ProjectGeneral} />
-            <PrivateRoute exact path="/UpdateKPIToProject" component={UpdateKPI} />
-            <PrivateRoute exact path="/usuariosgenerales" component={Usuariosgenerales} />
-            <PrivateRoute exact path="/usuariospermisos" component={Usuariospermisos} />
-            <PrivateRoute
-              exact
-              path="/detalleusuarios/:id_user/:uuid"
-              component={Detalleusuarios}
-            />
-            <PrivateRoute exact path="/cuenta" component={Cuenta} />
-            <PrivateRoute exact path="/porcentaje" component={Porcentaje} />
-            <PrivateRoute exact path="/terms" component={Terms} />
-            <PrivateRoute exact path="/faq" component={Faq} />
-            <PrivateRoute exact path="/perfil" component={Perfil} />
-            <PrivateRoute exact path="/infoeconomicauser" component={Infoeconomicauser} />
-            <PrivateRoute exact path="/infoempresauser" component={Infoempresauser} />
-            <PrivateRoute exact path="/infobancariauser" component={Infobancariauser} />
-            <PrivateRoute exact path="/infoarchivosuser" component={Infoarchivosuser} />
-            <PrivateRoute exact path="/perfiladmin/:uuid/:id_user" component={Perfiladmin} />
-            <PrivateRoute
-              exact
-              path="/infoeconomicadmin/:uuid/:id_user"
-              component={Infoeconomicaadmin}
-            />
-            <PrivateRoute
-              exact
-              path="/infoempresaadmin/:uuid/:id_user"
-              component={Infoempresaadmin}
-            />
-            <PrivateRoute
-              exact
-              path="/infobancariaadmin/:uuid/:id_user"
-              component={Infobancariaadmin}
-            />
-            <PrivateRoute
-              exact
-              path="/infoarchivosadmin/:uuid/:id_user"
-              component={Infoarchivosadmin}
-            />
-            <PrivateRoute exact path="/puntosforex" component={Puntosforex} />
-            <PrivateRoute exact path="/referidos" component={Referidos} />
             <Route exact path="/loading" component={Loading} />
 
             <Route component={Error404} />

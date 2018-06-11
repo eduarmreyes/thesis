@@ -4,15 +4,18 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import $ from 'jquery';
 import { NavLink } from 'react-router-dom';
-import Backend from '../../../components/Layouts/Backend';
 import ReactPaginate from 'react-paginate';
 import moment from 'moment';
 import Moment from 'moment';
 import { DatetimePickerTrigger } from 'rc-datetime-picker';
 import { CSVLink, CSVDownload } from 'react-csv';
 
-import '../../../assets/css/pages/general.css';
-import actions from '../../../actions';
+import 'assets/css/pages/general.css';
+
+import Backend from 'components/Layouts/Backend';
+
+import actions from 'actions';
+
 class General extends Component {
 	constructor(props) {
 		super(props);
@@ -40,16 +43,20 @@ class General extends Component {
 		};
 		this.get_projects = this.get_projects.bind(this);
 		this.onChange = this.onChange.bind(this);
-		this.update_indicator = this.update_indicator.bind(this);
+		this.updateKPI = this.updateKPI.bind(this);
+		this.updateActivities = this.updateActivities.bind(this);
 		this.select_project = this.select_project.bind(this);
 	}
 	componentDidMount() {
 		this.get_projects(1, 13);
 	}
-	update_indicator(e, id) {
+	updateKPI(e, projectID, projectMatrixID) {
 		e.preventDefault();
-		sessionStorage.setItem('updateKPIToProject', id);
-		this.props.history.push('/updateKPIToProject');
+		this.props.history.push('/updateKPIToProject/' + projectID + '-' + projectMatrixID);
+	}
+	updateActivities(e, projectID, projectMatrixID) {
+		e.preventDefault();
+		this.props.history.push('/updateActivitiesToProject/' + projectID + '-' + projectMatrixID);
 	}
 	select_project(e, id) {
 		e.preventDefault();
@@ -58,37 +65,37 @@ class General extends Component {
 	get_projects(page, per_page) {
 		$.ajax({
 			type: 'GET',
-			url: this.props.baseurl + '/ProjectProfile/GetAll',
+			url: this.props.baseurl + '/Project/GetAll',
 			contentType: 'application/json',
 			dataType: 'json',
 			success: response => {
 				let content;
-				this.setState({
-					pagina: page,
-					per_page: per_page,
-				});
 
 				this.setState({
-					data: response.data,
+					data: response,
 				});
 
-				const type_trans = 'Ninguna';
-
-				content = response.map((lista, index) => {
-					if (lista.projectName === '') {
+				content = response.map((project, index) => {
+					if (project.projectProfile.projectName === '') {
 						return false;
 					}
 					return (
 						<tr key={index} className="no-cursorpointer">
 							<td>
 								<div className="title-wrapper">
-									<div className="title">{lista.projectName}</div>
+									<div className="title">{project.projectProfile.projectName}</div>
 								</div>
 							</td>
 							<td>
 								<div className="key-value">
 									<div className="avatar" />
-									<strong>{lista.projectCoordinator}</strong>
+									<strong>{project.projectProfile.projectCoordinator}</strong>
+								</div>
+							</td>
+							<td>
+								<div className="key-value">
+									<div className="avatar" />
+									<strong>{moment(project.projectProfile.endDate).format('LL')}</strong>
 								</div>
 							</td>
 							<td className="actions min-width">
@@ -97,19 +104,29 @@ class General extends Component {
 										className="button"
 										href="#"
 										onClick={e => {
-											this.update_indicator(e, lista.id);
+											this.updateKPI(e, project.id, project.projectMatrixId);
 										}}
 									>
-										Actualizar Indicadores
+										Reportar Avance de Indicadores
 									</a>
 								</div>
-								<br />
 								<div className="button-group">
 									<a
 										className="button"
 										href="#"
 										onClick={e => {
-											this.select_project(e, lista.id);
+											this.updateActivities(e, project.id, project.projectMatrixId);
+										}}
+									>
+										Reportar Avance de Actividades
+									</a>
+								</div>
+								<div className="button-group">
+									<a
+										className="button"
+										href="#"
+										onClick={e => {
+											this.select_project(e, project.id);
 										}}
 									>
 										Editar
@@ -143,6 +160,7 @@ class General extends Component {
 								<tr className="heading" className="no-cursorpointer">
 									<th>Nombre del Proyecto</th>
 									<th>Coordinador</th>
+									<th>Fecha Final</th>
 									<th />
 								</tr>
 							</thead>
