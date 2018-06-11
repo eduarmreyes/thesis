@@ -46,7 +46,7 @@ class NewProjectSpecsAdmin extends Component {
 	}
 	componentDidMount() {
 		$.ajax({
-			type: 'GET',
+			type: 'get',
 			url: this.props.baseurl + '/KnowledgeArea/GetAll',
 			contentType: 'application/json',
 			dataType: 'json',
@@ -60,7 +60,7 @@ class NewProjectSpecsAdmin extends Component {
 			},
 		});
 		$.ajax({
-			type: 'GET',
+			type: 'get',
 			url: this.props.baseurl + '/DevelopmentObjective/GetAll',
 			contentType: 'application/json',
 			dataType: 'json',
@@ -74,7 +74,7 @@ class NewProjectSpecsAdmin extends Component {
 			},
 		});
 		$.ajax({
-			type: 'GET',
+			type: 'get',
 			url: this.props.baseurl + '/InvestigationLine/GetAll',
 			contentType: 'application/json',
 			dataType: 'json',
@@ -88,7 +88,7 @@ class NewProjectSpecsAdmin extends Component {
 			},
 		});
 		$.ajax({
-			type: 'GET',
+			type: 'get',
 			url: this.props.baseurl + '/Faculty/GetAll',
 			contentType: 'application/json',
 			dataType: 'json',
@@ -103,7 +103,7 @@ class NewProjectSpecsAdmin extends Component {
 		});
 		if (sessionStorage.getItem('currentProjectID')) {
 			$.ajax({
-				type: 'GET',
+				type: 'get',
 				url:
 					this.props.baseurl +
 					'/ProjectProfile/GetById/' +
@@ -171,7 +171,7 @@ class NewProjectSpecsAdmin extends Component {
 		});
 
 		$.ajax({
-			type: 'POST',
+			type: 'post',
 			url: url,
 			contentType: 'application/json',
 			dataType: 'json',
@@ -487,7 +487,7 @@ class NewProjectSpecs extends Component {
 		this.state = {
 			stado: 0,
 			store_uuid: null,
-			title: 'Proyecto',
+			title: 'Nuevo Proyecto - Perfil del Proyecto',
 			page: 'specs',
 			menu: 'project-new',
 		};

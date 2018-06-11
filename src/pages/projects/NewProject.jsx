@@ -80,9 +80,8 @@ class NewProjectAdmin extends Component {
       logframes: [],
       project_logframes: [],
       project_logframes_labels: [],
+      // General Objective State
       project_general_objective: '',
-      project_means_verification: '',
-      project_general_objective_kpi_unit_measurement: '',
 
       // Activities State
       activities: [],
@@ -100,15 +99,14 @@ class NewProjectAdmin extends Component {
       project_end_date: moment(),
       showLogframe: false,
       showSpecificObjectiveArea: true,
-      showResultsArea: true,
+      showResultsArea: false,
       project_general_objective_error_message: '',
       project_logframe_id: 0,
     };
 
-    this.onAdd = this.onAdd.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onChangeSelection = this.onChangeSelection.bind(this);
-    this.onAddActivities = this.onAddActivities.bind(this);
+    this.onChangeSpecificObjectiveSelection = this.onChangeSpecificObjectiveSelection.bind(this);
     this.onSelectProjectGeneralObjectiveKPIDate = this.onSelectProjectGeneralObjectiveKPIDate.bind(
       this
     );
@@ -122,9 +120,12 @@ class NewProjectAdmin extends Component {
     this.onSelectProjectEndDate = this.onSelectProjectEndDate.bind(this);
     this.onToggleLogframe = this.onToggleLogframe.bind(this);
     this.onToggleSpecificObjectiveArea = this.onToggleSpecificObjectiveArea.bind(this);
+
     this.onSubmitGeneralObjective = this.onSubmitGeneralObjective.bind(this);
     this.updateGeneralObjectiveErrorMessage = this.updateGeneralObjectiveErrorMessage.bind(this);
     this.saveLogframeId = this.saveLogframeId.bind(this);
+
+    this.saveSpecificObjective = this.saveSpecificObjective.bind(this);
   }
 
   componentDidMount() {
@@ -142,50 +143,6 @@ class NewProjectAdmin extends Component {
       error: response => {
         console.log(response.data);
       },
-    });
-  }
-
-  onAdd(e) {
-    e.preventDefault();
-    this.setState({
-      logframes: [
-        ...this.state.logframes,
-        {
-          id: this.state.logframes.length,
-          objective: this.state.project_general_objective,
-          means_verification: this.state.project_means_verification,
-          risk_assumptions: this.state.project_risk_assumptions,
-        },
-      ],
-    });
-    this.onCleanForm();
-  }
-
-  onAddActivities(e) {
-    e.preventDefault();
-    this.setState({
-      activities: [
-        ...this.state.activities,
-        {
-          id: this.state.activities.length,
-          name: this.state.project_activity_name,
-          resource: this.state.project_resources.join(', '),
-          resource_label: this.state.project_resources_labels.join(', '),
-          cost: parseInt(this.state.project_activity_budget, 10),
-        },
-      ],
-      total: parseInt(this.state.total, 10) + parseInt(this.state.project_activity_budget, 10),
-    });
-    this.onCleanForm();
-  }
-
-  onCleanForm() {
-    this.setState({
-      project_logframes: [],
-      project_logframes_labels: [],
-      project_general_objective: '',
-      project_means_verification: '',
-      project_risk_assumptions: '',
     });
   }
 
@@ -293,6 +250,12 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  onChangeSpecificObjectiveSelection(e) {
+    this.setState({
+      project_specific_objective_kpi_unit_measurement: e,
+    });
+  }
+
   saveLogframeId(id) {
     this.setState({
       project_logframe_id: id,
@@ -338,7 +301,7 @@ class NewProjectAdmin extends Component {
       ProjectObjectiveId: this.state.project_general_objective_id,
       Goal: this.state.project_general_objective_kpi_quantity,
       Variable: this.state.project_general_objective_kpi_variable,
-      // UnitMeasurement: this.state.project_general_objective_kpi_unit_measurement,
+      IndicatorUnitOfMeasure: this.state.project_general_objective_kpi_unit_measurement.value,
       GoalDate: this.state.project_general_objective_kpi_date,
     });
 
@@ -352,6 +315,72 @@ class NewProjectAdmin extends Component {
         console.log(response);
         if (response.status === 'success') {
           this.onToggleSpecificObjectiveArea();
+        } else {
+          this.updateGeneralObjectiveErrorMessage('No se pudo guardar la matriz de marco lógico.');
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  saveSpecificObjective(e) {
+    e.preventDefault();
+    const data = JSON.stringify({
+      ObjectiveDescription: this.state.project_specific_objective,
+      ObjetiveIndicator: this.state.project_specific_objective_kpi,
+      MeansOfVerification: this.state.project_specific_objective_means_of_verification,
+      ObjectiveType: '1',
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ProjectObjective/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        console.log(response);
+        if (response.status === 'success') {
+          this.saveSpecificObjectiveIndicator(response.id);
+        } else {
+          this.updateGeneralObjectiveErrorMessage('No se pudo guardar la matriz de marco lógico.');
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  saveSpecificObjectiveIndicator(project_specific_objective_id) {
+    this.setState({
+      project_specific_objective_id: project_specific_objective_id,
+    });
+
+    const data = JSON.stringify({
+      ProjectObjectiveId: this.state.project_specific_objective_id,
+      Goal: this.state.project_specific_objective_kpi_quantity,
+      Variable: this.state.project_specific_objective_kpi_variable,
+      IndicatorUnitOfMeasure: this.state.project_specific_objective_kpi_unit_measurement.value,
+      GoalDate: this.state.project_specific_objective_kpi_date,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ObjectiveIndicator/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        console.log(response);
+        if (response.status === 'success') {
+          this.onToggleResultsArea();
         } else {
           this.updateGeneralObjectiveErrorMessage('No se pudo guardar la matriz de marco lógico.');
         }
@@ -537,7 +566,7 @@ class NewProjectAdmin extends Component {
           </Form>
           <h1>Objetivos Específicos</h1>
           <Form
-            onSubmit={e => e.preventDefault()}
+            onSubmit={this.saveSpecificObjective}
             className={`${this.state.showSpecificObjectiveArea ? '' : 'opacity-5 p-events-none'}`}
           >
             <FormGroup row className="align-items-center">
@@ -593,9 +622,9 @@ class NewProjectAdmin extends Component {
                   required
                   isClearable
                   className="give-me-space-between"
-                  name="form-field-name"
+                  name="project_specific_objective_kpi_unit_measurement"
                   value={this.state.project_specific_objective_kpi_unit_measurement}
-                  onChange={this.onChangeSelection}
+                  onChange={this.onChangeSpecificObjectiveSelection}
                   onInputChange={this.onSelectInputChange}
                   options={UNIT_MEASUREMENT}
                 />
@@ -798,7 +827,12 @@ class NewProjectAdmin extends Component {
             </FormGroup>
           </Form>
           <h1>Actividades</h1>
-          <Form onSubmit={this.onAddActivities} className="opacity-5 p-events-none">
+          <Form
+            onSubmit={e => {
+              e.preventDefault();
+            }}
+            className="opacity-5 p-events-none"
+          >
             <FormGroup row className="align-items-center">
               <Label for="project_activity_name" sm={2}>
                 Resultado de la Actividad
@@ -1012,23 +1046,23 @@ class NewProjectAdmin extends Component {
                 <tr>
                   <th>Objetivo General</th>
                   <td>{this.state.project_general_objective}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
+                  <td>{this.state.project_general_objective_kpi}</td>
+                  <td>{this.state.project_general_objective_means_of_verification}</td>
+                  <td>{this.state.project_general_objective_risks}</td>
                 </tr>
                 <tr>
                   <th>Objetivo Específico</th>
                   <td>{this.state.project_specific_objective}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
+                  <td>{this.state.project_specific_objective_kpi}</td>
+                  <td>{this.state.project_specific_objective_means_of_verification}</td>
+                  <td>{this.state.project_specific_objective_risks}</td>
                 </tr>
                 <tr>
                   <th>Resultados</th>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
+                  <td>{this.state.project_result}</td>
+                  <td>{this.state.project_result_kpi}</td>
+                  <td>{this.state.project_result_means_of_verification}</td>
+                  <td>{this.state.project_result_risks}</td>
                 </tr>
                 <tr>
                   <th>Actividades</th>
