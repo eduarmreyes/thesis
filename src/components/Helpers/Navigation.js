@@ -60,8 +60,6 @@ class Navigation extends Component {
     super(props);
 
     this.state = {};
-    this.onChange = this.onChange.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
   set_navigation() {
     const scope = this.props.scope;

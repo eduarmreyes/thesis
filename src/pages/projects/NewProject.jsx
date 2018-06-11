@@ -99,7 +99,8 @@ class NewProjectAdmin extends Component {
       project_start_date: moment(),
       project_end_date: moment(),
       showLogframe: false,
-      showSpecificObjectiveArea: false,
+      showSpecificObjectiveArea: true,
+      showResultsArea: true,
       project_general_objective_error_message: '',
       project_logframe_id: 0,
     };
@@ -280,6 +281,12 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  onToggleResultsArea() {
+    this.setState({
+      showResultsArea: !this.state.showResultsArea,
+    });
+  }
+
   onChangeSelection(e) {
     this.setState({
       project_general_objective_kpi_unit_measurement: e,
@@ -392,7 +399,7 @@ class NewProjectAdmin extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
         <div className="toggle-logframe-wrapper">
-          <Button className="link" onClick={this.onToggleLogframe}>
+          <Button color="link" onClick={this.onToggleLogframe}>
             [ Mostrar Matriz ]
           </Button>
         </div>
@@ -660,7 +667,10 @@ class NewProjectAdmin extends Component {
             </FormGroup>
           </Form>
           <h1>Resultados</h1>
-          <Form onSubmit={e => e.preventDefault()} className="opacity-5 p-events-none">
+          <Form
+            onSubmit={e => e.preventDefault()}
+            className={`${this.state.showResultsArea ? '' : 'opacity-5 p-events-none'}`}
+          >
             <FormGroup row className="align-items-center">
               <Label for="project_result" sm={2}>
                 Resultado
@@ -983,7 +993,7 @@ class NewProjectAdmin extends Component {
         >
           <div className="bg-bright p-25 br-5">
             <div className="text-right">
-              <Button className="link" onClick={this.onToggleLogframe}>
+              <Button color="link" onClick={this.onToggleLogframe}>
                 [ Ocultar Matriz del Marco Lógico ]
               </Button>
             </div>
