@@ -226,7 +226,20 @@ class NewProjectAdmin extends Component {
       project_resources_labels: [],
       project_activity_name: "",
       total: 0,
-      RESOURCES_OPTIONS: [],
+      RESOURCES_OPTIONS: [
+        {
+          label: 'Resource One',
+          value: 'Resource One',
+        },
+        {
+          label: 'Resource Two',
+          value: 'Resource Two',
+        },
+        {
+          label: 'Resource Three',
+          value: 'Resource Three',
+        },
+      ],
       project_general_objective_kpi_date: moment(),
       project_specific_objective_kpi_date: moment(),
       project_result_kpi_date: moment(),
@@ -247,6 +260,7 @@ class NewProjectAdmin extends Component {
 
       // Activities
       showActivitiesArea: false,
+      project_activities: [],
 
       loading_project_general_objective: false,
       disabled_project_general_objective: false,
@@ -294,6 +308,9 @@ class NewProjectAdmin extends Component {
 
     // results
     // this.saveResults = this.saveResults.bind(this);
+    this.onChangeSelectionResultKPIUnitMeasurement = this.onChangeSelectionResultKPIUnitMeasurement.bind(
+      this
+    );
     this.onAddResults = this.onAddResults.bind(this);
     this.onCleanResultsForm = this.onCleanResultsForm.bind(this);
 
@@ -308,6 +325,14 @@ class NewProjectAdmin extends Component {
       this
     );
     this.onToggleButtonProjectSpecificDisabled = this.onToggleButtonProjectSpecificDisabled.bind(
+      this);
+    // activites
+    // this.saveActivities = this.saveActivities.bind(this);
+    this.onAddActivities = this.onAddActivities.bind(this);
+    this.onCleanActivitiesForm = this.onCleanActivitiesForm.bind(this);
+    this.onToggleActivitesArea = this.onToggleActivitesArea.bind(this);
+    this.onChangeSelectionResources = this.onChangeSelectionResources.bind(this);
+    this.onChangeSelectionResourcesForActivity = this.onChangeSelectionResourcesForActivity.bind(
       this
     );
   }
@@ -437,6 +462,24 @@ class NewProjectAdmin extends Component {
   onChangeSelection(e) {
     this.setState({
       project_general_objective_kpi_unit_measurement: e
+    });
+  }
+
+  onChangeSelectionResourcesForActivity(e) {
+    this.setState({
+      project_activity_resource: e,
+    });
+  }
+
+  onChangeSelectionResultKPIUnitMeasurement(e) {
+    this.setState({
+      project_result_kpi_unit_measurement: e,
+    });
+  }
+
+  onChangeSelectionResources(e) {
+    this.setState({
+      project_resources: e,
     });
   }
 
@@ -678,31 +721,52 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  // Activities
+  onToggleActivitesArea() {
+    this.setState({
+      showActivitiesArea: !this.state.showActivitiesArea,
+    });
+  }
+  onAddActivities(e) {
+    e.preventDefault();
+    this.setState({
+      project_activities: [
+        ...this.state.project_activities,
+        {
+          id: this.state.project_activities.length,
+          result: this.state.project_activity_resource,
+          activity: this.state.project_activity_name,
+          start_date: this.state.project_activity_start_date,
+          end_date: this.state.project_activity_end_date,
+          resource: this.state.project_resources,
+          resources_quantity: this.state.project_resources_quantity,
+          unit_of_measurement: this.state.project_resources_unit_of_measurement,
+          unit_price: this.state.project_resources_unit_price,
+          entity: this.state.project_resources_entity,
+          total:
+            parseInt(this.state.project_resources_unit_price, 10) *
+            parseInt(this.state.project_resources_quantity, 10),
+        },
+      ],
+      showActivitiesArea: true,
+    });
+    this.onCleanActivitiesForm();
+  }
+
+  onCleanActivitiesForm() {
+    this.setState({
+      project_activity_name: '',
+      project_activity_start_date: moment(),
+      project_activity_end_date: moment(),
+      project_resources: '',
+      project_resources_quantity: '',
+      project_resources_unit_of_measurement: '',
+      project_resources_unit_price: '',
+      project_resources_entity: null,
+    });
+  }
+
   render() {
-    /*const activities_table = this.state.activities.length ? (
-      this.state.activities.map(activity => {
-        return (
-          <tr key={activity.id}>
-            <td>{activity.name}</td>
-            <td>{activity.resource_label}</td>
-            <td>
-              {activity.cost.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
-            </td>
-          </tr>
-        );
-      })
-    ) : (
-      <tr>
-        <td colSpan={2}>
-          <div>
-            <h3 className="text-center">Agregue un recurso en el formulario de arriba ⬆️</h3>
-          </div>
-        </td>
-      </tr>
-    );*/
     const results_table = this.state.project_results.length ? (
       this.state.project_results.map(result => {
         const result_target_date = result.kpi_date;
@@ -727,6 +791,32 @@ class NewProjectAdmin extends Component {
                 ⬆️
               </span>
             </h3>
+          </div>
+        </td>
+      </tr>
+    );
+    const activities_table = this.state.project_activities.length ? (
+      this.state.project_activities.map(activity => {
+        return (
+          <tr key={activity.id}>
+            <td>{activity.activity}</td>
+            <td>
+              {activity.resources_quantity} {activity.unit_of_measurement}
+            </td>
+            <td>
+              {activity.total.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </td>
+          </tr>
+        );
+      })
+    ) : (
+      <tr>
+        <td colSpan={2}>
+          <div>
+            <h3 className="text-center">Agregue un recurso en el formulario de arriba ⬆️</h3>
           </div>
         </td>
       </tr>
@@ -1223,23 +1313,21 @@ class NewProjectAdmin extends Component {
           </div>
           <h1>Actividades</h1>
           <Form
-            onSubmit={e => {
-              e.preventDefault();
-            }}
-            className={`${
-              this.state.showActivitiesArea ? "" : "opacity-5 p-events-none"
-            }`}
+            onSubmit={this.onAddActivities}
+            className={`${this.state.showActivitiesArea ? '' : 'opacity-5 p-events-none'}`}
           >
             <FormGroup row className="align-items-center">
-              <Label for="project_activity_name" sm={2}>
+              <Label for="project_results_for_activities" sm={2}>
                 Resultado de la Actividad
               </Label>
               <Col sm={9}>
-                <select name="project_activity_resource_test">
-                  {this.state.project_results_for_activities.map(result => {
-                    return <option value={result.value}>{result.label}</option>;
-                  })}
-                </select>
+                <Select
+                  id="project_activity_resource"
+                  name="project_activity_resource"
+                  options={this.state.project_results_for_activities}
+                  value={this.state.project_activity_resource}
+                  onChange={this.onChangeSelectionResourcesForActivity}
+                />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -1310,17 +1398,18 @@ class NewProjectAdmin extends Component {
             <h3>Recursos a utilizarse en la actividad</h3>
             <FormGroup row className="align-items-center">
               <Label for="project-faculty" sm={2}>
-                Seleccione los recursos a utilizarse
+                Seleccione el recurso a utilizarse
               </Label>
               <Col sm={9}>
-                <Select
-                  name="project_resources"
-                  id="project_resources"
-                  onChange={this.onChangeMultipleSelect}
-                  value={this.state.project_resources}
-                  options={this.state.RESOURCES_OPTIONS}
+                <CreatableSelect
+                  required
                   isClearable
-                  isSearchable
+                  className="give-me-space-between"
+                  name="project_resources"
+                  value={this.state.project_resources}
+                  onChange={this.onChangeSelection}
+                  onInputChange={this.onSelectInputChange}
+                  options={UNIT_MEASUREMENT}
                 />
               </Col>
             </FormGroup>
@@ -1338,15 +1427,16 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_resources_quantity" sm={2}>
+              <Label for="project_resources_unit_of_measurement" sm={2}>
                 Unidad de Medida
               </Label>
               <Col sm={9}>
                 <Select
-                  name="project_resources"
-                  id="project_resources"
-                  onChange={this.onChangeMultipleSelect}
-                  value={this.state.project_resources}
+                  name="project_resources_unit_of_measurement"
+                  id="project_resources_unit_of_measurement"
+                  onInputChange={this.onSelectInputChange}
+                  onChange={this.onChangeSelection}
+                  value={this.state.project_resources_unit_of_measurement}
                   options={this.state.RESOURCES_OPTIONS}
                   isClearable
                   isSearchable
@@ -1428,6 +1518,19 @@ class NewProjectAdmin extends Component {
             })}
             <hr />
           </Form>
+          <hr />
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr className="no-cursorpointer">
+                  <th> Actividad </th>
+                  <th> Recurso </th>
+                  <th> Costo por Actividad </th>
+                </tr>
+              </thead>
+              <tbody>{activities_table}</tbody>
+            </table>
+          </div>
         </div>
         <div
           className={`bg-logframe ${
@@ -1511,10 +1614,39 @@ class NewProjectAdmin extends Component {
                 </tr>
                 <tr>
                   <th>Actividades</th>
-                  <td>{""}</td>
-                  <td>{""}</td>
-                  <td>{""}</td>
-                  <td>{""}</td>
+                  <td>
+                    <ul>
+                      {this.state.project_activities.map(activity => {
+                        return (
+                          <li>
+                            {activity.result}
+                            <br />
+                            {activity.activity} con fecha desde{' '}
+                            {moment(activity.start_date).format('LL')} hasta{' '}
+                            {moment(activity.end_date).format('LL')}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {this.state.project_activities.map(activity => {
+                        return (
+                          <li>
+                            <strong>
+                              {activity.total.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                              })}
+                            </strong>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>{''}</td>
+                  <td>{''}</td>
                 </tr>
               </tbody>
             </table>
