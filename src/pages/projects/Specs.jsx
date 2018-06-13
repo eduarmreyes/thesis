@@ -172,15 +172,13 @@ class NewProjectSpecsAdmin extends Component {
 
 		$.ajax({
 			type: 'post',
-			url: url,
+			url: this.props.baseurl + url,
 			contentType: 'application/json',
 			dataType: 'json',
 			data: data,
 			success: response => {
-				if (response.status === 'success') {
-					sessionStorage.setItem('currentProjectID', response.id);
-					this.props.history.push('/project-new-data');
-				}
+				// sessionStorage.setItem('currentProjectID', response.id);
+				this.props.history.push('/project-list');
 			},
 			error: response => {
 				console.log(response);
@@ -322,7 +320,7 @@ class NewProjectSpecsAdmin extends Component {
 						</FormGroup>
 						<FormGroup row className="align-items-center">
 							<Label for="project_line" sm={2}>
-								Línea Institucional
+								Línea de Investigación
 							</Label>
 							<Col sm={9}>
 								<Input

@@ -117,10 +117,6 @@ class UpdateKPIAdmin extends Component {
 					<p className="muted">
 						Actualice cómo va el proyecto actualmente y seleccione la fecha del indicador
 					</p>
-					<p className="muted">
-						<strong>Objetivo General: </strong> Test objetivo
-						general...fajewoifjawoeifja...faoweijfaoiwejfawe...jfaoiwejfaowejfoaiwe...
-					</p>
 					<Form onSubmit={this.onAdd}>
 						<FormGroup row className="align-items-center">
 							<Label for="project_kpi_target" sm={2}>

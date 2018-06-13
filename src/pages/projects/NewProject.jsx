@@ -312,7 +312,9 @@ class NewProjectAdmin extends Component {
       this
     );
     this.onAddResults = this.onAddResults.bind(this);
+    this.onAddResultsToTable = this.onAddResultsToTable.bind(this);
     this.onCleanResultsForm = this.onCleanResultsForm.bind(this);
+    this.onSaveResultsKPIID = this.onSaveResultsKPIID.bind(this);
 
     // loading fn changes
     this.onToggleButtonProjectGeneral = this.onToggleButtonProjectGeneral.bind(
@@ -329,6 +331,7 @@ class NewProjectAdmin extends Component {
     // activites
     // this.saveActivities = this.saveActivities.bind(this);
     this.onAddActivities = this.onAddActivities.bind(this);
+    this.onAddActivitiesToTable = this.onAddActivitiesToTable.bind(this);
     this.onCleanActivitiesForm = this.onCleanActivitiesForm.bind(this);
     this.onToggleActivitesArea = this.onToggleActivitesArea.bind(this);
     this.onChangeSelectionResources = this.onChangeSelectionResources.bind(this);
@@ -661,6 +664,66 @@ class NewProjectAdmin extends Component {
   // Results
   onAddResults(e) {
     e.preventDefault();
+    const data = JSON.stringify({
+      OutputDescription: this.state.project_result,
+      OutputIndicator: this.state.project_result_kpi,
+      MeansOfVerification: this.state.project_result_means_of_verification,
+      Assumption: this.state.project_result_risks,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ProjectOutput/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          this.onToggleActivitesArea(true);
+          this.onSaveResultsKPIID(response.id);
+          this.onAddResultsToTable();
+          this.onCleanResultsForm();
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  onSaveResultsKPIID(id) {
+    this.setState({
+      project_result_kpi_id: id,
+    });
+    const data = JSON.stringify({
+      ProjectOutputId: this.state.id,
+      ProjectMatrixId: this.state.project_logframe_id,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/MatrixOutput/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          console.log('success');
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  onAddResultsToTable() {
     this.setState({
       project_results: [
         ...this.state.project_results,
@@ -686,7 +749,6 @@ class NewProjectAdmin extends Component {
       ],
       showActivitiesArea: true
     });
-    this.onCleanResultsForm();
   }
 
   onCleanResultsForm() {
@@ -729,13 +791,91 @@ class NewProjectAdmin extends Component {
   }
 
   // Activities
-  onToggleActivitesArea() {
+  onToggleActivitesArea(value) {
     this.setState({
-      showActivitiesArea: !this.state.showActivitiesArea,
+      showActivitiesArea: value,
     });
   }
+
   onAddActivities(e) {
     e.preventDefault();
+    const data = JSON.stringify({
+      ActivityDescription: this.state.project_result,
+      ProjectOutputId: this.state.project_result_kpi_id,
+      ActivityStatus: '0',
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ProjectActivity/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          this.onAddActivitiesToTable();
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  onAddActivitiesToTable() {
+    this.setState({
+      project_activities: [
+        ...this.state.project_activities,
+        {
+          id: this.state.project_activities.length,
+          result: this.state.project_results_for_activities.value,
+          activity: this.state.project_activity_name,
+          start_date: this.state.project_activity_start_date,
+          end_date: this.state.project_activity_end_date,
+          resource: this.state.project_resources.value,
+          resources_quantity: this.state.project_resources_quantity,
+          unit_of_measurement: this.state.project_resources_unit_of_measurement.value,
+          unit_price: this.state.project_resources_unit_price,
+          entity: this.state.project_resources_entity,
+          total:
+            parseInt(this.state.project_resources_unit_price, 10) *
+            parseInt(this.state.project_resources_quantity, 10),
+        },
+      ],
+      showActivitiesArea: true,
+    });
+    this.onCleanActivitiesForm();
+  }
+
+  onAddResultsKPI() {
+    const data = JSON.stringify({
+      ProjecObjectiveId: this.state.project_general_objective_id,
+      Goal: this.state.project_result_kpi_quantity,
+      Variable: this.state.project_result_kpi_variable,
+      GoalDate: this.state.project_result_kpi_date,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/OutputIndicator/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          this.onCleanResultsForm();
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
     this.setState({
       project_activities: [
         ...this.state.project_activities,
@@ -1294,7 +1434,7 @@ class NewProjectAdmin extends Component {
                   name="project_result_risks"
                   id="project_result_risks"
                   placeholder="Supuesto del Resultado"
-                  value={this.state.project_especifico_objective_risks}
+                  value={this.state.project_result_risks}
                   onChange={this.onChange}
                 />
               </Col>
