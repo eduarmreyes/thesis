@@ -103,7 +103,7 @@ class NewProjectAdmin extends Component {
       project_logframe_id: 0,
 
       // Results
-      showResultsArea: true,
+      showResultsArea: false,
       project_results: [],
       project_results_for_activities: [],
 
@@ -935,7 +935,7 @@ class NewProjectAdmin extends Component {
                     return <option value={result.value}>{result.label}</option>;
                   })}
                 </select>
-                <Select
+                {/*<Select
                   defaultValue=""
                   isClearable
                   isSearchable
@@ -943,7 +943,7 @@ class NewProjectAdmin extends Component {
                   options={this.state.project_results_for_activities.map(result => {
                     return { value: result.label };
                   })}
-                />
+                />*/}
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
