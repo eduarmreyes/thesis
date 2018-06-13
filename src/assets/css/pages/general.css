@@ -2008,3 +2008,11 @@ a:hover {
 .color-danger {
   color: #dc3545;
 }
+
+.max-height-90vh {
+  max-height: 90vh;
+}
+
+.o-auto {
+  overflow: auto;
+}

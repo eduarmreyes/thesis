@@ -332,7 +332,8 @@ class NewProjectAdmin extends Component {
     this.onCleanActivitiesForm = this.onCleanActivitiesForm.bind(this);
     this.onToggleActivitesArea = this.onToggleActivitesArea.bind(this);
     this.onChangeSelectionResources = this.onChangeSelectionResources.bind(this);
-    this.onChangeSelectionResourcesForActivity = this.onChangeSelectionResourcesForActivity.bind(
+    this.onChangeSelectionResultsForActivity = this.onChangeSelectionResultsForActivity.bind(this);
+    this.onChangeSelectionResourcesUnitMeasurement = this.onChangeSelectionResourcesUnitMeasurement.bind(
       this
     );
   }
@@ -465,9 +466,15 @@ class NewProjectAdmin extends Component {
     });
   }
 
-  onChangeSelectionResourcesForActivity(e) {
+  onChangeSelectionResultsForActivity(e) {
     this.setState({
-      project_activity_resource: e,
+      project_activity_result: e,
+    });
+  }
+
+  onChangeSelectionResourcesUnitMeasurement(e) {
+    this.setState({
+      project_resources_unit_of_measurement: e,
     });
   }
 
@@ -734,13 +741,13 @@ class NewProjectAdmin extends Component {
         ...this.state.project_activities,
         {
           id: this.state.project_activities.length,
-          result: this.state.project_activity_resource,
+          result: this.state.project_results_for_activities.value,
           activity: this.state.project_activity_name,
           start_date: this.state.project_activity_start_date,
           end_date: this.state.project_activity_end_date,
-          resource: this.state.project_resources,
+          resource: this.state.project_resources.value,
           resources_quantity: this.state.project_resources_quantity,
-          unit_of_measurement: this.state.project_resources_unit_of_measurement,
+          unit_of_measurement: this.state.project_resources_unit_of_measurement.value,
           unit_price: this.state.project_resources_unit_price,
           entity: this.state.project_resources_entity,
           total:
@@ -761,7 +768,7 @@ class NewProjectAdmin extends Component {
       project_resources: '',
       project_resources_quantity: '',
       project_resources_unit_of_measurement: '',
-      project_resources_unit_price: '',
+      project_resources_unit_price: 0,
       project_resources_entity: null,
     });
   }
@@ -816,7 +823,12 @@ class NewProjectAdmin extends Component {
       <tr>
         <td colSpan={2}>
           <div>
-            <h3 className="text-center">Agregue un recurso en el formulario de arriba ⬆️</h3>
+            <h3 className="text-center">
+              Agregue un recurso en el formulario de arriba{' '}
+              <span role="img" aria-label="up emoji">
+                ⬆️
+              </span>
+            </h3>
           </div>
         </td>
       </tr>
@@ -1322,11 +1334,11 @@ class NewProjectAdmin extends Component {
               </Label>
               <Col sm={9}>
                 <Select
-                  id="project_activity_resource"
-                  name="project_activity_resource"
+                  id="project_activity_result"
+                  name="project_activity_result"
                   options={this.state.project_results_for_activities}
-                  value={this.state.project_activity_resource}
-                  onChange={this.onChangeSelectionResourcesForActivity}
+                  value={this.state.project_activity_result}
+                  onChange={this.onChangeSelectionResultsForActivity}
                 />
               </Col>
             </FormGroup>
@@ -1407,9 +1419,9 @@ class NewProjectAdmin extends Component {
                   className="give-me-space-between"
                   name="project_resources"
                   value={this.state.project_resources}
-                  onChange={this.onChangeSelection}
+                  onChange={this.onChangeSelectionResources}
                   onInputChange={this.onSelectInputChange}
-                  options={UNIT_MEASUREMENT}
+                  options={RESOURCES}
                 />
               </Col>
             </FormGroup>
@@ -1423,6 +1435,7 @@ class NewProjectAdmin extends Component {
                   name="project_resources_quantity"
                   id="project_resources_quantity"
                   placeholder="Cantidad de Recurso"
+                  onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
@@ -1435,9 +1448,9 @@ class NewProjectAdmin extends Component {
                   name="project_resources_unit_of_measurement"
                   id="project_resources_unit_of_measurement"
                   onInputChange={this.onSelectInputChange}
-                  onChange={this.onChangeSelection}
+                  onChange={this.onChangeSelectionResourcesUnitMeasurement}
                   value={this.state.project_resources_unit_of_measurement}
-                  options={this.state.RESOURCES_OPTIONS}
+                  options={UNIT_MEASUREMENT}
                   isClearable
                   isSearchable
                 />
@@ -1453,6 +1466,7 @@ class NewProjectAdmin extends Component {
                   name="project_resources_unit_price"
                   id="project_resources_unit_price"
                   placeholder="Precio Unitario"
+                  onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
@@ -1537,7 +1551,7 @@ class NewProjectAdmin extends Component {
             this.state.showLogframe ? "di-flex" : "d-none"
           } justify-content-center align-items-center`}
         >
-          <div className="bg-bright p-25 br-5">
+          <div className="bg-bright p-25 br-5 max-height-90vh o-auto">
             <div className="text-right">
               <Button color="link" onClick={this.onToggleLogframe}>
                 [ Ocultar Matriz del Marco Lógico ]
