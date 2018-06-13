@@ -98,10 +98,17 @@ class NewProjectAdmin extends Component {
       project_start_date: moment(),
       project_end_date: moment(),
       showLogframe: false,
-      showSpecificObjectiveArea: true,
-      showResultsArea: false,
+      showSpecificObjectiveArea: false,
       project_general_objective_error_message: '',
       project_logframe_id: 0,
+
+      // Results
+      showResultsArea: true,
+      project_results: [],
+      project_results_for_activities: [],
+
+      // Activities
+      showActivitiesArea: false,
     };
 
     this.onChange = this.onChange.bind(this);
@@ -124,8 +131,12 @@ class NewProjectAdmin extends Component {
     this.onSubmitGeneralObjective = this.onSubmitGeneralObjective.bind(this);
     this.updateGeneralObjectiveErrorMessage = this.updateGeneralObjectiveErrorMessage.bind(this);
     this.saveLogframeId = this.saveLogframeId.bind(this);
-
     this.saveSpecificObjective = this.saveSpecificObjective.bind(this);
+
+    // results
+    // this.saveResults = this.saveResults.bind(this);
+    this.onAddResults = this.onAddResults.bind(this);
+    this.onCleanResultsForm = this.onCleanResultsForm.bind(this);
   }
 
   componentDidMount() {
@@ -399,6 +410,47 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  // Results
+  onAddResults(e) {
+    e.preventDefault();
+    this.setState({
+      project_results: [
+        ...this.state.project_results,
+        {
+          id: this.state.project_results.length,
+          result: this.state.project_result,
+          kpi: this.state.project_result_kpi,
+          kpi_quantity: this.state.project_result_kpi_quantity,
+          kpi_variable: this.state.project_result_kpi_variable,
+          kpi_date: this.state.project_result_kpi_date,
+          means_of_verification: this.state.project_result_means_of_verification,
+          risks: this.state.project_result_risks,
+        },
+      ],
+      project_results_for_activities: [
+        ...this.state.project_results_for_activities,
+        {
+          id: this.state.project_results.length,
+          label: this.state.project_result,
+          value: this.state.project_result,
+        },
+      ],
+      showActivitiesArea: true,
+    });
+    this.onCleanResultsForm();
+  }
+
+  onCleanResultsForm() {
+    this.setState({
+      project_result: '',
+      project_result_kpi: '',
+      project_result_kpi_quantity: '',
+      project_result_kpi_date: moment(),
+      project_result_means_of_verification: '',
+      project_result_risks: '',
+    });
+  }
+
   render() {
     /*const activities_table = this.state.activities.length ? (
       this.state.activities.map(activity => {
@@ -424,6 +476,34 @@ class NewProjectAdmin extends Component {
         </td>
       </tr>
     );*/
+    const results_table = this.state.project_results.length ? (
+      this.state.project_results.map(result => {
+        const result_target_date = result.kpi_date;
+        return (
+          <tr key={result.id}>
+            <td>
+              <strong>R.{result.id + 1}</strong> {result.result}
+              <br />
+              <strong>KPI:</strong> {result.kpi}
+            </td>
+            <td>{moment(result_target_date).format('LL')}</td>
+          </tr>
+        );
+      })
+    ) : (
+      <tr>
+        <td colSpan={2}>
+          <div>
+            <h3 className="text-center">
+              Agregue un resultado en el formulario de arriba{' '}
+              <span role="img" aria-label="up emoji">
+                ⬆️
+              </span>
+            </h3>
+          </div>
+        </td>
+      </tr>
+    );
     return (
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
@@ -697,7 +777,7 @@ class NewProjectAdmin extends Component {
           </Form>
           <h1>Resultados</h1>
           <Form
-            onSubmit={e => e.preventDefault()}
+            onSubmit={this.onAddResults}
             className={`${this.state.showResultsArea ? '' : 'opacity-5 p-events-none'}`}
           >
             <FormGroup row className="align-items-center">
@@ -826,24 +906,43 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
           </Form>
+          <hr />
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr className="no-cursorpointer">
+                  <th> Resultado </th>
+                  <th> Fecha Meta </th>
+                </tr>
+              </thead>
+              <tbody>{results_table}</tbody>
+            </table>
+          </div>
           <h1>Actividades</h1>
           <Form
             onSubmit={e => {
               e.preventDefault();
             }}
-            className="opacity-5 p-events-none"
+            className={`${this.state.showActivitiesArea ? '' : 'opacity-5 p-events-none'}`}
           >
             <FormGroup row className="align-items-center">
               <Label for="project_activity_name" sm={2}>
                 Resultado de la Actividad
               </Label>
               <Col sm={9}>
+                <select name="project_activity_resource_test">
+                  {this.state.project_results_for_activities.map(result => {
+                    return <option value={result.value}>{result.label}</option>;
+                  })}
+                </select>
                 <Select
                   defaultValue=""
                   isClearable
                   isSearchable
                   name="project_activity_resource"
-                  options={UNIT_MEASUREMENT}
+                  options={this.state.project_results_for_activities.map(result => {
+                    return { value: result.label };
+                  })}
                 />
               </Col>
             </FormGroup>
@@ -1059,17 +1158,45 @@ class NewProjectAdmin extends Component {
                 </tr>
                 <tr>
                   <th>Resultados</th>
-                  <td>{this.state.project_result}</td>
-                  <td>{this.state.project_result_kpi}</td>
-                  <td>{this.state.project_result_means_of_verification}</td>
-                  <td>{this.state.project_result_risks}</td>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return (
+                          <li>
+                            {result.result} con fecha {moment(result.kpi_date).format('LL')}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return <li>{result.kpi}</li>;
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return <li>{result.means_of_verification}</li>;
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return <li>{result.risks}</li>;
+                      })}
+                    </ul>
+                  </td>
                 </tr>
                 <tr>
                   <th>Actividades</th>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
-                  <td>{' testing '}</td>
+                  <td>{''}</td>
+                  <td>{''}</td>
+                  <td>{''}</td>
+                  <td>{''}</td>
                 </tr>
               </tbody>
             </table>
