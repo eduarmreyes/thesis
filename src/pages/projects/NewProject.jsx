@@ -189,6 +189,49 @@ const UNIT_MEASUREMENT_HUMAN_RESOURCES = [
   }
 ];
 
+const RESOURCES = [
+  {
+    id: 1,
+    label: 'Estudiantes',
+    value: 'Estudiantes',
+  },
+  {
+    id: 2,
+    label: 'Material Didáctico',
+    value: 'Material Didáctico',
+  },
+  {
+    id: 3,
+    label: 'Personal Administrativo',
+    value: 'Personal Administrativo',
+  },
+  {
+    id: 4,
+    label: 'Papel Bond',
+    value: 'Papel Bond',
+  },
+  {
+    id: 5,
+    label: 'Aulas Clase',
+    value: 'Aulas Clase',
+  },
+  {
+    id: 6,
+    label: 'Centros Educativos',
+    value: 'Centros Educativos',
+  },
+  {
+    id: 7,
+    label: 'Personal de Mantenimiento',
+    value: 'Personal de Mantenimiento',
+  },
+  {
+    id: 8,
+    label: 'Horas',
+    value: 'Horas',
+  },
+];
+
 class NewProjectUser extends Component {
   constructor(props) {
     super(props);
@@ -336,6 +379,8 @@ class NewProjectAdmin extends Component {
     this.onToggleActivitesArea = this.onToggleActivitesArea.bind(this);
     this.onChangeSelectionResources = this.onChangeSelectionResources.bind(this);
     this.onChangeSelectionResultsForActivity = this.onChangeSelectionResultsForActivity.bind(this);
+    this.onSelectProjectActivityStartDate = this.onSelectProjectActivityStartDate.bind(this);
+    this.onSelectProjectActivityEndDate = this.onSelectProjectActivityEndDate.bind(this);
     this.onChangeSelectionResourcesUnitMeasurement = this.onChangeSelectionResourcesUnitMeasurement.bind(
       this
     );
@@ -799,6 +844,7 @@ class NewProjectAdmin extends Component {
 
   onAddActivities(e) {
     e.preventDefault();
+    this.onAddActivitiesToTable();
     const data = JSON.stringify({
       ActivityDescription: this.state.project_result,
       ProjectOutputId: this.state.project_result_kpi_id,
@@ -813,7 +859,6 @@ class NewProjectAdmin extends Component {
       data: data,
       success: response => {
         if (response.status === 'success') {
-          this.onAddActivitiesToTable();
         } else {
         }
       },
@@ -1466,7 +1511,7 @@ class NewProjectAdmin extends Component {
           <h1>Actividades</h1>
           <Form
             onSubmit={this.onAddActivities}
-            className={`${this.state.showActivitiesArea ? '' : 'opacity-5 p-events-none'}`}
+            className={`${true ? '' : 'opacity-5 p-events-none'}`}
           >
             <FormGroup row className="align-items-center">
               <Label for="project_results_for_activities" sm={2}>
@@ -1506,7 +1551,7 @@ class NewProjectAdmin extends Component {
                 <DatetimePickerTrigger
                   closeOnSelectDay={true}
                   moment={this.state.project_activity_start_date}
-                  onChange={this.onSelectProjectKPIDate}
+                  onChange={this.onSelectProjectActivityStartDate}
                   className="give-me-space-between"
                 >
                   <input
@@ -1548,6 +1593,9 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
             <h3>Recursos a utilizarse en la actividad</h3>
+            <h4>Recursos Humanos</h4>
+            <hr />
+            <h4>Otros Recursos</h4>
             <FormGroup row className="align-items-center">
               <Label for="project-faculty" sm={2}>
                 Seleccione el recurso a utilizarse
