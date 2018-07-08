@@ -99,7 +99,7 @@ class NewProjectAdmin extends Component {
       project_start_date: moment(),
       project_end_date: moment(),
       showLogframe: false,
-      showSpecificObjectiveArea: true,
+      showSpecificObjectiveArea: false,
       project_general_objective_error_message: "",
       project_specific_objective_error_message: "",
       project_logframe_id: 0,
