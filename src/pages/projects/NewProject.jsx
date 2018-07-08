@@ -177,6 +177,7 @@ class NewProjectAdmin extends Component {
   }
 
   componentDidMount() {
+    console.log("testing");
     moment.locale("es");
     $.ajax({
       type: "GET",
