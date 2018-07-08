@@ -177,7 +177,6 @@ class NewProjectAdmin extends Component {
   }
 
   componentDidMount() {
-    console.log("testing");
     moment.locale("es");
     $.ajax({
       type: "GET",
@@ -194,6 +193,7 @@ class NewProjectAdmin extends Component {
   }
 
   onChange(e) {
+    console.log(e);
     this.setState({
       [e.target.name]: e.target.value
     });
