@@ -8,7 +8,7 @@ import { Col, Button, Form, FormGroup, Label, Input } from "reactstrap";
 import Select from "react-select/lib/Select";
 import CreatableSelect from "react-select/lib/Creatable";
 import { DatetimePickerTrigger } from "rc-datetime-picker";
-import LaddaButton, { XL, SLIDE_UP } from "react-ladda";
+import LaddaButton from "react-ladda";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "rc-datetime-picker/dist/picker.css";
@@ -99,8 +99,9 @@ class NewProjectAdmin extends Component {
       project_start_date: moment(),
       project_end_date: moment(),
       showLogframe: false,
-      showSpecificObjectiveArea: false,
+      showSpecificObjectiveArea: true,
       project_general_objective_error_message: "",
+      project_specific_objective_error_message: "",
       project_logframe_id: 0,
 
       // Results
@@ -112,7 +113,10 @@ class NewProjectAdmin extends Component {
       showActivitiesArea: false,
 
       loading_project_general_objective: false,
-      disabled_project_general_objective: false
+      disabled_project_general_objective: false,
+
+      loading_project_specific_objective: false,
+      disabled_project_specific_objective: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -148,6 +152,9 @@ class NewProjectAdmin extends Component {
     );
     this.saveLogframeId = this.saveLogframeId.bind(this);
     this.saveSpecificObjective = this.saveSpecificObjective.bind(this);
+    this.updateSpecificObjectiveErrorMessage = this.updateSpecificObjectiveErrorMessage.bind(
+      this
+    );
 
     // results
     // this.saveResults = this.saveResults.bind(this);
@@ -159,6 +166,12 @@ class NewProjectAdmin extends Component {
       this
     );
     this.onToggleButtonProjectGeneralDisabled = this.onToggleButtonProjectGeneralDisabled.bind(
+      this
+    );
+    this.onToggleButtonProjectSpecific = this.onToggleButtonProjectSpecific.bind(
+      this
+    );
+    this.onToggleButtonProjectSpecificDisabled = this.onToggleButtonProjectSpecificDisabled.bind(
       this
     );
   }
@@ -248,6 +261,7 @@ class NewProjectAdmin extends Component {
         if (response.status === "success") {
           this.saveLogframeId(response.id);
           this.saveGeneralObjective();
+          this.onToggleButtonProjectGeneralDisabled();
         } else {
           this.updateGeneralObjectiveErrorMessage(
             "No se pudo guardar la matriz de marco lógico."
@@ -261,7 +275,6 @@ class NewProjectAdmin extends Component {
       },
       complete: () => {
         this.onToggleButtonProjectGeneral();
-        this.onToggleButtonProjectGeneralDisabled();
       }
     });
   }
@@ -374,6 +387,7 @@ class NewProjectAdmin extends Component {
 
   saveSpecificObjective(e) {
     e.preventDefault();
+    this.onToggleButtonProjectSpecific();
     const data = JSON.stringify({
       ObjectiveDescription: this.state.project_specific_objective,
       ObjetiveIndicator: this.state.project_specific_objective_kpi,
@@ -391,16 +405,20 @@ class NewProjectAdmin extends Component {
       success: response => {
         if (response.status === "success") {
           this.saveSpecificObjectiveIndicator(response.id);
+          this.onToggleButtonProjectSpecificDisabled();
         } else {
-          this.updateGeneralObjectiveErrorMessage(
+          this.updateSpecificObjectiveErrorMessage(
             "No se pudo guardar la matriz de marco lógico."
           );
         }
       },
       error: response => {
-        this.updateGeneralObjectiveErrorMessage(
-          "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
+        this.updateSpecificObjectiveErrorMessage(
+          "Un error en el servidor nos impidió guardar el objetivo específico. Contacte a GTI."
         );
+      },
+      complete: () => {
+        this.onToggleButtonProjectSpecific();
       }
     });
   }
@@ -445,6 +463,12 @@ class NewProjectAdmin extends Component {
   updateGeneralObjectiveErrorMessage(msg) {
     this.setState({
       project_general_objective_error_message: msg
+    });
+  }
+
+  updateSpecificObjectiveErrorMessage(msg) {
+    this.setState({
+      project_specific_objective_error_message: msg
     });
   }
 
@@ -501,6 +525,20 @@ class NewProjectAdmin extends Component {
     this.setState({
       disabled_project_general_objective: !this.state
         .disabled_project_general_objective
+    });
+  }
+
+  onToggleButtonProjectSpecific() {
+    this.setState({
+      loading_project_specific_objective: !this.state
+        .loading_project_specific_objective
+    });
+  }
+
+  onToggleButtonProjectSpecificDisabled() {
+    this.setState({
+      disabled_project_specific_objective: !this.state
+        .disabled_project_specific_objective
     });
   }
 
@@ -847,13 +885,17 @@ class NewProjectAdmin extends Component {
             </FormGroup>
             <FormGroup check row>
               <Col sm={{ size: 11 }}>
-                <Button
-                  color="primary"
-                  className="d-flex align-items-center ml-auto"
+                <span class="color-danger">
+                  {this.state.project_specific_objective_error_message}
+                </span>
+                <LaddaButton
+                  loading={this.state.loading_project_specific_objective}
+                  className="d-flex align-items-center ml-auto btn btn-primary"
+                  disabled={this.state.disabled_project_specific_objective}
                 >
                   <i className="md-icon">add</i>
                   Agregar Objetivo Específico
-                </Button>
+                </LaddaButton>
               </Col>
             </FormGroup>
           </Form>
