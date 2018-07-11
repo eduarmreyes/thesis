@@ -53,6 +53,142 @@ const UNIT_MEASUREMENT = [
   }
 ];
 
+const UNIT_MEASUREMENT_OBJECTIVE = [
+  {
+    id: 1,
+    label: "Personas",
+    value: "Personas"
+  },
+  {
+    id: 2,
+    label: "Niños",
+    value: "Niños"
+  },
+  {
+    id: 3,
+    label: "Niñas",
+    value: "Niñas"
+  },
+  {
+    id: 4,
+    label: "Niños y Niñas",
+    value: "Niños y Niñas"
+  },
+  {
+    id: 5,
+    label: "Familias",
+    value: "Familias"
+  },
+  {
+    id: 6,
+    label: "Centros Educativos",
+    value: "Centros Educativos"
+  },
+  {
+    id: 7,
+    label: "Mujeres",
+    value: "Mujeres"
+  },
+  {
+    id: 8,
+    label: "Programa",
+    value: "Programa"
+  },
+  {
+    id: 9,
+    label: "Comunidad",
+    value: "Comunidad"
+  },
+  {
+    id: 10,
+    label: "Personas Mayores",
+    value: "Personas Mayores"
+  },
+  {
+    id: 11,
+    label: "Centros de Desarrollo Infantil",
+    value: "Centros de Desarrollo Infantil"
+  },
+  {
+    id: 12,
+    label: "Educadores",
+    value: "Educadores"
+  },
+  {
+    id: 13,
+    label: "Pacientes",
+    value: "Pacientes"
+  }
+];
+
+const UNIT_MEASUREMENT_HUMAN_RESOURCES = [
+  {
+    id: 1,
+    label: "Personas",
+    value: "Personas"
+  },
+  {
+    id: 2,
+    label: "Niños",
+    value: "Niños"
+  },
+  {
+    id: 3,
+    label: "Niñas",
+    value: "Niñas"
+  },
+  {
+    id: 4,
+    label: "Niños y Niñas",
+    value: "Niños y Niñas"
+  },
+  {
+    id: 5,
+    label: "Familias",
+    value: "Familias"
+  },
+  {
+    id: 6,
+    label: "Centros Educativos",
+    value: "Centros Educativos"
+  },
+  {
+    id: 7,
+    label: "Mujeres",
+    value: "Mujeres"
+  },
+  {
+    id: 8,
+    label: "Programa",
+    value: "Programa"
+  },
+  {
+    id: 9,
+    label: "Comunidad",
+    value: "Comunidad"
+  },
+  {
+    id: 10,
+    label: "Personas Mayores",
+    value: "Personas Mayores"
+  },
+  {
+    id: 11,
+    label: "Centros de Desarrollo Infantil",
+    value: "Centros de Desarrollo Infantil"
+  },
+  {
+    id: 12,
+    label: "Educadores",
+    value: "Educadores"
+  },
+  {
+    id: 13,
+    label: "Pacientes",
+    value: "Pacientes"
+  }
+];
+
 class NewProjectUser extends Component {
   constructor(props) {
     super(props);
@@ -193,7 +329,6 @@ class NewProjectAdmin extends Component {
   }
 
   onChange(e) {
-    console.log(e);
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -599,10 +734,48 @@ class NewProjectAdmin extends Component {
     return (
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <div className="content-inner no-padding-top no-padding-left no-padding-right">
+        <div className="toggle-budget-wrapper">
+          <Button color="link" onClick={this.onToggleLogframe}>
+            <i className="md-icon">attach_money</i>
+          </Button>
+        </div>
         <div className="toggle-logframe-wrapper">
           <Button color="link" onClick={this.onToggleLogframe}>
-            [ Mostrar Matriz ]
+            <i className="md-icon">table_chart</i>
           </Button>
+        </div>
+        <div className="toggle-calendar-wrapper">
+          <Button color="link" onClick={this.onToggleLogframe}>
+            <i className="md-icon">calendar_today</i>
+          </Button>
+        </div>
+        <div className="text-center">
+          <h1>Información General</h1>
+          <Form onSubmit={this.onSubmit}>
+            <FormGroup row className="align-items-center">
+              <Col sm={7}>
+                <Input
+                  required
+                  type="text"
+                  name="project_general_objective"
+                  id="project_general_objective"
+                  placeholder="Nombre del Proyecto"
+                  value={this.state.project_general_objective}
+                  onChange={this.onChange}
+                />
+              </Col>
+              <Col sm={4}>
+                <LaddaButton
+                  loading={this.state.loading_project_general_objective}
+                  className="d-flex align-items-center ml-auto btn btn-primary"
+                  disabled={this.state.disabled_project_general_objective}
+                >
+                  <i className="md-icon">add</i>
+                  Crear Proyecto
+                </LaddaButton>
+              </Col>
+            </FormGroup>
+          </Form>
         </div>
         <div className="border-bottom side-margins box">
           <h1>Objetivo General</h1>
@@ -649,7 +822,7 @@ class NewProjectAdmin extends Component {
                 <Input
                   required
                   className="give-me-space-between"
-                  type="number"
+                  type="text"
                   name="project_general_objective_kpi_quantity"
                   id="project_general_objective_kpi_quantity"
                   placeholder="Valor del Indicador"
@@ -666,7 +839,7 @@ class NewProjectAdmin extends Component {
                   }
                   onChange={this.onChangeSelection}
                   onInputChange={this.onSelectInputChange}
-                  options={UNIT_MEASUREMENT}
+                  options={UNIT_MEASUREMENT_OBJECTIVE}
                 />
                 <Input
                   required
@@ -735,7 +908,7 @@ class NewProjectAdmin extends Component {
             </FormGroup>
             <FormGroup check row>
               <Col sm={{ size: 11 }}>
-                <span class="color-danger">
+                <span className="color-danger">
                   {this.state.project_general_objective_error_message}
                 </span>
                 <LaddaButton
@@ -800,7 +973,7 @@ class NewProjectAdmin extends Component {
                 <Input
                   required
                   className="give-me-space-between"
-                  type="number"
+                  type="text"
                   name="project_specific_objective_kpi_quantity"
                   id="project_specific_objective_kpi_quantity"
                   placeholder="Valor del Indicador"
@@ -817,7 +990,7 @@ class NewProjectAdmin extends Component {
                   }
                   onChange={this.onChangeSpecificObjectiveSelection}
                   onInputChange={this.onSelectInputChange}
-                  options={UNIT_MEASUREMENT}
+                  options={UNIT_MEASUREMENT_OBJECTIVE}
                 />
                 <Input
                   required
@@ -949,7 +1122,7 @@ class NewProjectAdmin extends Component {
                 <Input
                   required
                   className="give-me-space-between"
-                  type="number"
+                  type="text"
                   name="project_result_kpi_quantity"
                   id="project_result_kpi_quantity"
                   placeholder="Valor del Indicador"
@@ -964,7 +1137,7 @@ class NewProjectAdmin extends Component {
                   value={this.state.project_result_kpi_unit_measurement}
                   onChange={this.onChangeSelection}
                   onInputChange={this.onSelectInputChange}
-                  options={UNIT_MEASUREMENT}
+                  options={UNIT_MEASUREMENT_OBJECTIVE}
                 />
                 <Input
                   required
@@ -1067,15 +1240,6 @@ class NewProjectAdmin extends Component {
                     return <option value={result.value}>{result.label}</option>;
                   })}
                 </select>
-                {/*<Select
-                  defaultValue=""
-                  isClearable
-                  isSearchable
-                  name="project_activity_resource"
-                  options={this.state.project_results_for_activities.map(result => {
-                    return { value: result.label };
-                  })}
-                />*/}
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -1130,6 +1294,17 @@ class NewProjectAdmin extends Component {
                     readOnly
                   />
                 </DatetimePickerTrigger>
+              </Col>
+            </FormGroup>
+            <FormGroup check row>
+              <Col sm={{ size: 11 }}>
+                <Button
+                  color="primary"
+                  className="d-flex align-items-center ml-auto"
+                >
+                  <i className="md-icon">add</i>
+                  Agregar Actividad
+                </Button>
               </Col>
             </FormGroup>
             <h3>Recursos a utilizarse en la actividad</h3>
@@ -1241,7 +1416,7 @@ class NewProjectAdmin extends Component {
                   className="d-flex align-items-center ml-auto"
                 >
                   <i className="md-icon">add</i>
-                  Agregar Actividad
+                  Agregar Recurso
                 </Button>
               </Col>
             </FormGroup>

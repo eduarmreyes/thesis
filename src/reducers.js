@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 const initialState = {
   auth: {
@@ -11,25 +11,25 @@ const initialState = {
     type: null,
     infouser: null,
     info_cuenta: null,
-    info_cuenta_pfx: null,
+    info_cuenta_pfx: null
   },
   setBaseUrl: {
-    baseurl: 'https://vripsapiv3.azurewebsites.net',
-  },
+    baseurl: "https://vripsapiv4.azurewebsites.net"
+  }
 };
 const mainReducer = (state = initialState, action = {}) => {
   switch (action.type) {
-    case 'SET_AUTH':
+    case "SET_AUTH":
       return {
         ...state,
-        ...action.payload,
+        ...action.payload
       };
-    case 'SET_BASEURL':
+    case "SET_BASEURL":
       return {
         ...state,
         setBaseUrl: {
-          ...action.payload,
-        },
+          ...action.payload
+        }
       };
     default:
       return state;
@@ -37,7 +37,7 @@ const mainReducer = (state = initialState, action = {}) => {
 };
 
 const reducer = combineReducers({
-  mainReducer,
+  mainReducer
 });
 
 export default reducer;

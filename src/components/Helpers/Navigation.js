@@ -1,15 +1,20 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 class NavigationUser extends Component {
   render() {
     return (
       <ul>
         <li>
-          <NavLink to="/project-new" exact={true} className="highlighted" activeClassName="active">
-            <i className="md-icon">add</i> <span>Crear Proyecto</span>
+          <NavLink
+            to="/project-list"
+            exact={true}
+            className="highlighted"
+            activeClassName="active"
+          >
+            <i className="md-icon">add</i> <span>Diseño</span>
           </NavLink>
         </li>
         <li>
@@ -19,7 +24,8 @@ class NavigationUser extends Component {
         </li>
         <li>
           <NavLink to="/project-list" activeClassName="active">
-            <i className="md-icon">format_list_bulleted</i> <span>Proyectos</span>
+            <i className="md-icon">format_list_bulleted</i>{" "}
+            <span>Proyectos</span>
           </NavLink>
         </li>
       </ul>
@@ -32,8 +38,13 @@ class NavigationAdmin extends Component {
       /*Componente que se ejecutara cuando no encuentre un comonente al cual redireccionar*/
       <ul>
         <li>
-          <NavLink to="/project-new" exact={true} className="highlighted" activeClassName="active">
-            <i className="md-icon">add</i> <span>Crear Proyecto</span>
+          <NavLink
+            to="/project-list"
+            exact={true}
+            className="highlighted"
+            activeClassName="active"
+          >
+            <i className="md-icon">add</i> <span>Diseño</span>
           </NavLink>
         </li>
         <li>
@@ -43,7 +54,8 @@ class NavigationAdmin extends Component {
         </li>
         <li>
           <NavLink to="/project-list" activeClassName="active">
-            <i className="md-icon">format_list_bulleted</i> <span>Proyectos</span>
+            <i className="md-icon">format_list_bulleted</i>{" "}
+            <span>Proyectos</span>
           </NavLink>
         </li>
         <li>
@@ -64,11 +76,11 @@ class Navigation extends Component {
   set_navigation() {
     const scope = this.props.scope;
     switch (scope) {
-      case 'user':
+      case "user":
         return <NavigationUser />;
-      case 'admin':
+      case "admin":
         return <NavigationAdmin />;
-      case 'moderador':
+      case "moderador":
         return <NavigationAdmin />;
       default:
         return <NavigationUser />;
@@ -86,7 +98,7 @@ const mapStateToProps = (state, props) => {
     userToken: state.mainReducer.auth.token,
     scope: state.mainReducer.auth.scope,
     id: state.mainReducer.auth.id,
-    baseurl: state.mainReducer.setBaseUrl.baseurl,
+    baseurl: state.mainReducer.setBaseUrl.baseurl
   };
 };
 

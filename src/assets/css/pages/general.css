@@ -767,11 +767,11 @@ h2 {
   color: #6a8dff;
 }
 
-input[type='radio'] {
+input[type="radio"] {
   background-color: #5549ff;
 }
 
-input[type='radio']:checked {
+input[type="radio"]:checked {
   background: gold;
   margin: 10px;
 }
@@ -1362,7 +1362,7 @@ select {
 
 .datetime-picker-popup:before,
 .datetime-range-picker-popup:before {
-  content: '';
+  content: "";
   position: absolute;
   background: #fff;
   border-top: 1px solid #dbdbdb;
@@ -1445,7 +1445,7 @@ code {
   padding-right: 0px;
 }
 .chartjs-content-tooltip .tooltip-list .tooltip-list--item {
-  background-color: 'rgba(11, 56, 123, 1)';
+  background-color: "rgba(11, 56, 123, 1)";
   border-bottom: 1px solid;
   justify-content: space-between;
   padding: 0px 0;
@@ -1461,7 +1461,7 @@ code {
   height: 100%;
   color: #4b0101;
   min-width: 70px;
-  font-family: 'BlinkMacSystemFont', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: "BlinkMacSystemFont", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif";
 }
 .chartjs-content-tooltip .tooltip-list .tooltip-list--item .value {
   margin-left: 20px;
@@ -1471,7 +1471,7 @@ code {
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 0px 3px 3px 0px;
-  font-family: 'BlinkMacSystemFont', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif';
+  font-family: "BlinkMacSystemFont", "-apple-system", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif";
 }
 .chartjs-content-tooltip .tooltip-list .tooltip-list--item .value span {
   color: #fff !important;
@@ -1705,10 +1705,10 @@ code {
 .forex-content .forex-header .gift .giftcard .card_content .card_header li {
   position: relative;
 }
-.forex-content .forex-header .gift .giftcard .card_content .card_header li input[type='radio'] {
+.forex-content .forex-header .gift .giftcard .card_content .card_header li input[type="radio"] {
   margin: 0px;
 }
-.forex-content .forex-header .gift .giftcard .card_content .card_header li input[type='radio']:checked {
+.forex-content .forex-header .gift .giftcard .card_content .card_header li input[type="radio"]:checked {
   margin: 0px;
 }
 .forex-content .forex-header .gift .giftcard .card_content .card_header .card_option span {
@@ -1794,13 +1794,13 @@ code {
   width: 100%;
 }
 
-[class*='col-'] {
+[class*="col-"] {
   float: left;
   padding: 15px;
 }
 
 .row::after {
-  content: '';
+  content: "";
   clear: both;
   display: table;
 }
@@ -1986,9 +1986,23 @@ a:hover {
 
 .toggle-logframe-wrapper {
   position: fixed;
-  right: -30px;
+  right: 0;
   transform: rotate(270deg);
   top: 50%;
+}
+
+.toggle-calendar-wrapper {
+  position: fixed;
+  right: 0;
+  transform: rotate(270deg);
+  top: 60%;
+}
+
+.toggle-budget-wrapper {
+  position: fixed;
+  right: 0;
+  transform: rotate(270deg);
+  top: 40%;
 }
 
 .color-danger {
