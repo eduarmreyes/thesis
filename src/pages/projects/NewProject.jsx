@@ -15,6 +15,24 @@ import "rc-datetime-picker/dist/picker.css";
 
 import Backend from "components/Layouts/Backend";
 
+const HUMAN_RESOURCES_FUNCTION = [
+  {
+    id: 1,
+    label: 'Perfilador',
+    value: 'Perfilador',
+  },
+  {
+    id: 2,
+    label: 'Coordinador',
+    value: 'Coordinador',
+  },
+  {
+    id: 3,
+    label: 'Ejecutor',
+    value: 'Ejecutor',
+  },
+];
+
 const UNIT_MEASUREMENT = [
   {
     id: 1,
@@ -277,6 +295,72 @@ const UNIT_MEASUREMENT_HUMAN_RESOURCES = [
   }
 ];
 
+const HUMAN_RESOURCES = [
+  {
+    id: 1,
+    label: 'Estudiantes',
+    value: 'Estudiantes',
+  },
+  {
+    id: 2,
+    label: 'Personal Administrativo',
+    value: 'Personal Administrativo',
+  },
+  {
+    id: 3,
+    label: 'Personal de Mantenimiento',
+    value: 'Personal de Mantenimiento',
+  },
+  {
+    id: 4,
+    label: 'Personal de Docente',
+    value: 'Personal de Docente',
+  },
+];
+
+const RESOURCES = [
+  {
+    id: 1,
+    label: 'Estudiantes',
+    value: 'Estudiantes',
+  },
+  {
+    id: 2,
+    label: 'Material Didáctico',
+    value: 'Material Didáctico',
+  },
+  {
+    id: 3,
+    label: 'Personal Administrativo',
+    value: 'Personal Administrativo',
+  },
+  {
+    id: 4,
+    label: 'Papel Bond',
+    value: 'Papel Bond',
+  },
+  {
+    id: 5,
+    label: 'Aulas Clase',
+    value: 'Aulas Clase',
+  },
+  {
+    id: 6,
+    label: 'Centros Educativos',
+    value: 'Centros Educativos',
+  },
+  {
+    id: 7,
+    label: 'Personal de Mantenimiento',
+    value: 'Personal de Mantenimiento',
+  },
+  {
+    id: 8,
+    label: 'Horas',
+    value: 'Horas',
+  },
+];
+
 class NewProjectUser extends Component {
   constructor(props) {
     super(props);
@@ -314,7 +398,20 @@ class NewProjectAdmin extends Component {
       project_resources_labels: [],
       project_activity_name: "",
       total: 0,
-      RESOURCES_OPTIONS: [],
+      RESOURCES_OPTIONS: [
+        {
+          label: 'Resource One',
+          value: 'Resource One',
+        },
+        {
+          label: 'Resource Two',
+          value: 'Resource Two',
+        },
+        {
+          label: 'Resource Three',
+          value: 'Resource Three',
+        },
+      ],
       project_general_objective_kpi_date: moment(),
       project_specific_objective_kpi_date: moment(),
       project_result_kpi_date: moment(),
@@ -335,6 +432,7 @@ class NewProjectAdmin extends Component {
 
       // Activities
       showActivitiesArea: false,
+      project_activities: [],
 
       loading_project_general_objective: false,
       disabled_project_general_objective: false,
@@ -382,8 +480,13 @@ class NewProjectAdmin extends Component {
 
     // results
     // this.saveResults = this.saveResults.bind(this);
+    this.onChangeSelectionResultKPIUnitMeasurement = this.onChangeSelectionResultKPIUnitMeasurement.bind(
+      this
+    );
     this.onAddResults = this.onAddResults.bind(this);
+    this.onAddResultsToTable = this.onAddResultsToTable.bind(this);
     this.onCleanResultsForm = this.onCleanResultsForm.bind(this);
+    this.onSaveResultsKPIID = this.onSaveResultsKPIID.bind(this);
 
     // loading fn changes
     this.onToggleButtonProjectGeneral = this.onToggleButtonProjectGeneral.bind(
@@ -396,6 +499,23 @@ class NewProjectAdmin extends Component {
       this
     );
     this.onToggleButtonProjectSpecificDisabled = this.onToggleButtonProjectSpecificDisabled.bind(
+      this);
+    // activites
+    // this.saveActivities = this.saveActivities.bind(this);
+    this.onAddActivities = this.onAddActivities.bind(this);
+    this.onAddActivitiesToTable = this.onAddActivitiesToTable.bind(this);
+    this.onCleanActivitiesForm = this.onCleanActivitiesForm.bind(this);
+    this.onToggleActivitesArea = this.onToggleActivitesArea.bind(this);
+    this.onChangeSelectionResources = this.onChangeSelectionResources.bind(this);
+    this.onChangeSelectionHumanResources = this.onChangeSelectionHumanResources.bind(this);
+    this.onChangeSelectionResultsForActivity = this.onChangeSelectionResultsForActivity.bind(this);
+    this.onSelectProjectActivityStartDate = this.onSelectProjectActivityStartDate.bind(this);
+    this.onSelectProjectActivityEndDate = this.onSelectProjectActivityEndDate.bind(this);
+    this.onChangeSelectionResourcesFunction = this.onChangeSelectionResourcesFunction.bind(this);
+    this.onChangeSelectionResourcesUnitMeasurement = this.onChangeSelectionResourcesUnitMeasurement.bind(
+      this
+    );
+    this.onChangeSelectionHumanResourcesUnitMeasurement = this.onChangeSelectionHumanResourcesUnitMeasurement.bind(
       this
     );
   }
@@ -451,6 +571,12 @@ class NewProjectAdmin extends Component {
   onSelectProjectActivityEndDate(project_activity_end_date) {
     this.setState({
       project_activity_end_date
+    });
+  }
+
+  onChangeSelectionResourcesFunction(project_human_resources_function) {
+    this.setState({
+      project_human_resources_function,
     });
   }
 
@@ -525,6 +651,42 @@ class NewProjectAdmin extends Component {
   onChangeSelection(e) {
     this.setState({
       project_general_objective_kpi_unit_measurement: e
+    });
+  }
+
+  onChangeSelectionResultsForActivity(e) {
+    this.setState({
+      project_activity_result: e,
+    });
+  }
+
+  onChangeSelectionHumanResourcesUnitMeasurement(e) {
+    this.setState({
+      project_human_resources_unit_of_measurement: e,
+    });
+  }
+
+  onChangeSelectionResourcesUnitMeasurement(e) {
+    this.setState({
+      project_resources_unit_of_measurement: e,
+    });
+  }
+
+  onChangeSelectionResultKPIUnitMeasurement(e) {
+    this.setState({
+      project_result_kpi_unit_measurement: e,
+    });
+  }
+
+  onChangeSelectionResources(e) {
+    this.setState({
+      project_resources: e,
+    });
+  }
+
+  onChangeSelectionHumanResources(e) {
+    this.setState({
+      project_human_resources: e,
     });
   }
 
@@ -699,6 +861,66 @@ class NewProjectAdmin extends Component {
   // Results
   onAddResults(e) {
     e.preventDefault();
+    const data = JSON.stringify({
+      OutputDescription: this.state.project_result,
+      OutputIndicator: this.state.project_result_kpi,
+      MeansOfVerification: this.state.project_result_means_of_verification,
+      Assumption: this.state.project_result_risks,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ProjectOutput/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          this.onToggleActivitesArea(true);
+          this.onSaveResultsKPIID(response.id);
+          this.onAddResultsToTable();
+          this.onCleanResultsForm();
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  onSaveResultsKPIID(id) {
+    this.setState({
+      project_result_kpi_id: id,
+    });
+    const data = JSON.stringify({
+      ProjectOutputId: this.state.id,
+      ProjectMatrixId: this.state.project_logframe_id,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/MatrixOutput/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          console.log('success');
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+  }
+
+  onAddResultsToTable() {
     this.setState({
       project_results: [
         ...this.state.project_results,
@@ -724,7 +946,6 @@ class NewProjectAdmin extends Component {
       ],
       showActivitiesArea: true
     });
-    this.onCleanResultsForm();
   }
 
   onCleanResultsForm() {
@@ -766,31 +987,140 @@ class NewProjectAdmin extends Component {
     });
   }
 
-  render() {
-    /*const activities_table = this.state.activities.length ? (
-      this.state.activities.map(activity => {
-        return (
-          <tr key={activity.id}>
-            <td>{activity.name}</td>
-            <td>{activity.resource_label}</td>
-            <td>
-              {activity.cost.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              })}
-            </td>
-          </tr>
+  // Activities
+  onToggleActivitesArea(value) {
+    this.setState({
+      showActivitiesArea: value,
+    });
+  }
+
+  onAddActivities(e) {
+    e.preventDefault();
+    this.onAddActivitiesToTable();
+    const data = JSON.stringify({
+      ActivityDescription: this.state.project_result,
+      ProjectOutputId: this.state.project_result_kpi_id,
+      ActivityStatus: '0',
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/ProjectActivity/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
         );
-      })
-    ) : (
-      <tr>
-        <td colSpan={2}>
-          <div>
-            <h3 className="text-center">Agregue un recurso en el formulario de arriba ⬆️</h3>
-          </div>
-        </td>
-      </tr>
-    );*/
+      },
+    });
+  }
+
+  onAddActivitiesToTable() {
+    debugger;
+    this.setState({
+      project_activities: [
+        ...this.state.project_activities,
+        {
+          id: this.state.project_activities.length,
+          result: this.state.project_results_for_activities.value,
+          activity: this.state.project_activity_name,
+          start_date: this.state.project_activity_start_date,
+          end_date: this.state.project_activity_end_date,
+          resource: this.state.project_resources.value,
+          resources_quantity: this.state.project_resources_quantity,
+
+          human_resource: this.state.project_human_resources.value,
+          human_resource_name: this.state.project_resources_quantity,
+          project_human_resources_total_hours: this.state.project_human_resources_total_hours,
+          project_human_resources_unit_price: this.state.project_human_resources_unit_price,
+          project_human_resources_total_cost:
+            parseInt(this.state.project_human_resources_total_hours, 10) *
+            parseInt(this.state.project_human_resources_unit_price, 10),
+
+          unit_of_measurement: this.state.project_resources_unit_of_measurement.value,
+          unit_price: this.state.project_resources_unit_price,
+          entity: this.state.project_resources_entity,
+          total:
+            parseInt(this.state.project_resources_unit_price, 10) *
+            parseInt(this.state.project_resources_quantity, 10),
+        },
+      ],
+      showActivitiesArea: true,
+    });
+    this.onCleanActivitiesForm();
+  }
+
+  onAddResultsKPI() {
+    const data = JSON.stringify({
+      ProjecObjectiveId: this.state.project_general_objective_id,
+      Goal: this.state.project_result_kpi_quantity,
+      Variable: this.state.project_result_kpi_variable,
+      GoalDate: this.state.project_result_kpi_date,
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: this.props.baseurl + '/OutputIndicator/Add',
+      contentType: 'application/json',
+      dataType: 'json',
+      data: data,
+      success: response => {
+        if (response.status === 'success') {
+          this.onCleanResultsForm();
+        } else {
+        }
+      },
+      error: response => {
+        this.updateGeneralObjectiveErrorMessage(
+          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+        );
+      },
+    });
+    this.setState({
+      project_activities: [
+        ...this.state.project_activities,
+        {
+          id: this.state.project_activities.length,
+          result: this.state.project_results_for_activities.value,
+          activity: this.state.project_activity_name,
+          start_date: this.state.project_activity_start_date,
+          end_date: this.state.project_activity_end_date,
+          resource: this.state.project_resources.value,
+          resources_quantity: this.state.project_resources_quantity,
+          unit_of_measurement: this.state.project_resources_unit_of_measurement.value,
+          unit_price: this.state.project_resources_unit_price,
+          entity: this.state.project_resources_entity,
+          total:
+            parseInt(this.state.project_resources_unit_price, 10) *
+            parseInt(this.state.project_resources_quantity, 10),
+        },
+      ],
+      showActivitiesArea: true,
+    });
+    this.onCleanActivitiesForm();
+  }
+
+  onCleanActivitiesForm() {
+    this.setState({
+      project_activity_name: '',
+      project_activity_start_date: moment(),
+      project_activity_end_date: moment(),
+      project_resources: '',
+      project_resources_quantity: '',
+      project_resources_unit_of_measurement: '',
+      project_resources_unit_price: 0,
+      project_resources_entity: null,
+    });
+  }
+
+  render() {
     const results_table = this.state.project_results.length ? (
       this.state.project_results.map(result => {
         const result_target_date = result.kpi_date;
@@ -811,6 +1141,37 @@ class NewProjectAdmin extends Component {
           <div>
             <h3 className="text-center">
               Agregue un resultado en el formulario de arriba{" "}
+              <span role="img" aria-label="up emoji">
+                ⬆️
+              </span>
+            </h3>
+          </div>
+        </td>
+      </tr>
+    );
+    const activities_table = this.state.project_activities.length ? (
+      this.state.project_activities.map(activity => {
+        return (
+          <tr key={activity.id}>
+            <td>{activity.activity}</td>
+            <td>
+              {activity.resources_quantity} {activity.unit_of_measurement}
+            </td>
+            <td>
+              {activity.total.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </td>
+          </tr>
+        );
+      })
+    ) : (
+      <tr>
+        <td colSpan={2}>
+          <div>
+            <h3 className="text-center">
+              Agregue un recurso en el formulario de arriba{' '}
               <span role="img" aria-label="up emoji">
                 ⬆️
               </span>
@@ -1280,7 +1641,7 @@ class NewProjectAdmin extends Component {
                   name="project_result_risks"
                   id="project_result_risks"
                   placeholder="Supuesto del Resultado"
-                  value={this.state.project_especifico_objective_risks}
+                  value={this.state.project_result_risks}
                   onChange={this.onChange}
                 />
               </Col>
@@ -1311,23 +1672,21 @@ class NewProjectAdmin extends Component {
           </div>
           <h1>Actividades</h1>
           <Form
-            onSubmit={e => {
-              e.preventDefault();
-            }}
-            className={`${
-              this.state.showActivitiesArea ? "" : "opacity-5 p-events-none"
-            }`}
+            onSubmit={this.onAddActivities}
+            className={`${this.state.showActivitiesArea ? '' : 'opacity-5 p-events-none'}`}
           >
             <FormGroup row className="align-items-center">
-              <Label for="project_activity_name" sm={2}>
+              <Label for="project_results_for_activities" sm={2}>
                 Resultado de la Actividad
               </Label>
               <Col sm={9}>
-                <select name="project_activity_resource_test">
-                  {this.state.project_results_for_activities.map(result => {
-                    return <option value={result.value}>{result.label}</option>;
-                  })}
-                </select>
+                <Select
+                  id="project_activity_result"
+                  name="project_activity_result"
+                  options={this.state.project_results_for_activities}
+                  value={this.state.project_activity_result}
+                  onChange={this.onChangeSelectionResultsForActivity}
+                />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
@@ -1354,7 +1713,7 @@ class NewProjectAdmin extends Component {
                 <DatetimePickerTrigger
                   closeOnSelectDay={true}
                   moment={this.state.project_activity_start_date}
-                  onChange={this.onSelectProjectKPIDate}
+                  onChange={this.onSelectProjectActivityStartDate}
                   className="give-me-space-between"
                 >
                   <input
@@ -1396,19 +1755,106 @@ class NewProjectAdmin extends Component {
               </Col>
             </FormGroup>
             <h3>Recursos a utilizarse en la actividad</h3>
+            <h4>Recursos Humanos</h4>
             <FormGroup row className="align-items-center">
-              <Label for="project-faculty" sm={2}>
-                Seleccione los recursos a utilizarse
+              <Label for="project_human_resources" sm={2}>
+                Seleccione el recurso a utilizarse
+              </Label>
+              <Col sm={9}>
+                <CreatableSelect
+                  required
+                  isClearable
+                  className="give-me-space-between"
+                  name="project_human_resources"
+                  id="project_human_resources"
+                  value={this.state.project_human_resources}
+                  onChange={this.onChangeSelectionHumanResources}
+                  onInputChange={this.onSelectInputChange}
+                  options={HUMAN_RESOURCES}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_human_resources_name" sm={2}>
+                Nombre del recurso humano
+              </Label>
+              <Col sm={9}>
+                <Input
+                  required
+                  type="text"
+                  name="project_human_resources_name"
+                  id="project_human_resources_name"
+                  placeholder="Nombre completo"
+                  onChange={this.onChange}
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_human_resources_function" sm={2}>
+                Función del recurso humano dentro del proyecto
               </Label>
               <Col sm={9}>
                 <Select
+                  name="project_human_resources_function"
+                  id="project_human_resources_function"
+                  onInputChange={this.onSelectInputChange}
+                  onChange={this.onChangeSelectionResourcesFunction}
+                  value={this.state.project_human_resources_function}
+                  options={HUMAN_RESOURCES_FUNCTION}
+                  isClearable
+                  simpleValue
+                  isMulti
+                  isSearchable
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_human_resources_total_hours" sm={2}>
+                Cantidad de Horas
+              </Label>
+              <Col sm={9}>
+                <Input
+                  type="number"
+                  name="project_human_resources_total_hours"
+                  id="project_human_resources_total_hours"
+                  placeholder="Cantidad de Horas"
+                  onChange={this.onChange}
+                  step="0.5"
+                />
+              </Col>
+            </FormGroup>
+            <FormGroup row className="align-items-center">
+              <Label for="project_human_resources_unit_price" sm={2}>
+                Costo por Hora
+              </Label>
+              <Col sm={9}>
+                <Input
+                  type="number"
+                  name="project_human_resources_unit_price"
+                  id="project_human_resources_unit_price"
+                  placeholder="Costo por Hora"
+                  onChange={this.onChange}
+                  step="0.1"
+                />
+              </Col>
+            </FormGroup>
+            <hr />
+            <h4>Otros Recursos</h4>
+            <FormGroup row className="align-items-center">
+              <Label for="project_resources" sm={2}>
+                Seleccione el recurso a utilizarse
+              </Label>
+              <Col sm={9}>
+                <CreatableSelect
+                  required
+                  isClearable
+                  className="give-me-space-between"
                   name="project_resources"
                   id="project_resources"
-                  onChange={this.onChangeMultipleSelect}
                   value={this.state.project_resources}
-                  options={this.state.RESOURCES_OPTIONS}
-                  isClearable
-                  isSearchable
+                  onChange={this.onChangeSelectionResources}
+                  onInputChange={this.onSelectInputChange}
+                  options={RESOURCES}
                 />
               </Col>
             </FormGroup>
@@ -1422,20 +1868,22 @@ class NewProjectAdmin extends Component {
                   name="project_resources_quantity"
                   id="project_resources_quantity"
                   placeholder="Cantidad de Recurso"
+                  onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_resources_quantity" sm={2}>
+              <Label for="project_resources_unit_of_measurement" sm={2}>
                 Unidad de Medida
               </Label>
               <Col sm={9}>
                 <Select
-                  name="project_resources"
-                  id="project_resources"
-                  onChange={this.onChangeMultipleSelect}
-                  value={this.state.project_resources}
-                  options={this.state.RESOURCES_OPTIONS}
+                  name="project_resources_unit_of_measurement"
+                  id="project_resources_unit_of_measurement"
+                  onInputChange={this.onSelectInputChange}
+                  onChange={this.onChangeSelectionResourcesUnitMeasurement}
+                  value={this.state.project_resources_unit_of_measurement}
+                  options={UNIT_MEASUREMENT}
                   isClearable
                   isSearchable
                 />
@@ -1451,6 +1899,7 @@ class NewProjectAdmin extends Component {
                   name="project_resources_unit_price"
                   id="project_resources_unit_price"
                   placeholder="Precio Unitario"
+                  onChange={this.onChange}
                 />
               </Col>
             </FormGroup>
@@ -1516,13 +1965,26 @@ class NewProjectAdmin extends Component {
             })}
             <hr />
           </Form>
+          <hr />
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr className="no-cursorpointer">
+                  <th> Actividad </th>
+                  <th> Recurso </th>
+                  <th> Costo por Actividad </th>
+                </tr>
+              </thead>
+              <tbody>{activities_table}</tbody>
+            </table>
+          </div>
         </div>
         <div
           className={`bg-logframe ${
             this.state.showLogframe ? "di-flex" : "d-none"
           } justify-content-center align-items-center`}
         >
-          <div className="bg-bright p-25 br-5">
+          <div className="bg-bright p-25 br-5 max-height-90vh o-auto">
             <div className="text-right">
               <Button color="link" onClick={this.onToggleLogframe}>
                 [ Ocultar Matriz del Marco Lógico ]
@@ -1599,10 +2061,51 @@ class NewProjectAdmin extends Component {
                 </tr>
                 <tr>
                   <th>Actividades</th>
-                  <td>{""}</td>
-                  <td>{""}</td>
-                  <td>{""}</td>
-                  <td>{""}</td>
+                  <td>
+                    <ul>
+                      {this.state.project_activities.map(activity => {
+                        return (
+                          <li>
+                            {activity.result}
+                            <br />
+                            {activity.activity} con fecha desde{' '}
+                            {moment(activity.start_date).format('LL')} hasta{' '}
+                            {moment(activity.end_date).format('LL')}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <strong>Recursos</strong>
+                    <ul>
+                      {this.state.project_activities.map(activity => {
+                        return (
+                          <li>
+                            {activity.resources_quantity} {activity.resource}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <strong>Costo</strong>
+                    <ul>
+                      {this.state.project_activities.map(activity => {
+                        return (
+                          <li>
+                            <strong>
+                              {activity.total.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                              })}
+                            </strong>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>{''}</td>
                 </tr>
               </tbody>
             </table>
