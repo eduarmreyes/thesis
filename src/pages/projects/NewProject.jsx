@@ -121,6 +121,94 @@ const UNIT_MEASUREMENT_OBJECTIVE = [
   }
 ];
 
+const UNIT_MEASUREMENT_RESULTS = [
+  {
+    id: 1,
+    label: "Personas",
+    value: "Personas"
+  },
+  {
+    id: 2,
+    label: "Niños",
+    value: "Niños"
+  },
+  {
+    id: 3,
+    label: "Niñas",
+    value: "Niñas"
+  },
+  {
+    id: 4,
+    label: "Niños y Niñas",
+    value: "Niños y Niñas"
+  },
+  {
+    id: 5,
+    label: "Familias",
+    value: "Familias"
+  },
+  {
+    id: 6,
+    label: "Centros Educativos",
+    value: "Centros Educativos"
+  },
+  {
+    id: 7,
+    label: "Mujeres",
+    value: "Mujeres"
+  },
+  {
+    id: 8,
+    label: "Programa",
+    value: "Programa"
+  },
+  {
+    id: 9,
+    label: "Comunidad",
+    value: "Comunidad"
+  },
+  {
+    id: 10,
+    label: "Personas Mayores",
+    value: "Personas Mayores"
+  },
+  {
+    id: 11,
+    label: "Centros de Desarrollo Infantil",
+    value: "Centros de Desarrollo Infantil"
+  },
+  {
+    id: 12,
+    label: "Educadores",
+    value: "Educadores"
+  },
+  {
+    id: 13,
+    label: "Pacientes",
+    value: "Pacientes"
+  },
+  {
+    id: 14,
+    label: "Conocimientos",
+    value: "Conocimientos"
+  },
+  {
+    id: 15,
+    label: "Habilidades",
+    value: "Habilidades"
+  },
+  {
+    id: 16,
+    label: "Prácticas",
+    value: "Prácticas"
+  },
+  {
+    id: 17,
+    label: "Aptitudes",
+    value: "Aptitudes"
+  }
+];
+
 const UNIT_MEASUREMENT_HUMAN_RESOURCES = [
   {
     id: 1,
@@ -1137,7 +1225,7 @@ class NewProjectAdmin extends Component {
                   value={this.state.project_result_kpi_unit_measurement}
                   onChange={this.onChangeSelection}
                   onInputChange={this.onSelectInputChange}
-                  options={UNIT_MEASUREMENT_OBJECTIVE}
+                  options={UNIT_MEASUREMENT_RESULTS}
                 />
                 <Input
                   required
