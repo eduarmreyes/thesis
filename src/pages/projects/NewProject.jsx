@@ -5,7 +5,7 @@ import moment from "moment";
 import "moment/locale/es";
 import $ from "jquery";
 import { Col, Button, Form, FormGroup, Label, Input } from "reactstrap";
-import Select from "react-select/lib/Select";
+import Select from "react-select";
 import CreatableSelect from "react-select/lib/Creatable";
 import { DatetimePickerTrigger } from "rc-datetime-picker";
 import LaddaButton from "react-ladda";
@@ -18,19 +18,32 @@ import Backend from "components/Layouts/Backend";
 const HUMAN_RESOURCES_FUNCTION = [
   {
     id: 1,
-    label: 'Perfilador',
-    value: 'Perfilador',
+    label: "Perfilador",
+    value: "Perfilador"
   },
   {
     id: 2,
-    label: 'Coordinador',
-    value: 'Coordinador',
+    label: "Coordinador",
+    value: "Coordinador"
   },
   {
     id: 3,
-    label: 'Ejecutor',
-    value: 'Ejecutor',
+    label: "Ejecutor",
+    value: "Ejecutor"
+  }
+];
+
+const PROJECT_RESOURCE_TYPE = [
+  {
+    id: 1,
+    label: "Recursos Humanos",
+    value: "Recursos Humanos"
   },
+  {
+    id: 2,
+    label: "Otros Recursos",
+    value: "Otros Recursos"
+  }
 ];
 
 const UNIT_MEASUREMENT = [
@@ -298,67 +311,67 @@ const UNIT_MEASUREMENT_HUMAN_RESOURCES = [
 const HUMAN_RESOURCES = [
   {
     id: 1,
-    label: 'Estudiantes',
-    value: 'Estudiantes',
+    label: "Estudiantes",
+    value: "Estudiantes"
   },
   {
     id: 2,
-    label: 'Personal Administrativo',
-    value: 'Personal Administrativo',
+    label: "Personal Administrativo",
+    value: "Personal Administrativo"
   },
   {
     id: 3,
-    label: 'Personal de Mantenimiento',
-    value: 'Personal de Mantenimiento',
+    label: "Personal de Mantenimiento",
+    value: "Personal de Mantenimiento"
   },
   {
     id: 4,
-    label: 'Personal de Docente',
-    value: 'Personal de Docente',
-  },
+    label: "Personal de Docente",
+    value: "Personal de Docente"
+  }
 ];
 
 const RESOURCES = [
   {
     id: 1,
-    label: 'Estudiantes',
-    value: 'Estudiantes',
+    label: "Estudiantes",
+    value: "Estudiantes"
   },
   {
     id: 2,
-    label: 'Material Didáctico',
-    value: 'Material Didáctico',
+    label: "Material Didáctico",
+    value: "Material Didáctico"
   },
   {
     id: 3,
-    label: 'Personal Administrativo',
-    value: 'Personal Administrativo',
+    label: "Personal Administrativo",
+    value: "Personal Administrativo"
   },
   {
     id: 4,
-    label: 'Papel Bond',
-    value: 'Papel Bond',
+    label: "Papel Bond",
+    value: "Papel Bond"
   },
   {
     id: 5,
-    label: 'Aulas Clase',
-    value: 'Aulas Clase',
+    label: "Aulas Clase",
+    value: "Aulas Clase"
   },
   {
     id: 6,
-    label: 'Centros Educativos',
-    value: 'Centros Educativos',
+    label: "Centros Educativos",
+    value: "Centros Educativos"
   },
   {
     id: 7,
-    label: 'Personal de Mantenimiento',
-    value: 'Personal de Mantenimiento',
+    label: "Personal de Mantenimiento",
+    value: "Personal de Mantenimiento"
   },
   {
     id: 8,
-    label: 'Horas',
-    value: 'Horas',
-  },
+    label: "Horas",
+    value: "Horas"
+  }
 ];
 
 class NewProjectUser extends Component {
@@ -395,22 +408,23 @@ class NewProjectAdmin extends Component {
       // Activities State
       activities: [],
       project_resources: [],
+      project_resources_table: [],
       project_resources_labels: [],
       project_activity_name: "",
       total: 0,
       RESOURCES_OPTIONS: [
         {
-          label: 'Resource One',
-          value: 'Resource One',
+          label: "Resource One",
+          value: "Resource One"
         },
         {
-          label: 'Resource Two',
-          value: 'Resource Two',
+          label: "Resource Two",
+          value: "Resource Two"
         },
         {
-          label: 'Resource Three',
-          value: 'Resource Three',
-        },
+          label: "Resource Three",
+          value: "Resource Three"
+        }
       ],
       project_general_objective_kpi_date: moment(),
       project_specific_objective_kpi_date: moment(),
@@ -431,8 +445,42 @@ class NewProjectAdmin extends Component {
       project_results_for_activities: [],
 
       // Activities
-      showActivitiesArea: false,
+      showActivitiesArea: true,
       project_activities: [],
+      project_activity_results_options: [
+        {
+          id: 1,
+          label: "Result One",
+          value: "Result One"
+        },
+        {
+          id: 2,
+          label: "Result Two",
+          value: "Result Two"
+        },
+        {
+          id: 3,
+          label: "Result Three",
+          value: "Result Three"
+        }
+      ],
+      project_activity_type_of_resource_options: [
+        {
+          id: 1,
+          label: "Activity One",
+          value: "Activity One"
+        },
+        {
+          id: 2,
+          label: "Activity Two",
+          value: "Activity Two"
+        },
+        {
+          id: 3,
+          label: "Activity Three",
+          value: "Activity Three"
+        }
+      ],
 
       loading_project_general_objective: false,
       disabled_project_general_objective: false,
@@ -499,23 +547,40 @@ class NewProjectAdmin extends Component {
       this
     );
     this.onToggleButtonProjectSpecificDisabled = this.onToggleButtonProjectSpecificDisabled.bind(
-      this);
+      this
+    );
     // activites
     // this.saveActivities = this.saveActivities.bind(this);
     this.onAddActivities = this.onAddActivities.bind(this);
     this.onAddActivitiesToTable = this.onAddActivitiesToTable.bind(this);
     this.onCleanActivitiesForm = this.onCleanActivitiesForm.bind(this);
     this.onToggleActivitesArea = this.onToggleActivitesArea.bind(this);
-    this.onChangeSelectionResources = this.onChangeSelectionResources.bind(this);
-    this.onChangeSelectionHumanResources = this.onChangeSelectionHumanResources.bind(this);
-    this.onChangeSelectionResultsForActivity = this.onChangeSelectionResultsForActivity.bind(this);
-    this.onSelectProjectActivityStartDate = this.onSelectProjectActivityStartDate.bind(this);
-    this.onSelectProjectActivityEndDate = this.onSelectProjectActivityEndDate.bind(this);
-    this.onChangeSelectionResourcesFunction = this.onChangeSelectionResourcesFunction.bind(this);
+    this.onChangeSelectionResources = this.onChangeSelectionResources.bind(
+      this
+    );
+    this.onChangeSelectionHumanResources = this.onChangeSelectionHumanResources.bind(
+      this
+    );
+    this.onChangeSelectionResultsForActivity = this.onChangeSelectionResultsForActivity.bind(
+      this
+    );
+    this.onSelectProjectActivityStartDate = this.onSelectProjectActivityStartDate.bind(
+      this
+    );
+    this.onSelectProjectActivityEndDate = this.onSelectProjectActivityEndDate.bind(
+      this
+    );
+    this.onChangeSelectionResourcesFunction = this.onChangeSelectionResourcesFunction.bind(
+      this
+    );
     this.onChangeSelectionResourcesUnitMeasurement = this.onChangeSelectionResourcesUnitMeasurement.bind(
       this
     );
     this.onChangeSelectionHumanResourcesUnitMeasurement = this.onChangeSelectionHumanResourcesUnitMeasurement.bind(
+      this
+    );
+
+    this.onChangeSelectionTypeOfResourceFunction = this.onChangeSelectionTypeOfResourceFunction.bind(
       this
     );
   }
@@ -576,7 +641,7 @@ class NewProjectAdmin extends Component {
 
   onChangeSelectionResourcesFunction(project_human_resources_function) {
     this.setState({
-      project_human_resources_function,
+      project_human_resources_function
     });
   }
 
@@ -589,6 +654,13 @@ class NewProjectAdmin extends Component {
   onSelectProjectEndDate(project_end_date) {
     this.setState({
       project_end_date
+    });
+  }
+
+  onChangeSelectionTypeOfResourceFunction(project_type_of_resource) {
+    this.setState({
+      project_type_of_resource,
+      showResourceType: project_type_of_resource.label
     });
   }
 
@@ -654,39 +726,39 @@ class NewProjectAdmin extends Component {
     });
   }
 
-  onChangeSelectionResultsForActivity(e) {
+  onChangeSelectionResultsForActivity(project_activity_result) {
     this.setState({
-      project_activity_result: e,
+      project_activity_result
     });
   }
 
   onChangeSelectionHumanResourcesUnitMeasurement(e) {
     this.setState({
-      project_human_resources_unit_of_measurement: e,
+      project_human_resources_unit_of_measurement: e
     });
   }
 
   onChangeSelectionResourcesUnitMeasurement(e) {
     this.setState({
-      project_resources_unit_of_measurement: e,
+      project_resources_unit_of_measurement: e
     });
   }
 
   onChangeSelectionResultKPIUnitMeasurement(e) {
     this.setState({
-      project_result_kpi_unit_measurement: e,
+      project_result_kpi_unit_measurement: e
     });
   }
 
   onChangeSelectionResources(e) {
     this.setState({
-      project_resources: e,
+      project_resources: e
     });
   }
 
   onChangeSelectionHumanResources(e) {
     this.setState({
-      project_human_resources: e,
+      project_human_resources: e
     });
   }
 
@@ -865,17 +937,17 @@ class NewProjectAdmin extends Component {
       OutputDescription: this.state.project_result,
       OutputIndicator: this.state.project_result_kpi,
       MeansOfVerification: this.state.project_result_means_of_verification,
-      Assumption: this.state.project_result_risks,
+      Assumption: this.state.project_result_risks
     });
 
     $.ajax({
-      type: 'POST',
-      url: this.props.baseurl + '/ProjectOutput/Add',
-      contentType: 'application/json',
-      dataType: 'json',
+      type: "POST",
+      url: this.props.baseurl + "/ProjectOutput/Add",
+      contentType: "application/json",
+      dataType: "json",
       data: data,
       success: response => {
-        if (response.status === 'success') {
+        if (response.status === "success") {
           this.onToggleActivitesArea(true);
           this.onSaveResultsKPIID(response.id);
           this.onAddResultsToTable();
@@ -885,38 +957,38 @@ class NewProjectAdmin extends Component {
       },
       error: response => {
         this.updateGeneralObjectiveErrorMessage(
-          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+          "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
         );
-      },
+      }
     });
   }
 
   onSaveResultsKPIID(id) {
     this.setState({
-      project_result_kpi_id: id,
+      project_result_kpi_id: id
     });
     const data = JSON.stringify({
       ProjectOutputId: this.state.id,
-      ProjectMatrixId: this.state.project_logframe_id,
+      ProjectMatrixId: this.state.project_logframe_id
     });
 
     $.ajax({
-      type: 'POST',
-      url: this.props.baseurl + '/MatrixOutput/Add',
-      contentType: 'application/json',
-      dataType: 'json',
+      type: "POST",
+      url: this.props.baseurl + "/MatrixOutput/Add",
+      contentType: "application/json",
+      dataType: "json",
       data: data,
       success: response => {
-        if (response.status === 'success') {
-          console.log('success');
+        if (response.status === "success") {
+          console.log("success");
         } else {
         }
       },
       error: response => {
         this.updateGeneralObjectiveErrorMessage(
-          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+          "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
         );
-      },
+      }
     });
   }
 
@@ -990,7 +1062,7 @@ class NewProjectAdmin extends Component {
   // Activities
   onToggleActivitesArea(value) {
     this.setState({
-      showActivitiesArea: value,
+      showActivitiesArea: value
     });
   }
 
@@ -1000,30 +1072,29 @@ class NewProjectAdmin extends Component {
     const data = JSON.stringify({
       ActivityDescription: this.state.project_result,
       ProjectOutputId: this.state.project_result_kpi_id,
-      ActivityStatus: '0',
+      ActivityStatus: "0"
     });
 
     $.ajax({
-      type: 'POST',
-      url: this.props.baseurl + '/ProjectActivity/Add',
-      contentType: 'application/json',
-      dataType: 'json',
+      type: "POST",
+      url: this.props.baseurl + "/ProjectActivity/Add",
+      contentType: "application/json",
+      dataType: "json",
       data: data,
       success: response => {
-        if (response.status === 'success') {
+        if (response.status === "success") {
         } else {
         }
       },
       error: response => {
         this.updateGeneralObjectiveErrorMessage(
-          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+          "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
         );
-      },
+      }
     });
   }
 
   onAddActivitiesToTable() {
-    debugger;
     this.setState({
       project_activities: [
         ...this.state.project_activities,
@@ -1038,21 +1109,24 @@ class NewProjectAdmin extends Component {
 
           human_resource: this.state.project_human_resources.value,
           human_resource_name: this.state.project_resources_quantity,
-          project_human_resources_total_hours: this.state.project_human_resources_total_hours,
-          project_human_resources_unit_price: this.state.project_human_resources_unit_price,
+          project_human_resources_total_hours: this.state
+            .project_human_resources_total_hours,
+          project_human_resources_unit_price: this.state
+            .project_human_resources_unit_price,
           project_human_resources_total_cost:
             parseInt(this.state.project_human_resources_total_hours, 10) *
             parseInt(this.state.project_human_resources_unit_price, 10),
 
-          unit_of_measurement: this.state.project_resources_unit_of_measurement.value,
+          unit_of_measurement: this.state.project_resources_unit_of_measurement
+            .value,
           unit_price: this.state.project_resources_unit_price,
           entity: this.state.project_resources_entity,
           total:
             parseInt(this.state.project_resources_unit_price, 10) *
-            parseInt(this.state.project_resources_quantity, 10),
-        },
+            parseInt(this.state.project_resources_quantity, 10)
+        }
       ],
-      showActivitiesArea: true,
+      showActivitiesArea: true
     });
     this.onCleanActivitiesForm();
   }
@@ -1062,26 +1136,26 @@ class NewProjectAdmin extends Component {
       ProjecObjectiveId: this.state.project_general_objective_id,
       Goal: this.state.project_result_kpi_quantity,
       Variable: this.state.project_result_kpi_variable,
-      GoalDate: this.state.project_result_kpi_date,
+      GoalDate: this.state.project_result_kpi_date
     });
 
     $.ajax({
-      type: 'POST',
-      url: this.props.baseurl + '/OutputIndicator/Add',
-      contentType: 'application/json',
-      dataType: 'json',
+      type: "POST",
+      url: this.props.baseurl + "/OutputIndicator/Add",
+      contentType: "application/json",
+      dataType: "json",
       data: data,
       success: response => {
-        if (response.status === 'success') {
+        if (response.status === "success") {
           this.onCleanResultsForm();
         } else {
         }
       },
       error: response => {
         this.updateGeneralObjectiveErrorMessage(
-          'Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI.'
+          "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
         );
-      },
+      }
     });
     this.setState({
       project_activities: [
@@ -1094,29 +1168,30 @@ class NewProjectAdmin extends Component {
           end_date: this.state.project_activity_end_date,
           resource: this.state.project_resources.value,
           resources_quantity: this.state.project_resources_quantity,
-          unit_of_measurement: this.state.project_resources_unit_of_measurement.value,
+          unit_of_measurement: this.state.project_resources_unit_of_measurement
+            .value,
           unit_price: this.state.project_resources_unit_price,
           entity: this.state.project_resources_entity,
           total:
             parseInt(this.state.project_resources_unit_price, 10) *
-            parseInt(this.state.project_resources_quantity, 10),
-        },
+            parseInt(this.state.project_resources_quantity, 10)
+        }
       ],
-      showActivitiesArea: true,
+      showActivitiesArea: true
     });
     this.onCleanActivitiesForm();
   }
 
   onCleanActivitiesForm() {
     this.setState({
-      project_activity_name: '',
+      project_activity_name: "",
       project_activity_start_date: moment(),
       project_activity_end_date: moment(),
-      project_resources: '',
-      project_resources_quantity: '',
-      project_resources_unit_of_measurement: '',
+      project_resources: "",
+      project_resources_quantity: "",
+      project_resources_unit_of_measurement: "",
       project_resources_unit_price: 0,
-      project_resources_entity: null,
+      project_resources_entity: null
     });
   }
 
@@ -1149,18 +1224,18 @@ class NewProjectAdmin extends Component {
         </td>
       </tr>
     );
-    const activities_table = this.state.project_activities.length ? (
-      this.state.project_activities.map(activity => {
+    const resources_table = this.state.project_resources_table.length ? (
+      this.state.project_resources_table.map(resource => {
         return (
-          <tr key={activity.id}>
-            <td>{activity.activity}</td>
+          <tr key={resource.id}>
+            <td>{resource.resource}</td>
             <td>
-              {activity.resources_quantity} {activity.unit_of_measurement}
+              {resource.resources_quantity} {resource.unit_of_measurement}
             </td>
             <td>
-              {activity.total.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
+              {resource.total.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD"
               })}
             </td>
           </tr>
@@ -1171,7 +1246,38 @@ class NewProjectAdmin extends Component {
         <td colSpan={2}>
           <div>
             <h3 className="text-center">
-              Agregue un recurso en el formulario de arriba{' '}
+              Agregue un recurso en el formulario de arriba{" "}
+              <span role="img" aria-label="up emoji">
+                ⬆️
+              </span>
+            </h3>
+          </div>
+        </td>
+      </tr>
+    );
+    const activities_table = this.state.project_activities.length ? (
+      this.state.project_activities.map(activity => {
+        return (
+          <tr key={activity.id}>
+            <td>{activity.activity}</td>
+            <td>
+              {activity.resources_quantity} {activity.unit_of_measurement}
+            </td>
+            <td>
+              {activity.total.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD"
+              })}
+            </td>
+          </tr>
+        );
+      })
+    ) : (
+      <tr>
+        <td colSpan={2}>
+          <div>
+            <h3 className="text-center">
+              Agregue una actividad en el formulario de arriba{" "}
               <span role="img" aria-label="up emoji">
                 ⬆️
               </span>
@@ -1673,19 +1779,23 @@ class NewProjectAdmin extends Component {
           <h1>Actividades</h1>
           <Form
             onSubmit={this.onAddActivities}
-            className={`${this.state.showActivitiesArea ? '' : 'opacity-5 p-events-none'}`}
+            className={`${
+              this.state.showActivitiesArea ? "" : "opacity-5 p-events-none"
+            }`}
           >
             <FormGroup row className="align-items-center">
-              <Label for="project_results_for_activities" sm={2}>
+              <Label for="project_activity_result" sm={2}>
                 Resultado de la Actividad
               </Label>
               <Col sm={9}>
                 <Select
                   id="project_activity_result"
                   name="project_activity_result"
-                  options={this.state.project_results_for_activities}
+                  options={this.state.project_activity_results_options}
                   value={this.state.project_activity_result}
                   onChange={this.onChangeSelectionResultsForActivity}
+                  onInputChange={this.onSelectInputChange}
+                  isClearable
                 />
               </Col>
             </FormGroup>
@@ -1754,198 +1864,274 @@ class NewProjectAdmin extends Component {
                 </Button>
               </Col>
             </FormGroup>
+          </Form>
+          <hr />
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr className="no-cursorpointer">
+                  <th> Resultado </th>
+                  <th> Actividad </th>
+                  <th> Fechas </th>
+                </tr>
+              </thead>
+              <tbody>{activities_table}</tbody>
+            </table>
+          </div>
+          <Form
+            onSubmit={this.onAddResourcesByActivity}
+            className={`${
+              !this.state.showResourcesByActivitiesArea
+                ? ""
+                : "opacity-5 p-events-none"
+            }`}
+          >
             <h3>Recursos a utilizarse en la actividad</h3>
-            <h4>Recursos Humanos</h4>
             <FormGroup row className="align-items-center">
-              <Label for="project_human_resources" sm={2}>
-                Seleccione el recurso a utilizarse
-              </Label>
-              <Col sm={9}>
-                <CreatableSelect
-                  required
-                  isClearable
-                  className="give-me-space-between"
-                  name="project_human_resources"
-                  id="project_human_resources"
-                  value={this.state.project_human_resources}
-                  onChange={this.onChangeSelectionHumanResources}
-                  onInputChange={this.onSelectInputChange}
-                  options={HUMAN_RESOURCES}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_human_resources_name" sm={2}>
-                Nombre del recurso humano
-              </Label>
-              <Col sm={9}>
-                <Input
-                  required
-                  type="text"
-                  name="project_human_resources_name"
-                  id="project_human_resources_name"
-                  placeholder="Nombre completo"
-                  onChange={this.onChange}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_human_resources_function" sm={2}>
-                Función del recurso humano dentro del proyecto
+              <Label for="project_type_of_resource" sm={2}>
+                Seleccione el tipo de recurso
               </Label>
               <Col sm={9}>
                 <Select
-                  name="project_human_resources_function"
-                  id="project_human_resources_function"
+                  name="project_type_of_resource"
+                  id="project_type_of_resource"
                   onInputChange={this.onSelectInputChange}
-                  onChange={this.onChangeSelectionResourcesFunction}
-                  value={this.state.project_human_resources_function}
-                  options={HUMAN_RESOURCES_FUNCTION}
+                  onChange={this.onChangeSelectionTypeOfResourceFunction}
+                  value={this.state.project_type_of_resource}
+                  options={PROJECT_RESOURCE_TYPE}
                   isClearable
                   simpleValue
-                  isMulti
                   isSearchable
                 />
               </Col>
             </FormGroup>
             <FormGroup row className="align-items-center">
-              <Label for="project_human_resources_total_hours" sm={2}>
-                Cantidad de Horas
+              <Label for="project_activity_type_of_resource" sm={2}>
+                Seleccione actividad
               </Label>
               <Col sm={9}>
-                <Input
-                  type="number"
-                  name="project_human_resources_total_hours"
-                  id="project_human_resources_total_hours"
-                  placeholder="Cantidad de Horas"
-                  onChange={this.onChange}
-                  step="0.5"
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_human_resources_unit_price" sm={2}>
-                Costo por Hora
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="number"
-                  name="project_human_resources_unit_price"
-                  id="project_human_resources_unit_price"
-                  placeholder="Costo por Hora"
-                  onChange={this.onChange}
-                  step="0.1"
+                <Select
+                  name="project_activity_type_of_resource"
+                  id="project_activity_type_of_resource"
+                  onInputChange={this.onSelectInputChange}
+                  onChange={this.onChangeSelectionTypeOfResourcesFunction}
+                  value={this.state.project_activity_type_of_resource}
+                  options={this.state.project_activity_type_of_resource_options}
+                  isClearable
+                  simpleValue
+                  isSearchable
                 />
               </Col>
             </FormGroup>
             <hr />
-            <h4>Otros Recursos</h4>
-            <FormGroup row className="align-items-center">
-              <Label for="project_resources" sm={2}>
-                Seleccione el recurso a utilizarse
-              </Label>
-              <Col sm={9}>
-                <CreatableSelect
-                  required
-                  isClearable
-                  className="give-me-space-between"
-                  name="project_resources"
-                  id="project_resources"
-                  value={this.state.project_resources}
-                  onChange={this.onChangeSelectionResources}
-                  onInputChange={this.onSelectInputChange}
-                  options={RESOURCES}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_resources_quantity" sm={2}>
-                Cantidad
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="text"
-                  name="project_resources_quantity"
-                  id="project_resources_quantity"
-                  placeholder="Cantidad de Recurso"
-                  onChange={this.onChange}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_resources_unit_of_measurement" sm={2}>
-                Unidad de Medida
-              </Label>
-              <Col sm={9}>
-                <Select
-                  name="project_resources_unit_of_measurement"
-                  id="project_resources_unit_of_measurement"
-                  onInputChange={this.onSelectInputChange}
-                  onChange={this.onChangeSelectionResourcesUnitMeasurement}
-                  value={this.state.project_resources_unit_of_measurement}
-                  options={UNIT_MEASUREMENT}
-                  isClearable
-                  isSearchable
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label for="project_resources_unit_price" sm={2}>
-                Precio Unitario
-              </Label>
-              <Col sm={9}>
-                <Input
-                  type="number"
-                  name="project_resources_unit_price"
-                  id="project_resources_unit_price"
-                  placeholder="Precio Unitario"
-                  onChange={this.onChange}
-                />
-              </Col>
-            </FormGroup>
-            <FormGroup row className="align-items-center">
-              <Label sm={2}>Entidad que proporciona el recurso</Label>
-              <Col sm={4}>
-                <div className="pretty p-default p-round">
-                  <input
-                    type="radio"
+            <div
+              className={`${
+                this.state.showResourceType !== "Otros Recursos"
+                  ? "d-block"
+                  : "d-none"
+              }`}
+            >
+              <h4>Recursos Humanos</h4>
+              <FormGroup row className="align-items-center">
+                <Label for="project_human_resources" sm={2}>
+                  Seleccione el recurso a utilizarse
+                </Label>
+                <Col sm={9}>
+                  <CreatableSelect
                     required
-                    id="project_resources_entity_uees"
-                    name="project_resources_entity"
-                    checked={
-                      typeof this.state.project_resources_entity !== "undefined"
-                        ? this.state.project_resources_entity === "uees"
-                        : false
-                    }
-                    value="uees"
+                    isClearable
+                    className="give-me-space-between"
+                    name="project_human_resources"
+                    id="project_human_resources"
+                    value={this.state.project_human_resources}
+                    onChange={this.onChangeSelectionHumanResources}
+                    onInputChange={this.onSelectInputChange}
+                    options={HUMAN_RESOURCES}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label for="project_human_resources_name" sm={2}>
+                  Nombre del recurso humano
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    required
+                    type="text"
+                    name="project_human_resources_name"
+                    id="project_human_resources_name"
+                    placeholder="Nombre completo"
                     onChange={this.onChange}
                   />
-                  <div className="state">
-                    <label>Universidad Evangélica (UEES)</label>
-                  </div>
-                </div>
-              </Col>
-              <Col sm={4}>
-                <div className="pretty p-default p-round">
-                  <input
-                    type="radio"
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label for="project_human_resources_function" sm={2}>
+                  Función del recurso humano dentro del proyecto
+                </Label>
+                <Col sm={9}>
+                  <Select
+                    name="project_human_resources_function"
+                    id="project_human_resources_function"
+                    onInputChange={this.onSelectInputChange}
+                    onChange={this.onChangeSelectionResourcesFunction}
+                    value={this.state.project_human_resources_function}
+                    options={HUMAN_RESOURCES_FUNCTION}
+                    isClearable
+                    simpleValue
+                    isMulti
+                    isSearchable
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label for="project_human_resources_total_hours" sm={2}>
+                  Cantidad de Horas
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    type="number"
+                    name="project_human_resources_total_hours"
+                    id="project_human_resources_total_hours"
+                    placeholder="Cantidad de Horas"
+                    onChange={this.onChange}
+                    step="0.5"
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label for="project_human_resources_unit_price" sm={2}>
+                  Costo por Hora
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    type="number"
+                    name="project_human_resources_unit_price"
+                    id="project_human_resources_unit_price"
+                    placeholder="Costo por Hora"
+                    onChange={this.onChange}
+                    step="0.1"
+                  />
+                </Col>
+              </FormGroup>
+            </div>
+            <div
+              className={`${
+                this.state.showResourceType !== "Otros Recursos"
+                  ? "d-none"
+                  : "d-block"
+              }`}
+            >
+              <h4>Otros Recursos</h4>
+              <FormGroup row className="align-items-center">
+                <Label for="project_resources" sm={2}>
+                  Seleccione el recurso a utilizarse
+                </Label>
+                <Col sm={9}>
+                  <CreatableSelect
                     required
-                    id="project_resources_entity_other_one"
-                    name="project_resources_entity"
-                    checked={
-                      typeof this.state.project_resources_entity !== "undefined"
-                        ? this.state.project_resources_entity === "other"
-                        : false
-                    }
-                    value="other"
+                    isClearable
+                    className="give-me-space-between"
+                    name="project_resources"
+                    id="project_resources"
+                    value={this.state.project_resources}
+                    onChange={this.onChangeSelectionResources}
+                    onInputChange={this.onSelectInputChange}
+                    options={RESOURCES}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label for="project_resources_quantity" sm={2}>
+                  Cantidad
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    type="text"
+                    name="project_resources_quantity"
+                    id="project_resources_quantity"
+                    placeholder="Cantidad de Recurso"
                     onChange={this.onChange}
                   />
-                  <div className="state">
-                    <label>Institución Contraparte</label>
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label for="project_resources_unit_of_measurement" sm={2}>
+                  Unidad de Medida
+                </Label>
+                <Col sm={9}>
+                  <Select
+                    name="project_resources_unit_of_measurement"
+                    id="project_resources_unit_of_measurement"
+                    onInputChange={this.onSelectInputChange}
+                    onChange={this.onChangeSelectionResourcesUnitMeasurement}
+                    value={this.state.project_resources_unit_of_measurement}
+                    options={UNIT_MEASUREMENT}
+                    isClearable
+                    isSearchable
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label for="project_resources_unit_price" sm={2}>
+                  Precio Unitario
+                </Label>
+                <Col sm={9}>
+                  <Input
+                    type="number"
+                    name="project_resources_unit_price"
+                    id="project_resources_unit_price"
+                    placeholder="Precio Unitario"
+                    onChange={this.onChange}
+                  />
+                </Col>
+              </FormGroup>
+              <FormGroup row className="align-items-center">
+                <Label sm={2}>Entidad que proporciona el recurso</Label>
+                <Col sm={4}>
+                  <div className="pretty p-default p-round">
+                    <input
+                      type="radio"
+                      required
+                      id="project_resources_entity_uees"
+                      name="project_resources_entity"
+                      checked={
+                        typeof this.state.project_resources_entity !==
+                        "undefined"
+                          ? this.state.project_resources_entity === "uees"
+                          : false
+                      }
+                      value="uees"
+                      onChange={this.onChange}
+                    />
+                    <div className="state">
+                      <label>Universidad Evangélica (UEES)</label>
+                    </div>
                   </div>
-                </div>
-              </Col>
-            </FormGroup>
+                </Col>
+                <Col sm={4}>
+                  <div className="pretty p-default p-round">
+                    <input
+                      type="radio"
+                      required
+                      id="project_resources_entity_other_one"
+                      name="project_resources_entity"
+                      checked={
+                        typeof this.state.project_resources_entity !==
+                        "undefined"
+                          ? this.state.project_resources_entity === "other"
+                          : false
+                      }
+                      value="other"
+                      onChange={this.onChange}
+                    />
+                    <div className="state">
+                      <label>Institución Contraparte</label>
+                    </div>
+                  </div>
+                </Col>
+              </FormGroup>
+            </div>
             <FormGroup check row>
               <Col sm={{ size: 11 }}>
                 <Button
@@ -1975,7 +2161,7 @@ class NewProjectAdmin extends Component {
                   <th> Costo por Actividad </th>
                 </tr>
               </thead>
-              <tbody>{activities_table}</tbody>
+              <tbody>{resources_table}</tbody>
             </table>
           </div>
         </div>
@@ -2068,9 +2254,9 @@ class NewProjectAdmin extends Component {
                           <li>
                             {activity.result}
                             <br />
-                            {activity.activity} con fecha desde{' '}
-                            {moment(activity.start_date).format('LL')} hasta{' '}
-                            {moment(activity.end_date).format('LL')}
+                            {activity.activity} con fecha desde{" "}
+                            {moment(activity.start_date).format("LL")} hasta{" "}
+                            {moment(activity.end_date).format("LL")}
                           </li>
                         );
                       })}
@@ -2095,9 +2281,9 @@ class NewProjectAdmin extends Component {
                         return (
                           <li>
                             <strong>
-                              {activity.total.toLocaleString('en-US', {
-                                style: 'currency',
-                                currency: 'USD',
+                              {activity.total.toLocaleString("en-US", {
+                                style: "currency",
+                                currency: "USD"
                               })}
                             </strong>
                           </li>
@@ -2105,7 +2291,7 @@ class NewProjectAdmin extends Component {
                       })}
                     </ul>
                   </td>
-                  <td>{''}</td>
+                  <td>{""}</td>
                 </tr>
               </tbody>
             </table>
