@@ -434,13 +434,13 @@ class NewProjectAdmin extends Component {
       project_start_date: moment(),
       project_end_date: moment(),
       showLogframe: false,
-      showSpecificObjectiveArea: false,
+      showSpecificObjectiveArea: true,
       project_general_objective_error_message: "",
       project_specific_objective_error_message: "",
       project_logframe_id: 0,
 
       // Results
-      showResultsArea: false,
+      showResultsArea: true,
       project_results: [],
       project_results_for_activities: [],
 
@@ -486,7 +486,11 @@ class NewProjectAdmin extends Component {
       disabled_project_general_objective: false,
 
       loading_project_specific_objective: false,
-      disabled_project_specific_objective: false
+      disabled_project_specific_objective: false,
+
+      showResourcesByActivitiesArea: true,
+
+      loading_project_name: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -516,6 +520,8 @@ class NewProjectAdmin extends Component {
       this
     );
 
+    this.onSubmitProjectName = this.onSubmitProjectName.bind(this);
+
     this.onSubmitGeneralObjective = this.onSubmitGeneralObjective.bind(this);
     this.updateGeneralObjectiveErrorMessage = this.updateGeneralObjectiveErrorMessage.bind(
       this
@@ -535,6 +541,8 @@ class NewProjectAdmin extends Component {
     this.onAddResultsToTable = this.onAddResultsToTable.bind(this);
     this.onCleanResultsForm = this.onCleanResultsForm.bind(this);
     this.onSaveResultsKPIID = this.onSaveResultsKPIID.bind(this);
+
+    this.onToggleButtonProjectName = this.onToggleButtonProjectName.bind(this);
 
     // loading fn changes
     this.onToggleButtonProjectGeneral = this.onToggleButtonProjectGeneral.bind(
@@ -664,13 +672,13 @@ class NewProjectAdmin extends Component {
     });
   }
 
-  onSubmitGeneralObjective(e) {
+  onSubmitProjectName(e) {
     e.preventDefault();
 
-    this.onToggleButtonProjectGeneral();
+    this.onToggleButtonProjectName();
 
     const data = JSON.stringify({
-      ProjectName: ""
+      ProjectName: this.state.project_name
     });
 
     $.ajax({
@@ -682,8 +690,38 @@ class NewProjectAdmin extends Component {
       success: response => {
         if (response.status === "success") {
           this.saveLogframeId(response.id);
-          this.saveGeneralObjective();
-          this.onToggleButtonProjectGeneralDisabled();
+        } else {
+        }
+      },
+      error: response => {},
+      complete: () => {
+        this.onToggleButtonProjectName();
+      }
+    });
+  }
+
+  onSubmitGeneralObjective(e) {
+    e.preventDefault();
+
+    this.onToggleButtonProjectGeneral();
+
+    const data = JSON.stringify({
+      ObjectiveDescription: this.state.project_general_objective,
+      ObjetiveIndicator: this.state.project_general_objective_kpi,
+      MeansOfVerification: this.state
+        .project_general_objective_means_of_verification,
+      ObjectiveType: "0"
+    });
+
+    $.ajax({
+      type: "POST",
+      url: this.props.baseurl + "/ProjectObjective/Add",
+      contentType: "application/json",
+      dataType: "json",
+      data: data,
+      success: response => {
+        if (response.status === "success") {
+          this.saveGeneralObjectiveIndicator(response.id);
         } else {
           this.updateGeneralObjectiveErrorMessage(
             "No se pudo guardar la matriz de marco lógico."
@@ -694,9 +732,6 @@ class NewProjectAdmin extends Component {
         this.updateGeneralObjectiveErrorMessage(
           "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
         );
-      },
-      complete: () => {
-        this.onToggleButtonProjectGeneral();
       }
     });
   }
@@ -771,38 +806,6 @@ class NewProjectAdmin extends Component {
   saveLogframeId(id) {
     this.setState({
       project_logframe_id: id
-    });
-  }
-
-  saveGeneralObjective() {
-    const data = JSON.stringify({
-      ObjectiveDescription: this.state.project_general_objective,
-      ObjetiveIndicator: this.state.project_general_objective_kpi,
-      MeansOfVerification: this.state
-        .project_general_objective_means_of_verification,
-      ObjectiveType: "0"
-    });
-
-    $.ajax({
-      type: "POST",
-      url: this.props.baseurl + "/ProjectObjective/Add",
-      contentType: "application/json",
-      dataType: "json",
-      data: data,
-      success: response => {
-        if (response.status === "success") {
-          this.saveGeneralObjectiveIndicator(response.id);
-        } else {
-          this.updateGeneralObjectiveErrorMessage(
-            "No se pudo guardar la matriz de marco lógico."
-          );
-        }
-      },
-      error: response => {
-        this.updateGeneralObjectiveErrorMessage(
-          "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
-        );
-      }
     });
   }
 
@@ -980,7 +983,6 @@ class NewProjectAdmin extends Component {
       data: data,
       success: response => {
         if (response.status === "success") {
-          console.log("success");
         } else {
         }
       },
@@ -1028,6 +1030,12 @@ class NewProjectAdmin extends Component {
       project_result_kpi_date: moment(),
       project_result_means_of_verification: "",
       project_result_risks: ""
+    });
+  }
+
+  onToggleButtonProjectName() {
+    this.setState({
+      loading_project_name: !this.state.loading_project_name
     });
   }
 
@@ -1306,24 +1314,23 @@ class NewProjectAdmin extends Component {
         </div>
         <div className="text-center">
           <h1>Información General</h1>
-          <Form onSubmit={this.onSubmit}>
+          <Form onSubmit={this.onSubmitProjectName}>
             <FormGroup row className="align-items-center">
               <Col sm={7}>
                 <Input
                   required
                   type="text"
-                  name="project_general_objective"
-                  id="project_general_objective"
+                  name="project_name"
+                  id="project_name"
                   placeholder="Nombre del Proyecto"
-                  value={this.state.project_general_objective}
+                  value={this.state.project_name}
                   onChange={this.onChange}
                 />
               </Col>
               <Col sm={4}>
                 <LaddaButton
-                  loading={this.state.loading_project_general_objective}
+                  loading={this.state.loading_project_name}
                   className="d-flex align-items-center ml-auto btn btn-primary"
-                  disabled={this.state.disabled_project_general_objective}
                 >
                   <i className="md-icon">add</i>
                   Crear Proyecto
@@ -1614,7 +1621,7 @@ class NewProjectAdmin extends Component {
             </FormGroup>
             <FormGroup check row>
               <Col sm={{ size: 11 }}>
-                <span class="color-danger">
+                <span className="color-danger">
                   {this.state.project_specific_objective_error_message}
                 </span>
                 <LaddaButton
@@ -1881,7 +1888,7 @@ class NewProjectAdmin extends Component {
           <Form
             onSubmit={this.onAddResourcesByActivity}
             className={`${
-              !this.state.showResourcesByActivitiesArea
+              this.state.showResourcesByActivitiesArea
                 ? ""
                 : "opacity-5 p-events-none"
             }`}
@@ -2143,13 +2150,13 @@ class NewProjectAdmin extends Component {
                 </Button>
               </Col>
             </FormGroup>
-            <hr />
+            {/* <hr />
             Costo Total:{" "}
             {parseInt(this.state.total, 10).toLocaleString("en-US", {
               style: "currency",
               currency: "USD"
             })}
-            <hr />
+            <hr /> */}
           </Form>
           <hr />
           <div className="table-responsive">
