@@ -381,7 +381,9 @@ class NewProjectUser extends Component {
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.onToggleResultsArea(true);
+  }
 
   onChange(e) {
     this.setState({
@@ -434,6 +436,7 @@ class NewProjectAdmin extends Component {
       project_start_date: moment(),
       project_end_date: moment(),
       showLogframe: false,
+      showCalendar: false,
       showSpecificObjectiveArea: false,
       project_general_objective_error_message: "",
       project_specific_objective_error_message: "",
@@ -464,23 +467,7 @@ class NewProjectAdmin extends Component {
           value: "Result Three"
         }
       ],
-      project_activity_type_of_resource_options: [
-        {
-          id: 1,
-          label: "Activity One",
-          value: "Activity One"
-        },
-        {
-          id: 2,
-          label: "Activity Two",
-          value: "Activity Two"
-        },
-        {
-          id: 3,
-          label: "Activity Three",
-          value: "Activity Three"
-        }
-      ],
+      project_activity_type_of_resource_options: [],
 
       loading_project_general_objective: false,
       disabled_project_general_objective: false,
@@ -516,6 +503,7 @@ class NewProjectAdmin extends Component {
     this.onSelectProjectStartDate = this.onSelectProjectStartDate.bind(this);
     this.onSelectProjectEndDate = this.onSelectProjectEndDate.bind(this);
     this.onToggleLogframe = this.onToggleLogframe.bind(this);
+    this.onToggleCalendar = this.onToggleCalendar.bind(this);
     this.onToggleSpecificObjectiveArea = this.onToggleSpecificObjectiveArea.bind(
       this
     );
@@ -743,15 +731,23 @@ class NewProjectAdmin extends Component {
     });
   }
 
+  onToggleCalendar(e) {
+    e.preventDefault();
+    this.setState({
+      showCalendar: !this.state.showCalendar
+    });
+  }
+
   onToggleSpecificObjectiveArea() {
     this.setState({
       showSpecificObjectiveArea: !this.state.showSpecificObjectiveArea
     });
   }
 
-  onToggleResultsArea() {
+  onToggleResultsArea(b) {
     this.setState({
-      showResultsArea: !this.state.showResultsArea
+      showResourcesByActivitiesArea:
+        b || !this.state.showResourcesByActivitiesArea
     });
   }
 
@@ -912,7 +908,7 @@ class NewProjectAdmin extends Component {
       data: data,
       success: response => {
         if (response.status === "success") {
-          this.onToggleResultsArea();
+          this.onToggleResultsArea(true);
         } else {
           this.updateGeneralObjectiveErrorMessage(
             "No se pudo guardar el objetivo específico."
@@ -1019,7 +1015,7 @@ class NewProjectAdmin extends Component {
       project_results_for_activities: [
         ...this.state.project_results_for_activities,
         {
-          id: this.state.project_results.length,
+          id: this.state.project_results.length + 1,
           label: this.state.project_result,
           value: this.state.project_result
         }
@@ -1097,6 +1093,7 @@ class NewProjectAdmin extends Component {
       data: data,
       success: response => {
         if (response.status === "success") {
+          this.onToggleResultsArea(true);
         } else {
         }
       },
@@ -1118,6 +1115,12 @@ class NewProjectAdmin extends Component {
           activity: this.state.project_activity_name,
           start_date: this.state.project_activity_start_date,
           end_date: this.state.project_activity_end_date
+        },
+        ...this.state.project_activity_type_of_resource_options,
+        {
+          id: this.state.project_activity_type_of_resource_options.length,
+          value: this.state.project_activity_name,
+          label: this.state.project_activity_name
         }
       ],
       showActivitiesArea: true
@@ -1285,7 +1288,7 @@ class NewProjectAdmin extends Component {
           </Button>
         </div>
         <div className="toggle-calendar-wrapper">
-          <Button color="link" onClick={this.onToggleLogframe}>
+          <Button color="link" onClick={this.onToggleCalendar}>
             <i className="md-icon">calendar_today</i>
           </Button>
         </div>
@@ -2151,133 +2154,25 @@ class NewProjectAdmin extends Component {
         </div>
         <div
           className={`bg-logframe ${
-            this.state.showLogframe ? "di-flex" : "d-none"
+            this.state.showCalendar ? "di-flex" : "d-none"
           } justify-content-center align-items-center`}
         >
           <div className="bg-bright p-25 br-5 max-height-90vh o-auto">
             <div className="text-right">
-              <Button color="link" onClick={this.onToggleLogframe}>
-                [ Ocultar Matriz del Marco Lógico ]
+              <Button color="link" onClick={this.onToggleCalendar}>
+                [ Ocultar Calendario ]
               </Button>
             </div>
-            <h3 className="text-center">Matriz del Marco Lógico</h3>
+            <h3 className="text-center">Calendario</h3>
             <table>
               <thead>
                 <tr>
-                  <td> </td>
-                  <th>Resumen del Proyecto</th>
-                  <th>Indicadores</th>
-                  <th>Medios de Verificación</th>
-                  <th>Supuesto</th>
+                  <th>Resultado</th>
+                  <th>Actividad</th>
+                  <th>Fechas</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <th>Objetivo General</th>
-                  <td>{this.state.project_general_objective}</td>
-                  <td>{this.state.project_general_objective_kpi}</td>
-                  <td>
-                    {this.state.project_general_objective_means_of_verification}
-                  </td>
-                  <td>{this.state.project_general_objective_risks}</td>
-                </tr>
-                <tr>
-                  <th>Objetivo Específico</th>
-                  <td>{this.state.project_specific_objective}</td>
-                  <td>{this.state.project_specific_objective_kpi}</td>
-                  <td>
-                    {
-                      this.state
-                        .project_specific_objective_means_of_verification
-                    }
-                  </td>
-                  <td>{this.state.project_specific_objective_risks}</td>
-                </tr>
-                <tr>
-                  <th>Resultados</th>
-                  <td>
-                    <ul>
-                      {this.state.project_results.map(result => {
-                        return (
-                          <li>
-                            {result.result} con fecha{" "}
-                            {moment(result.kpi_date).format("LL")}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      {this.state.project_results.map(result => {
-                        return <li>{result.kpi}</li>;
-                      })}
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      {this.state.project_results.map(result => {
-                        return <li>{result.means_of_verification}</li>;
-                      })}
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      {this.state.project_results.map(result => {
-                        return <li>{result.risks}</li>;
-                      })}
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Actividades</th>
-                  <td>
-                    <ul>
-                      {this.state.project_activities.map(activity => {
-                        return (
-                          <li>
-                            {activity.result}
-                            <br />
-                            {activity.activity} con fecha desde{" "}
-                            {moment(activity.start_date).format("LL")} hasta{" "}
-                            {moment(activity.end_date).format("LL")}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </td>
-                  <td>
-                    <strong>Recursos</strong>
-                    <ul>
-                      {/* this.state.project_activities.map(activity => {
-                        return (
-                          <li>
-                            {activity.resources_quantity} {activity.resource}
-                          </li>
-                        );
-                      })*/}
-                    </ul>
-                  </td>
-                  <td>
-                    <strong>Costo</strong>
-                    <ul>
-                      {/*this.state.project_activities.map(activity => {
-                        return (
-                          <li>
-                            <strong>
-                              {activity.total.toLocaleString("en-US", {
-                                style: "currency",
-                                currency: "USD"
-                              })}
-                            </strong>
-                          </li>
-                        );
-                      })*/}
-                    </ul>
-                  </td>
-                  <td>{""}</td>
-                </tr>
-              </tbody>
+              <tbody>{activities_table}</tbody>
             </table>
           </div>
         </div>
