@@ -710,12 +710,13 @@ class NewProjectAdmin extends Component {
       ObjetiveIndicator: this.state.project_general_objective_kpi,
       MeansOfVerification: this.state
         .project_general_objective_means_of_verification,
-      ObjectiveType: "0"
+      ObjectiveType: "0",
+      id: this.state.project_profile_id
     });
 
     $.ajax({
       type: "POST",
-      url: this.props.baseurl + "/ProjectObjective/Add",
+      url: this.props.baseurl + "/ProjectObjective/Edit",
       contentType: "application/json",
       dataType: "json",
       data: data,
@@ -807,6 +808,7 @@ class NewProjectAdmin extends Component {
     this.setState({
       project_logframe_id: id
     });
+    window.sessionStorage.setItem("project_logframe_id", id);
   }
 
   saveGeneralObjectiveIndicator(project_general_objective_id) {
