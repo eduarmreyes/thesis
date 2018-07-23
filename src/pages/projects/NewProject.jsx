@@ -977,7 +977,7 @@ class NewProjectAdmin extends Component {
       project_result_kpi_id: id
     });
     const data = JSON.stringify({
-      ProjectOutputId: this.state.id,
+      ProjectOutputId: id,
       ProjectMatrixId: this.state.project_logframe_id
     });
 
@@ -1084,8 +1084,8 @@ class NewProjectAdmin extends Component {
     e.preventDefault();
     this.onAddActivitiesToTable();
     const data = JSON.stringify({
-      ActivityDescription: this.state.project_result,
-      ProjectOutputId: this.state.project_result_kpi_id,
+      ActivityDescription: this.state.project_activity_name,
+      ProjectOutputId: this.state.project_results_for_activities.id,
       ActivityStatus: "0"
     });
 
@@ -1101,7 +1101,7 @@ class NewProjectAdmin extends Component {
         }
       },
       error: response => {
-        this.updateGeneralObjectiveErrorMessage(
+        this.updateSpecificObjectiveErrorMessage(
           "Un error en el servidor nos impidió guardar el objetivo general. Contacte a GTI."
         );
       }
@@ -1117,27 +1117,7 @@ class NewProjectAdmin extends Component {
           result: this.state.project_results_for_activities.value,
           activity: this.state.project_activity_name,
           start_date: this.state.project_activity_start_date,
-          end_date: this.state.project_activity_end_date,
-          resource: this.state.project_resources.value,
-          resources_quantity: this.state.project_resources_quantity,
-
-          human_resource: this.state.project_human_resources.value,
-          human_resource_name: this.state.project_resources_quantity,
-          project_human_resources_total_hours: this.state
-            .project_human_resources_total_hours,
-          project_human_resources_unit_price: this.state
-            .project_human_resources_unit_price,
-          project_human_resources_total_cost:
-            parseInt(this.state.project_human_resources_total_hours, 10) *
-            parseInt(this.state.project_human_resources_unit_price, 10),
-
-          unit_of_measurement: this.state.project_resources_unit_of_measurement
-            .value,
-          unit_price: this.state.project_resources_unit_price,
-          entity: this.state.project_resources_entity,
-          total:
-            parseInt(this.state.project_resources_unit_price, 10) *
-            parseInt(this.state.project_resources_quantity, 10)
+          end_date: this.state.project_activity_end_date
         }
       ],
       showActivitiesArea: true
@@ -1200,12 +1180,7 @@ class NewProjectAdmin extends Component {
     this.setState({
       project_activity_name: "",
       project_activity_start_date: moment(),
-      project_activity_end_date: moment(),
-      project_resources: "",
-      project_resources_quantity: "",
-      project_resources_unit_of_measurement: "",
-      project_resources_unit_price: 0,
-      project_resources_entity: null
+      project_activity_end_date: moment()
     });
   }
 
@@ -1273,15 +1248,11 @@ class NewProjectAdmin extends Component {
       this.state.project_activities.map(activity => {
         return (
           <tr key={activity.id}>
+            <td>{activity.result}</td>
             <td>{activity.activity}</td>
             <td>
-              {activity.resources_quantity} {activity.unit_of_measurement}
-            </td>
-            <td>
-              {activity.total.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD"
-              })}
+              Inicia: {moment(activity.start_date).format("LL")} <br />
+              Finaliza: {moment(activity.end_date).format("LL")}
             </td>
           </tr>
         );
@@ -1804,7 +1775,7 @@ class NewProjectAdmin extends Component {
                 <Select
                   id="project_activity_result"
                   name="project_activity_result"
-                  options={this.state.project_activity_results_options}
+                  options={this.state.project_results_for_activities}
                   value={this.state.project_activity_result}
                   onChange={this.onChangeSelectionResultsForActivity}
                   onInputChange={this.onSelectInputChange}
@@ -2278,19 +2249,19 @@ class NewProjectAdmin extends Component {
                   <td>
                     <strong>Recursos</strong>
                     <ul>
-                      {this.state.project_activities.map(activity => {
+                      {/* this.state.project_activities.map(activity => {
                         return (
                           <li>
                             {activity.resources_quantity} {activity.resource}
                           </li>
                         );
-                      })}
+                      })*/}
                     </ul>
                   </td>
                   <td>
                     <strong>Costo</strong>
                     <ul>
-                      {this.state.project_activities.map(activity => {
+                      {/*this.state.project_activities.map(activity => {
                         return (
                           <li>
                             <strong>
@@ -2301,7 +2272,7 @@ class NewProjectAdmin extends Component {
                             </strong>
                           </li>
                         );
-                      })}
+                      })*/}
                     </ul>
                   </td>
                   <td>{""}</td>
