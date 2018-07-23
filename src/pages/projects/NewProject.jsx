@@ -440,12 +440,12 @@ class NewProjectAdmin extends Component {
       project_logframe_id: 0,
 
       // Results
-      showResultsArea: true,
+      showResultsArea: false,
       project_results: [],
       project_results_for_activities: [],
 
       // Activities
-      showActivitiesArea: true,
+      showActivitiesArea: false,
       project_activities: [],
       project_activity_results_options: [
         {
@@ -488,7 +488,7 @@ class NewProjectAdmin extends Component {
       loading_project_specific_objective: false,
       disabled_project_specific_objective: false,
 
-      showResourcesByActivitiesArea: true,
+      showResourcesByActivitiesArea: false,
 
       loading_project_name: false
     };
@@ -899,7 +899,9 @@ class NewProjectAdmin extends Component {
       Variable: this.state.project_specific_objective_kpi_variable,
       IndicatorUnitOfMeasure: this.state
         .project_specific_objective_kpi_unit_measurement.value,
-      GoalDate: this.state.project_specific_objective_kpi_date
+      GoalDate: this.state.project_specific_objective_kpi_date,
+      ObjectiveAnalysisUnitId: this.state
+        .project_specific_objective_kpi_unit_measurement.id
     });
 
     $.ajax({
@@ -913,7 +915,7 @@ class NewProjectAdmin extends Component {
           this.onToggleResultsArea();
         } else {
           this.updateGeneralObjectiveErrorMessage(
-            "No se pudo guardar la matriz de marco lógico."
+            "No se pudo guardar el objetivo específico."
           );
         }
       },
