@@ -434,7 +434,7 @@ class NewProjectAdmin extends Component {
       project_start_date: moment(),
       project_end_date: moment(),
       showLogframe: false,
-      showSpecificObjectiveArea: true,
+      showSpecificObjectiveArea: false,
       project_general_objective_error_message: "",
       project_specific_objective_error_message: "",
       project_logframe_id: 0,
@@ -710,13 +710,12 @@ class NewProjectAdmin extends Component {
       ObjetiveIndicator: this.state.project_general_objective_kpi,
       MeansOfVerification: this.state
         .project_general_objective_means_of_verification,
-      ObjectiveType: "0",
-      id: this.state.project_profile_id
+      ObjectiveType: "0"
     });
 
     $.ajax({
       type: "POST",
-      url: this.props.baseurl + "/ProjectObjective/Edit",
+      url: this.props.baseurl + "/ProjectObjective/Add",
       contentType: "application/json",
       dataType: "json",
       data: data,
@@ -817,12 +816,14 @@ class NewProjectAdmin extends Component {
     });
 
     const data = JSON.stringify({
-      ProjectObjectiveId: this.state.project_general_objective_id,
+      ProjectObjectiveId: this.state.project_general_objective_id + "",
       Goal: this.state.project_general_objective_kpi_quantity,
       Variable: this.state.project_general_objective_kpi_variable,
       IndicatorUnitOfMeasure: this.state
         .project_general_objective_kpi_unit_measurement.value,
-      GoalDate: this.state.project_general_objective_kpi_date
+      GoalDate: this.state.project_general_objective_kpi_date,
+      ObjectiveAnalysisUnitId: this.state
+        .project_general_objective_kpi_unit_measurement.id
     });
 
     $.ajax({
@@ -833,6 +834,7 @@ class NewProjectAdmin extends Component {
       data: data,
       success: response => {
         if (response.status === "success") {
+          this.onToggleButtonProjectGeneral();
           this.onToggleSpecificObjectiveArea();
         } else {
           this.updateGeneralObjectiveErrorMessage(
