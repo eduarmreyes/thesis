@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import axios from 'axios';
-import $ from 'jquery';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import axios from "axios";
+import $ from "jquery";
 
-import actions from '../../actions';
-import '../../assets/css/pages/style.css';
-import '../../assets/css/pages/login.css';
-import '../../assets/css/pages/movil.css';
+import actions from "../../actions";
+import "../../assets/css/pages/style.css";
+import "../../assets/css/pages/login.css";
+import "../../assets/css/pages/movil.css";
 
 class LoginUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
       stado: 0,
-      msj: '',
+      msj: ""
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -26,40 +26,40 @@ class LoginUser extends Component {
 
     const data = JSON.stringify({
       UserName: this.state.email,
-      Password: this.state.password,
+      Password: this.state.password
     });
 
     const obj = {
       authorize: true,
-      token: 'token-783848822771634',
-      scope: 'admin',
+      token: "token-783848822771634",
+      scope: "admin",
       email: null,
       id: null,
       register: null,
       type: null,
       infouser: null,
-      info_cuenta: null,
+      info_cuenta: null
     };
     this.props.dispatch(actions.setAuth(obj));
     this.get_me();
 
     $.ajax({
-      type: 'POST',
-      url: this.props.baseurl + '/Account/Login',
-      contentType: 'application/json',
-      dataType: 'json',
+      type: "POST",
+      url: this.props.baseurl + "/Account/Login",
+      contentType: "application/json",
+      dataType: "json",
       data: data,
       success: response => {
         const obj = {
           authorize: true,
           token: response.token,
-          scope: 'admin',
+          scope: "admin",
           email: null,
           id: null,
           register: null,
           type: null,
           infouser: null,
-          info_cuenta: null,
+          info_cuenta: null
         };
         this.props.dispatch(actions.setAuth(obj));
         this.get_me();
@@ -70,40 +70,41 @@ class LoginUser extends Component {
         switch (response.status) {
           case 401:
             error = {
-              message: 'Usuario o Contraseña incorrecta',
+              message: "Usuario o Contraseña incorrecta"
             };
             this.showerror(error);
             break;
           default:
             error = {
-              message: 'Error en el servidor, por favor contacte a IT de la Universidad',
+              message:
+                "Error en el servidor, por favor contacte a IT de la Universidad"
             };
             this.showerror(error);
             break;
         }
         this.load_view();
-      },
+      }
     });
   }
 
   get_me() {
     const data = {
       email: this.state.email,
-      id: 'fjawoeifjawñoi2j13ño1ij234ñ1o2j34ñoi',
+      id: "fjawoeifjawñoi2j13ño1ij234ñ1o2j34ñoi"
     };
     const obj = {
       // authorize       : this.props.authorize,
       authorize: true,
-      token: 'token-783848822771634',
-      scope: 'admin',
+      token: "token-783848822771634",
+      scope: "admin",
       email: data.email,
       id: data.id,
       type: null,
       infouser: data,
-      info_cuenta: null,
+      info_cuenta: null
     };
     this.props.dispatch(actions.setAuth(obj));
-    this.props.history.push('/dashboard');
+    this.props.history.push("/project-list");
 
     // this.get_my_account_info();
 
@@ -118,10 +119,10 @@ class LoginUser extends Component {
     // });
   }
   get_my_account_info() {
-    const bearer = 'bearer ' + this.props.userToken;
+    const bearer = "bearer " + this.props.userToken;
     axios
-      .get(this.props.baseurl + '/v1/user_accounts?page=1&per_page=100', {
-        headers: { Authorization: bearer, 'Content-Type': 'application/json' },
+      .get(this.props.baseurl + "/v1/user_accounts?page=1&per_page=100", {
+        headers: { Authorization: bearer, "Content-Type": "application/json" }
       })
       .then(jsonresponse => {
         const data = jsonresponse.data;
@@ -129,7 +130,7 @@ class LoginUser extends Component {
         var pfx = [];
         for (var i = data.length - 1; i >= 0; i--) {
           var info = data[i];
-          if (info.code === 'FX-POINT') {
+          if (info.code === "FX-POINT") {
             pfx = info;
             console.log(pfx);
           }
@@ -143,63 +144,63 @@ class LoginUser extends Component {
           register: this.props.register,
           type: null,
           infouser: this.props.infouser,
-          info_cuenta: data[0],
+          info_cuenta: data[0]
         };
         this.props.dispatch(actions.setAuth(obj));
         if (this.props.infouser.approved === true) {
-          this.props.history.push('/dashboard');
+          this.props.history.push("/project-list");
           return;
         }
         switch (this.props.infouser.type_of_user) {
-          case 'personality':
-            this.props.history.push('/pnpasouno');
+          case "personality":
+            this.props.history.push("/pnpasouno");
             switch (data[0].step) {
               case 1:
-                this.props.history.push('/pnpasouno');
+                this.props.history.push("/pnpasouno");
                 break;
               case 2:
-                this.props.history.push('/pnpasodos');
+                this.props.history.push("/pnpasodos");
                 break;
               case 3:
-                this.props.history.push('/pnpasotres');
+                this.props.history.push("/pnpasotres");
                 break;
               case 4:
-                this.props.history.push('/pnpasocuatro');
+                this.props.history.push("/pnpasocuatro");
                 break;
               case 6:
-                this.props.history.push('/validating-account');
+                this.props.history.push("/validating-account");
                 break;
               default:
                 break;
             }
             break;
-          case 'company':
-            this.props.history.push('/empasouno');
+          case "company":
+            this.props.history.push("/empasouno");
             switch (data[0].step) {
               case 1:
-                this.props.history.push('/empasouno');
+                this.props.history.push("/empasouno");
                 break;
               case 2:
-                this.props.history.push('/empasodos');
+                this.props.history.push("/empasodos");
                 break;
               case 3:
-                this.props.history.push('/empasotres');
+                this.props.history.push("/empasotres");
                 break;
               case 4:
-                this.props.history.push('/empasocuatro');
+                this.props.history.push("/empasocuatro");
                 break;
               case 5:
-                this.props.history.push('/empasocinco');
+                this.props.history.push("/empasocinco");
                 break;
               case 6:
-                this.props.history.push('/validating-account');
+                this.props.history.push("/validating-account");
                 break;
               default:
                 break;
             }
             break;
           default:
-            this.props.history.push('/companytype');
+            this.props.history.push("/companytype");
             break;
         }
       })
@@ -209,14 +210,14 @@ class LoginUser extends Component {
   }
   onChange(e) {
     this.setState({
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   }
 
   showerror(error) {
-    let message = '* Error al enviar los datos. ' + error.message;
+    let message = "* Error al enviar los datos. " + error.message;
     this.setState({
-      msj: message,
+      msj: message
     });
   }
 
@@ -228,8 +229,13 @@ class LoginUser extends Component {
   load_view() {
     const view_login = (
       <div className="page-empty-content">
-        <h1 className="border-radius-top empty-color-title aling-center ">INGRESAR</h1>
-        <form className="border-radius-bottom border-0top" onSubmit={this.onSubmit}>
+        <h1 className="border-radius-top empty-color-title aling-center ">
+          INGRESAR
+        </h1>
+        <form
+          className="border-radius-bottom border-0top"
+          onSubmit={this.onSubmit}
+        >
           <div className="form-group">
             <label className="label-gray-color">Usuario</label>
             <input
@@ -263,7 +269,7 @@ class LoginUser extends Component {
           </div>
           <div className="form-group form-group-button">
             <div className="form-group-button-description content-aling-center label-gray-color">
-              Crea tu cuenta,{' '}
+              Crea tu cuenta,{" "}
               <a className="blue-link" href="/singup">
                 Click
               </a>
@@ -273,7 +279,7 @@ class LoginUser extends Component {
       </div>
     );
     this.setState({
-      content: view_login,
+      content: view_login
     });
   }
   render() {
@@ -291,7 +297,7 @@ const mapStateToProps = (state, props) => {
     register: state.mainReducer.auth.register,
     type: state.mainReducer.auth.type,
     infouser: state.mainReducer.auth.infouser,
-    baseurl: state.mainReducer.setBaseUrl.baseurl,
+    baseurl: state.mainReducer.setBaseUrl.baseurl
   };
 };
 

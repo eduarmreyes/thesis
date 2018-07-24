@@ -17,17 +17,6 @@ class NavigationUser extends Component {
             <i className="md-icon">add</i> <span>Diseño</span>
           </NavLink>
         </li>
-        <li>
-          <NavLink to="/dashboard" exact={true} activeClassName="active">
-            <i className="md-icon">home</i> <span>Inicio</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/project-list" activeClassName="active">
-            <i className="md-icon">format_list_bulleted</i>{" "}
-            <span>Proyectos</span>
-          </NavLink>
-        </li>
       </ul>
     );
   }
@@ -45,22 +34,6 @@ class NavigationAdmin extends Component {
             activeClassName="active"
           >
             <i className="md-icon">add</i> <span>Diseño</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/dashboard" exact={true} activeClassName="active">
-            <i className="md-icon">home</i> <span>Inicio</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/project-list" activeClassName="active">
-            <i className="md-icon">format_list_bulleted</i>{" "}
-            <span>Proyectos</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/usuariosgenerales" activeClassName="active">
-            <i className="md-icon">people</i> <span>Usuarios</span>
           </NavLink>
         </li>
       </ul>
