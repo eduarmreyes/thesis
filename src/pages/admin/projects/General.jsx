@@ -74,70 +74,6 @@ class General extends Component {
           if (project.projectProfile.projectName === "") {
             return false;
           }
-          return (
-            <tr key={index} className="no-cursorpointer">
-              <td>
-                <div className="title-wrapper">
-                  <div className="title">
-                    {project.projectProfile.projectName}
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div className="key-value">
-                  <div className="avatar" />
-                  <strong>{project.projectProfile.projectCoordinator}</strong>
-                </div>
-              </td>
-              <td>
-                <div className="key-value">
-                  <div className="avatar" />
-                  <strong>
-                    {moment(project.projectProfile.endDate).format("LL")}
-                  </strong>
-                </div>
-              </td>
-              <td className="actions min-width">
-                <div className="button-group">
-                  <a
-                    className="button"
-                    href="#"
-                    onClick={e => {
-                      this.updateKPI(e, project.id, project.projectMatrixId);
-                    }}
-                  >
-                    Reportar Avance de Indicadores
-                  </a>
-                </div>
-                <div className="button-group">
-                  <a
-                    className="button"
-                    href="#"
-                    onClick={e => {
-                      this.updateActivities(
-                        e,
-                        project.id,
-                        project.projectMatrixId
-                      );
-                    }}
-                  >
-                    Reportar Avance de Actividades
-                  </a>
-                </div>
-                <div className="button-group">
-                  <a
-                    className="button"
-                    href="#"
-                    onClick={e => {
-                      this.select_project(e, project.id);
-                    }}
-                  >
-                    Editar
-                  </a>
-                </div>
-              </td>
-            </tr>
-          );
         });
         this.setState({
           tabla: content
@@ -172,7 +108,62 @@ class General extends Component {
                   <th />
                 </tr>
               </thead>
-              <tbody>{this.state.tabla}</tbody>
+              <tbody>
+                <tr key={1} className="no-cursorpointer">
+                  <td>
+                    <div className="title-wrapper">
+                      <div className="title">{"Salud bucal en los niños"}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="key-value">
+                      <div className="avatar" />
+                      <strong>{"Manuel García"}</strong>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="key-value">
+                      <div className="avatar" />
+                      <strong>{moment().format("LL")}</strong>
+                    </div>
+                  </td>
+                  <td className="actions min-width">
+                    <div className="button-group">
+                      <a
+                        className="button"
+                        href="#"
+                        onClick={e => {
+                          this.updateKPI(e, 1, 1);
+                        }}
+                      >
+                        Reportar Avance de Indicadores
+                      </a>
+                    </div>
+                    <div className="button-group">
+                      <a
+                        className="button"
+                        href="#"
+                        onClick={e => {
+                          this.updateActivities(e, 1, 1);
+                        }}
+                      >
+                        Reportar Avance de Actividades
+                      </a>
+                    </div>
+                    <div className="button-group">
+                      <a
+                        className="button"
+                        href="#"
+                        onClick={e => {
+                          this.select_project(e, 1);
+                        }}
+                      >
+                        Editar
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>

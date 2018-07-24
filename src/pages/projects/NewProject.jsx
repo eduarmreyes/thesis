@@ -2272,6 +2272,138 @@ class NewProjectAdmin extends Component {
             </table>
           </div>
         </div>
+        <div
+          className={`bg-logframe ${
+            this.state.showLogframe ? "di-flex" : "d-none"
+          } justify-content-center align-items-center`}
+        >
+          <div className="bg-bright p-25 br-5 max-height-90vh o-auto">
+            <div className="text-right">
+              <Button color="link" onClick={this.onToggleLogframe}>
+                [ Ocultar Matriz del Marco Lógico ]
+              </Button>
+            </div>
+            <h3 className="text-center">Matriz del Marco Lógico</h3>
+            <table>
+              <thead>
+                <tr>
+                  <td> </td>
+                  <th>Resumen del Proyecto</th>
+                  <th>Indicadores</th>
+                  <th>Medios de Verificación</th>
+                  <th>Supuesto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Objetivo General</th>
+                  <td>{this.state.project_general_objective}</td>
+                  <td>{this.state.project_general_objective_kpi}</td>
+                  <td>
+                    {this.state.project_general_objective_means_of_verification}
+                  </td>
+                  <td>{this.state.project_general_objective_risks}</td>
+                </tr>
+                <tr>
+                  <th>Objetivo Específico</th>
+                  <td>{this.state.project_specific_objective}</td>
+                  <td>{this.state.project_specific_objective_kpi}</td>
+                  <td>
+                    {
+                      this.state
+                        .project_specific_objective_means_of_verification
+                    }
+                  </td>
+                  <td>{this.state.project_specific_objective_risks}</td>
+                </tr>
+                <tr>
+                  <th>Resultados</th>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return (
+                          <li>
+                            {result.result} con fecha{" "}
+                            {moment(result.kpi_date).format("LL")}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return <li>{result.kpi}</li>;
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return <li>{result.means_of_verification}</li>;
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      {this.state.project_results.map(result => {
+                        return <li>{result.risks}</li>;
+                      })}
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Actividades</th>
+                  <td>
+                    <ul>
+                      {this.state.project_activities.map(activity => {
+                        return (
+                          <li>
+                            {activity.result}
+                            <br />
+                            {activity.activity} con fecha desde{" "}
+                            {moment(activity.start_date).format("LL")} hasta{" "}
+                            {moment(activity.end_date).format("LL")}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <strong>Recursos</strong>
+                    <ul>
+                      {this.state.project_resources_table.map(activity => {
+                        return (
+                          <li>
+                            {activity.resources_quantity} {activity.resource}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>
+                    <strong>Costo</strong>
+                    <ul>
+                      {this.state.project_resources_table.map(activity => {
+                        return (
+                          <li>
+                            <strong>
+                              {activity.total.toLocaleString("en-US", {
+                                style: "currency",
+                                currency: "USD"
+                              })}
+                            </strong>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </td>
+                  <td>{""}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     );
   }
